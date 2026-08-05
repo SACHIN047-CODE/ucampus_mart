@@ -1,0 +1,68 @@
+.cm-admin { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - var(--nav-h)); }
+
+.cm-admin__sidebar { background: var(--dark-bg); color: #cbd5e1; padding: 22px 14px; display: flex; flex-direction: column; gap: 20px; }
+.cm-admin__brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; color: #fff; font-weight: 700; font-size: 15px; }
+.cm-admin__sidebar nav { display: flex; flex-direction: column; gap: 2px; }
+.cm-admin__sidebar button {
+  display: flex; align-items: center; gap: 10px; text-align: left;
+  background: none; border: none; cursor: pointer; color: #94a3b8;
+  padding: 11px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+.cm-admin__sidebar button:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.cm-admin__sidebar button.is-active { background: var(--primary); color: #fff; }
+
+.cm-admin__main { padding: 24px 30px 60px; overflow-x: hidden; }
+
+.cm-admin__topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 26px; }
+.cm-admin__topbar h1 { font-size: 22px; }
+
+.cm-admin__cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.cm-admin__card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; display: flex; flex-direction: column; gap: 4px;
+}
+.cm-admin__card span { font-size: 12.5px; color: var(--text-muted); }
+.cm-admin__card strong { font-size: 26px; font-weight: 800; }
+.cm-admin__card em { font-size: 11.5px; color: var(--success); font-style: normal; }
+
+.cm-admin__grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 24px; }
+
+.cm-admin__panel {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 22px; margin-bottom: 20px;
+}
+.cm-admin__panel h3 { font-size: 15px; margin-bottom: 18px; }
+
+.cm-admin__bars { display: flex; flex-direction: column; gap: 12px; }
+.cm-admin__bar-row { display: grid; grid-template-columns: 130px 1fr 30px; align-items: center; gap: 12px; font-size: 12.5px; }
+.cm-admin__bar-row span { color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cm-admin__bar-track { height: 8px; border-radius: 999px; background: var(--border); overflow: hidden; }
+.cm-admin__bar-fill { height: 100%; border-radius: 999px; transition: width 0.6s var(--ease); }
+.cm-admin__bar-row b { text-align: right; }
+
+.cm-admin__activity { display: flex; flex-direction: column; gap: 12px; }
+.cm-admin__activity li { font-size: 13px; color: var(--text-muted); padding-bottom: 12px; border-bottom: 1px dashed var(--border); }
+.cm-admin__activity li:last-child { border-bottom: none; padding-bottom: 0; }
+
+.cm-admin__table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.cm-admin__table th { text-align: left; padding: 10px 12px; color: var(--text-soft); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border); }
+.cm-admin__table td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+.cm-admin__table tr:last-child td { border-bottom: none; }
+
+.cm-admin__td-item { display: flex; align-items: center; gap: 10px; }
+.cm-admin__td-item img { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; }
+
+.cm-admin__td-actions { display: flex; gap: 8px; }
+.cm-admin__td-actions button { border: none; cursor: pointer; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.cm-admin__td-actions .approve { background: rgba(34,197,94,0.14); color: #16a34a; }
+.cm-admin__td-actions .reject { background: rgba(239,68,68,0.14); color: #dc2626; }
+
+@media (max-width: 900px) {
+  .cm-admin { grid-template-columns: 1fr; }
+  .cm-admin__sidebar { flex-direction: row; overflow-x: auto; }
+  .cm-admin__sidebar nav { flex-direction: row; }
+  .cm-admin__cards { grid-template-columns: repeat(2, 1fr); }
+  .cm-admin__grid { grid-template-columns: 1fr; }
+  .cm-admin__table { display: block; overflow-x: auto; }
+}

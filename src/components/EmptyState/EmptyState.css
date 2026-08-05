@@ -1,0 +1,30 @@
+.cm-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 72px 24px;
+  gap: 8px;
+}
+
+.cm-empty__icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+  filter: grayscale(0.15);
+  animation: float 3.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.cm-empty__title { font-size: 19px; font-weight: 700; }
+.cm-empty__subtitle {
+  color: var(--text-muted);
+  font-size: 14.5px;
+  max-width: 380px;
+  line-height: 1.6;
+  margin: 0;
+}
+.cm-empty__action { margin-top: 12px; }

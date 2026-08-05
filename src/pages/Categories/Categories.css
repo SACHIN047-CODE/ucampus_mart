@@ -1,0 +1,18 @@
+.cm-catpage__hero {
+  padding: 64px 0 40px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), transparent);
+}
+.cm-catpage__hero h1 { font-size: clamp(30px, 4vw, 42px); margin: 10px 0 14px; }
+.cm-catpage__hero p { color: var(--text-muted); max-width: 520px; margin: 0 auto; font-size: 15.5px; line-height: 1.7; }
+.cm-catpage__hero .cm-section__eyebrow { display: block; }
+
+.cm-catpage__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  padding: 48px 0 90px;
+}
+
+@media (max-width: 1080px) { .cm-catpage__grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .cm-catpage__grid { grid-template-columns: repeat(2, 1fr); } }
