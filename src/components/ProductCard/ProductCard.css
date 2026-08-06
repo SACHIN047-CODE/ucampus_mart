@@ -126,3 +126,39 @@
 }
 
 .cm-pcard__seller { font-weight: 600; color: var(--text-muted); }
+
+.cm-pcard__quickview-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translate(-50%, 12px);
+  background: var(--primary);
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s var(--ease);
+  box-shadow: 0 4px 12px rgba(226, 26, 34, 0.3);
+  z-index: 3;
+}
+
+.cm-pcard:hover .cm-pcard__quickview-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.cm-pcard__quickview-btn:hover {
+  background: var(--secondary);
+  box-shadow: 0 4px 12px rgba(20, 18, 14, 0.3);
+}
+
+[data-theme='dark'] .cm-pcard__quickview-btn:hover {
+  background: #fff;
+  color: #000;
+}

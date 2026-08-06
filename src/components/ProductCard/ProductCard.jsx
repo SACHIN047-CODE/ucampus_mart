@@ -3,7 +3,7 @@ import { useApp } from '../../context/AppContext';
 import Badge from '../Badge/Badge';
 import './ProductCard.css';
 
-export default function ProductCard({ product, style }) {
+export default function ProductCard({ product, style, onQuickView }) {
   const { toggleWishlist, isWishlisted } = useApp();
   const wished = isWishlisted(product.id);
   const discount = product.originalPrice > product.price && product.price > 0
@@ -16,6 +16,18 @@ export default function ProductCard({ product, style }) {
         <Link to={`/product/${product.id}`}>
           <img src={product.images[0]} alt={product.title} loading="lazy" />
         </Link>
+        {onQuickView && (
+          <button
+            className="cm-pcard__quickview-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onQuickView(product);
+            }}
+          >
+            ⚡ Quick View
+          </button>
+        )}
         <button
           className={`cm-pcard__wish ${wished ? 'is-active' : ''}`}
           aria-label={wished ? 'Remove from wishlist' : 'Save to wishlist'}

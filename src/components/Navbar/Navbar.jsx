@@ -6,6 +6,7 @@ import { categories } from '../../data/categories';
 import SearchBar from '../SearchBar/SearchBar';
 import Avatar from '../Avatar/Avatar';
 import Button from '../Button/Button';
+import ChitkaraLogo from '../ChitkaraLogo/ChitkaraLogo';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -15,6 +16,9 @@ export default function Navbar() {
   const [catOpen, setCatOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [selectedCampus, setSelectedCampus] = useState(
+    localStorage.getItem('selected-campus') || 'Punjab Campus'
+  );
   const catRef = useRef(null);
   const profileRef = useRef(null);
 
@@ -22,6 +26,15 @@ export default function Navbar() {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    // Listen for campus updates triggered elsewhere (e.g. from Hero panel)
+    const handleCampusChange = () => {
+      setSelectedCampus(localStorage.getItem('selected-campus') || 'Punjab Campus');
+    };
+    window.addEventListener('campusChanged', handleCampusChange);
+    return () => window.removeEventListener('campusChanged', handleCampusChange);
   }, []);
 
   useEffect(() => {
@@ -37,10 +50,38 @@ export default function Navbar() {
     <header className={`cm-nav ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="cm-nav__inner container">
         <div className="cm-nav__left">
-          <Link to="/" className="cm-nav__logo">
-            <span className="cm-nav__logo-mark">CM</span>
-            <span className="cm-nav__logo-text">Campus<em>Mart</em></span>
+          <Link to="/" className="cm-nav__logo" style={{ textDecoration: 'none' }}>
+            <ChitkaraLogo type="full" height={36} />
           </Link>
+
+          <div className="cm-nav__campus-pill" style={{ marginLeft: '4px' }}>
+            <select
+              value={selectedCampus}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedCampus(val);
+                localStorage.setItem('selected-campus', val);
+                window.dispatchEvent(new Event('campusChanged'));
+              }}
+              style={{
+                background: 'rgba(226, 26, 34, 0.06)',
+                border: '1px solid rgba(226, 26, 34, 0.15)',
+                borderRadius: '20px',
+                padding: '4px 10px',
+                fontSize: '12px',
+                fontWeight: '700',
+                color: 'var(--primary)',
+                cursor: 'pointer',
+                outline: 'none',
+                height: '30px',
+                transition: 'all 0.2s var(--ease)',
+              }}
+            >
+              <option value="Punjab Campus">📍 Punjab Campus</option>
+              <option value="Himachal Campus">📍 Himachal Campus</option>
+              <option value="Online Campus">📍 Online Campus</option>
+            </select>
+          </div>
 
           <div className="cm-nav__cat" ref={catRef}>
             <button className="cm-nav__cat-btn" onClick={() => setCatOpen((v) => !v)}>
@@ -122,9 +163,8 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="cm-nav__mobile fade-in">
           <div className="cm-nav__mobile-top">
-            <Link to="/" className="cm-nav__logo" onClick={() => setMobileOpen(false)}>
-              <span className="cm-nav__logo-mark">CM</span>
-              <span className="cm-nav__logo-text">Campus<em>Mart</em></span>
+            <Link to="/" className="cm-nav__logo" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none' }}>
+              <ChitkaraLogo type="full" height={36} />
             </Link>
             <button onClick={() => setMobileOpen(false)} aria-label="Close menu">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>

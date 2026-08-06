@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import ChitkaraLogo from '../ChitkaraLogo/ChitkaraLogo';
 import './Footer.css';
 
 export default function Footer() {
@@ -6,11 +7,10 @@ export default function Footer() {
     <footer className="cm-footer">
       <div className="container cm-footer__top">
         <div className="cm-footer__brand">
-          <div className="cm-nav__logo">
-            <span className="cm-nav__logo-mark">CM</span>
-            <span className="cm-nav__logo-text" style={{ color: '#fff' }}>Campus<em>Mart</em></span>
-          </div>
-          <p>The marketplace built for your campus. Buy, sell, and exchange with verified students near you.</p>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <ChitkaraLogo type="full" height={34} />
+          </Link>
+          <p style={{ marginTop: '12px' }}>The marketplace built for Chitkara University. Buy, sell, and exchange with verified students near you.</p>
           <div className="cm-footer__social">
             <a href="#" aria-label="Instagram">IG</a>
             <a href="#" aria-label="Twitter">X</a>
@@ -44,7 +44,7 @@ export default function Footer() {
       </div>
 
       <div className="container cm-footer__bottom">
-        <span>© 2025 CampusMart. Built for students, by students.</span>
+        <span>© 2026 Chitkara CampusMart. Built for Chitkara students, by students.</span>
         <div className="cm-footer__legal">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
