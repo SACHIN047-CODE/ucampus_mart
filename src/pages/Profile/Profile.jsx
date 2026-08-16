@@ -16,7 +16,7 @@ const TABS = [
 ];
 
 export default function Profile() {
-  const { products, wishlist } = useApp();
+  const { products, wishlist, user } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState(searchParams.get('tab') || 'listings');
   const myListings = products.slice(0, 5);
@@ -28,9 +28,9 @@ export default function Profile() {
     <div className="cm-profile container">
       <aside className="cm-profile__sidebar">
         <div className="cm-profile__card">
-          <Avatar initials="YO" size={64} online />
-          <h3>Sachin Sharma</h3>
-          <p>B.Tech CSE, 2nd Year</p>
+          <Avatar initials={user?.initials || 'SS'} size={64} online />
+          <h3>{user?.name || 'Sachin Sharma'}</h3>
+          <p>{user?.department || 'B.Tech CSE, 2nd Year'}</p>
           <Badge variant="success">✓ Verified Student</Badge>
         </div>
         <nav className="cm-profile__nav">
@@ -122,10 +122,10 @@ export default function Profile() {
           <section className="cm-profile__settings">
             <h2>Profile Settings</h2>
             <div className="cm-profile__form">
-              <div className="cm-sell__field"><label>Full Name</label><input type="text" defaultValue="Yash Oberoi" /></div>
-              <div className="cm-sell__field"><label>Campus Email</label><input type="email" defaultValue="yash.oberoi@university.edu" /></div>
-              <div className="cm-sell__field"><label>Hostel / Block</label><input type="text" defaultValue="CS Dept Hostel" /></div>
-              <div className="cm-sell__field"><label>Phone Number</label><input type="tel" defaultValue="+91 98XXX XXXXX" /></div>
+              <div className="cm-sell__field"><label>Full Name</label><input type="text" defaultValue={user?.name || 'Sachin Sharma'} /></div>
+              <div className="cm-sell__field"><label>Campus Email</label><input type="email" defaultValue={user?.email || 'sachin.sharma@chitkara.edu.in'} /></div>
+              <div className="cm-sell__field"><label>Hostel / Block</label><input type="text" defaultValue={user?.hostel || 'CS Dept Hostel'} /></div>
+              <div className="cm-sell__field"><label>Phone Number</label><input type="tel" defaultValue={user?.phone || '+91 98765 43210'} /></div>
               <Button>Save Changes</Button>
             </div>
           </section>

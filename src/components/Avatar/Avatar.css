@@ -8,17 +8,23 @@
   font-weight: 700;
   flex-shrink: 0;
   font-family: var(--font-display);
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  border: 2px solid var(--card);
+  user-select: none;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
 
 .cm-avatar__dot {
   position: absolute;
   bottom: -1px;
   right: -1px;
-  width: 30%;
-  height: 30%;
-  min-width: 8px;
-  min-height: 8px;
+  width: 28%;
+  height: 28%;
+  min-width: 9px;
+  min-height: 9px;
   background: var(--success);
   border-radius: 50%;
   border: 2px solid var(--card);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
 }

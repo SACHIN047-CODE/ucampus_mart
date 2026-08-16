@@ -11,7 +11,7 @@ import './Navbar.css';
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
-  const { wishlist } = useApp();
+  const { wishlist, user, logout } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -134,25 +134,64 @@ export default function Navbar() {
             )}
           </button>
 
+          {!user ? (
+            <Link to="/login" className="cm-nav__login">
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" y1="12" x2="3" y2="12" />
+                  </svg>
+                }
+              >
+                Login
+              </Button>
+            </Link>
+          ) : null}
+
           <Link to="/sell" className="cm-nav__sell">
             <Button variant="primary" size="sm" icon="+">Sell Item</Button>
           </Link>
 
-          <div className="cm-nav__profile" ref={profileRef}>
-            <button onClick={() => setProfileOpen((v) => !v)} aria-label="Profile menu">
-              <Avatar initials="YO" size={38} online />
-            </button>
-            {profileOpen && (
-              <div className="cm-nav__profile-menu scale-in">
-                <Link to="/profile" onClick={() => setProfileOpen(false)}>My Dashboard</Link>
-                <Link to="/profile?tab=listings" onClick={() => setProfileOpen(false)}>My Listings</Link>
-                <Link to="/wishlist" onClick={() => setProfileOpen(false)}>Wishlist</Link>
-                <Link to="/admin" onClick={() => setProfileOpen(false)}>Admin Panel</Link>
-                <div className="cm-nav__profile-sep" />
-                <Link to="/login" onClick={() => setProfileOpen(false)}>Log out</Link>
-              </div>
-            )}
-          </div>
+          {user ? (
+            <div className="cm-nav__profile" ref={profileRef}>
+              <button onClick={() => setProfileOpen((v) => !v)} aria-label="Profile menu" className="cm-nav__profile-btn">
+                <Avatar initials={user.initials || 'SS'} size={38} online />
+              </button>
+              {profileOpen && (
+                <div className="cm-nav__profile-menu scale-in">
+                  <div className="cm-nav__profile-header">
+                    <span className="cm-nav__profile-name">{user.name || 'Sachin Sharma'}</span>
+                    <span className="cm-nav__profile-email">{user.email || 'sachin.sharma@chitkara.edu.in'}</span>
+                  </div>
+                  <div className="cm-nav__profile-sep" />
+                  <Link to="/profile" onClick={() => setProfileOpen(false)}>My Dashboard</Link>
+                  <Link to="/profile?tab=listings" onClick={() => setProfileOpen(false)}>My Listings</Link>
+                  <Link to="/wishlist" onClick={() => setProfileOpen(false)}>Wishlist</Link>
+                  <Link to="/admin" onClick={() => setProfileOpen(false)}>Admin Panel</Link>
+                  <div className="cm-nav__profile-sep" />
+                  <button
+                    type="button"
+                    className="cm-nav__profile-logout"
+                    onClick={() => {
+                      setProfileOpen(false);
+                      logout();
+                    }}
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Log out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : null}
 
           <button className="cm-nav__burger" onClick={() => setMobileOpen(true)} aria-label="Open menu">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="7" x2="21" y2="7" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="17" x2="21" y2="17" /></svg>
@@ -177,9 +216,24 @@ export default function Navbar() {
             <Link to="/sell" onClick={() => setMobileOpen(false)}>Sell an Item</Link>
             <Link to="/wishlist" onClick={() => setMobileOpen(false)}>Wishlist</Link>
             <Link to="/messages" onClick={() => setMobileOpen(false)}>Messages</Link>
-            <Link to="/profile" onClick={() => setMobileOpen(false)}>My Dashboard</Link>
-            <Link to="/admin" onClick={() => setMobileOpen(false)}>Admin Panel</Link>
-            <Link to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
+            {user ? (
+              <>
+                <Link to="/profile" onClick={() => setMobileOpen(false)}>My Dashboard ({user.name})</Link>
+                <Link to="/admin" onClick={() => setMobileOpen(false)}>Admin Panel</Link>
+                <button
+                  type="button"
+                  className="cm-nav__mobile-logout"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    logout();
+                  }}
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <Link to="/login" onClick={() => setMobileOpen(false)}>Login / Sign In</Link>
+            )}
           </nav>
         </div>
       )}

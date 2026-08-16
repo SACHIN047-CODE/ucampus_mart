@@ -6,7 +6,7 @@ import AuthArt from './AuthArt';
 import './Auth.css';
 
 export default function VerifyOtp() {
-  const { showToast } = useApp();
+  const { showToast, user, login } = useApp();
   const navigate = useNavigate();
   const [digits, setDigits] = useState(['', '', '', '', '', '']);
   const refs = useRef([]);
@@ -28,6 +28,9 @@ export default function VerifyOtp() {
     if (digits.some((d) => d === '')) {
       showToast('Enter the full 6-digit code', 'danger');
       return;
+    }
+    if (!user) {
+      login({ name: 'Sachin Sharma', email: 'sachin.sharma@chitkara.edu.in', initials: 'SS' });
     }
     showToast('Email verified! Welcome to CampusMart.');
     navigate('/profile');

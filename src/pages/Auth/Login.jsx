@@ -6,7 +6,7 @@ import AuthArt from './AuthArt';
 import './Auth.css';
 
 export default function Login() {
-  const { showToast } = useApp();
+  const { showToast, login } = useApp();
   const navigate = useNavigate();
   const [showPw, setShowPw] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
@@ -19,6 +19,17 @@ export default function Login() {
     if (form.password.length < 6) errs.password = 'Password must be at least 6 characters';
     setErrors(errs);
     if (Object.keys(errs).length === 0) {
+      const emailPrefix = form.email.split('@')[0];
+      const displayName = emailPrefix.includes('.')
+        ? emailPrefix.split('.').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+        : emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+      const initials = displayName.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'SS';
+
+      login({
+        email: form.email,
+        name: displayName,
+        initials,
+      });
       showToast('Welcome back! Logged in successfully.');
       navigate('/profile');
     }
@@ -33,8 +44,26 @@ export default function Login() {
           <p>Log in to continue buying and selling on your campus.</p>
 
           <div className="cm-auth__social">
-            <button type="button" onClick={() => showToast('Google sign-in coming soon')}>Google</button>
-            <button type="button" onClick={() => showToast('Campus SSO coming soon')}>Campus SSO</button>
+            <button
+              type="button"
+              onClick={() => {
+                login({ name: 'Sachin Sharma', email: 'sachin.sharma@chitkara.edu.in', initials: 'SS' });
+                showToast('Welcome back, Sachin! Logged in with Google.');
+                navigate('/profile');
+              }}
+            >
+              Google
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                login({ name: 'Sachin Sharma', email: 'sachin.sharma@chitkara.edu.in', initials: 'SS' });
+                showToast('Welcome back, Sachin! Logged in via Campus SSO.');
+                navigate('/profile');
+              }}
+            >
+              Campus SSO
+            </button>
           </div>
           <div className="cm-auth__divider">or continue with email</div>
 

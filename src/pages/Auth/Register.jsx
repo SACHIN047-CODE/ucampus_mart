@@ -6,7 +6,7 @@ import AuthArt from './AuthArt';
 import './Auth.css';
 
 export default function Register() {
-  const { showToast } = useApp();
+  const { showToast, login } = useApp();
   const navigate = useNavigate();
   const [showPw, setShowPw] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -20,7 +20,13 @@ export default function Register() {
     if (form.password.length < 6) errs.password = 'Password must be at least 6 characters';
     setErrors(errs);
     if (Object.keys(errs).length === 0) {
-      showToast('Account created! Verify your email to continue.');
+      const initials = form.name.trim().split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'SS';
+      login({
+        name: form.name.trim(),
+        email: form.email,
+        initials,
+      });
+      showToast('Account created! Please verify your email.');
       navigate('/verify-otp');
     }
   };
