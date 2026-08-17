@@ -88,3 +88,89 @@
   .cm-admin__grid { grid-template-columns: 1fr; }
   .cm-admin__table { display: block; overflow-x: auto; }
 }
+
+/* Admin Auth Screen */
+.cm-admin-auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--nav-h));
+  background: var(--bg);
+  padding: 20px;
+}
+
+.cm-admin-auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: scaleIn 0.35s var(--ease) both;
+}
+
+.cm-admin-auth-card__header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.cm-admin-auth-card__icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.cm-admin-auth-card h2 {
+  font-size: 24px;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.cm-admin-auth-card p {
+  color: var(--text-soft);
+  font-size: 13.5px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Sidebar Lock Button */
+.cm-admin__lock-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 9px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  width: 100%;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cm-admin__lock-btn:hover {
+  background: rgba(225, 29, 36, 0.12);
+  color: #ff4d52;
+}
+
+/* Password Change Forms styling updates */
+.cm-admin__success-msg {
+  display: block;
+  color: var(--success);
+  font-size: 13.5px;
+  font-weight: 700;
+  background: rgba(22, 163, 74, 0.08);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  margin-top: 4px;
+}
