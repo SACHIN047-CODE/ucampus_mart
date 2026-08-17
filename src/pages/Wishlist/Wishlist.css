@@ -1,4 +1,4 @@
-.cm-wishlist { padding: 44px 32px 100px; }
-.cm-wishlist__head { margin-bottom: 36px; }
-.cm-wishlist__head h1 { font-size: clamp(26px, 3.5vw, 34px); margin: 10px 0 6px; }
-.cm-wishlist__head p { color: var(--text-muted); font-size: 14.5px; }
+.cm-wishlist { padding: 36px 32px 80px; }
+.cm-wishlist__head { margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+.cm-wishlist__head h1 { font-size: clamp(26px, 3.5vw, 36px); margin: 6px 0 6px; letter-spacing: -0.04em; }
+.cm-wishlist__head p { color: var(--text-muted); font-size: 14px; }

@@ -112,100 +112,132 @@ export default function Home() {
 
   return (
     <div className="cm-home">
-      {/* ---------- LIVE ACTIVITY TICKER ---------- */}
+      {/* ---------- LIVE ACTIVITY & TELEMETRY TICKER ---------- */}
       <div className="cm-live-ticker">
         <div className="cm-live-ticker__inner">
-          <div className="cm-live-ticker__badge">⚡ Chitkara Live</div>
+          <div className="cm-live-ticker__badge">READY ▍</div>
+          <div className="cm-live-ticker__mono-tag">CHITKARA · EDGE P2P</div>
           <div className="cm-live-ticker__marquee-wrap">
             <div className="cm-live-ticker__marquee">
               <span onClick={() => openProductById('p4')} className="ticker-item">
-                🥼 Priya N. listed <b>Lab Coat + Safety Goggles</b> for ₹180 near Chemistry Block
+                &gt; Priya N. listed <b>Lab Coat + Safety Goggles</b> for ₹180 near Chemistry Block
               </span>
               <span onClick={() => openProductById('p7')} className="ticker-item">
-                🖩 Aditya R. listed <b>Casio FX- scientific calculator</b> for ₹550 at Engineering Block
+                &gt; Aditya R. listed <b>Casio FX-991CW Calculator</b> for ₹550 at Engineering Block
               </span>
               <span onClick={() => openProductById('p2')} className="ticker-item">
-                💻 Rohan M. sold <b>MacBook Air M1</b> to a senior in Einstein Block C
+                &gt; Rohan M. listed <b>MacBook Air M1</b> at Einstein Block C
               </span>
               <span onClick={() => openProductById('p5')} className="ticker-item">
-                🪑 Karan S. saved <b>Foldable Study Table</b> in girls hostel parking
+                &gt; Karan S. saved <b>Foldable Study Table</b> near Socrates Hostel
               </span>
               <span onClick={() => openProductById('p22')} className="ticker-item">
-                🧪 Harsh V. listed <b>Drafting Kit (Civil Lab)</b> for ₹220 at Nehru Hostel
+                &gt; Harsh V. listed <b>Drafting Kit (Civil Lab)</b> for ₹220 at Nehru Hostel
               </span>
-              {/* Duplicate for infinite loop speed */}
+              {/* Duplicate for seamless infinite loop */}
               <span onClick={() => openProductById('p4')} className="ticker-item">
-                🥼 Priya N. listed <b>Lab Coat + Safety Goggles</b> for ₹180 near Chemistry Block
+                &gt; Priya N. listed <b>Lab Coat + Safety Goggles</b> for ₹180 near Chemistry Block
               </span>
               <span onClick={() => openProductById('p7')} className="ticker-item">
-                🖩 Aditya R. listed <b>Casio FX- scientific calculator</b> for ₹550 at Engineering Block
+                &gt; Aditya R. listed <b>Casio FX-991CW Calculator</b> for ₹550 at Engineering Block
               </span>
             </div>
           </div>
+          <div className="cm-live-ticker__right-tag">MMXXVI</div>
         </div>
       </div>
 
       {/* ---------- HERO ---------- */}
       <section className="cm-hero">
-        <div className="cm-hero__glow" />
+        <div className="cm-hero__ambient-glow" />
         <div className="container cm-hero__inner">
           <div className="cm-hero__copy slide-up">
-            <div className="cm-hero__brand-header">
-              <ChitkaraLogo type="mark" height={28} />
-              <span className="brand-pill">Explore Potential</span>
+            <div className="cm-hero__telemetry-header">
+              <span className="mono-badge">HSB · CHITKARA P2P</span>
+              <span className="mono-badge mono-badge--status">STATUS: ONLINE</span>
             </div>
-            <span className="cm-hero__eyebrow">Verified Students Only · Zero Listing Fees</span>
-            <h1>Buy &amp; Sell<br />Within <span>Chitkara Campus</span></h1>
-            <p>Find affordable second-hand books, electronics, hostel essentials, cycles, lab equipment, and more from verified students near you.</p>
             
-            {/* Campus Selector Buttons inside Hero */}
+            <h1 className="cm-hero__title">
+              Alright. Let’s fly.
+            </h1>
+            <p className="cm-hero__subtitle">
+              Buy, sell, and exchange books, electronics, cycles, and hostel gear directly with verified peers across Chitkara University. Zero middleman fees.
+            </p>
+
+            {/* Micro-Telemetry Console */}
+            <div className="cm-hero__console">
+              <div className="cm-console-line">&gt; waking edge node <span>online</span></div>
+              <div className="cm-console-line">&gt; indexing campus catalog <span>095 active listings</span></div>
+              <div className="cm-console-line">&gt; verified student network <span>4,800+ peers</span></div>
+              <div className="cm-console-line">&gt; trade protocol <span>100% direct handover</span></div>
+            </div>
+            
+            {/* Campus Selector Buttons */}
             <div className="cm-hero__campus-picker">
               <button 
                 className={`campus-btn ${activeCampus === 'Punjab Campus' ? 'active' : ''}`}
                 onClick={() => changeCampus('Punjab Campus')}
               >
-                Punjab Campus (Rajpura)
+                PUNJAB CAMPUS (RAJPURA)
               </button>
               <button 
                 className={`campus-btn ${activeCampus === 'Himachal Campus' ? 'active' : ''}`}
                 onClick={() => changeCampus('Himachal Campus')}
               >
-                Himachal Campus (Baddi)
+                HIMACHAL CAMPUS (BADDI)
               </button>
               <button 
                 className={`campus-btn ${activeCampus === 'Online Campus' ? 'active' : ''}`}
                 onClick={() => changeCampus('Online Campus')}
               >
-                Online Learning Center
+                ONLINE CAMPUS
               </button>
             </div>
 
             <div className="cm-hero__cta">
-              <Link to="/marketplace"><Button size="lg">Browse Marketplace</Button></Link>
+              <Link to="/marketplace"><Button size="lg" variant="primary">Browse Marketplace</Button></Link>
               <Link to="/sell"><Button size="lg" variant="secondary">Sell an Item</Button></Link>
             </div>
             <div className="cm-hero__search"><SearchBar size="lg" /></div>
           </div>
 
           <div className="cm-hero__art slide-up" style={{ animationDelay: '0.1s' }}>
+            {/* Large Tech Numeral from Reference Screenshot 1 */}
+            <div className="cm-hero__giant-number">
+              <span className="giant-num">095</span>
+              <span className="giant-num-label">LIVE CAMPUS DEALS</span>
+            </div>
+
+            {/* Featured Product Floating Card */}
             <div className="cm-hero__card cm-hero__card--main" onClick={() => openProductById('p2')}>
-              <img src={products[1].images[0]} alt="" />
-              <div className="cm-hero__card-tag">🔥 Trending Deal</div>
+              <div className="cm-pcard__glow-bar" />
+              <div className="hero-card-media">
+                <img src={products[1].images[0]} alt={products[1].title} />
+                <div className="cm-hero__card-tag">⚡ 01 · HOT DEAL OF THE DAY</div>
+                <div className="hero-card-views">👁 512 views</div>
+              </div>
               <div className="cm-hero__card-info">
-                <span>{products[1].title}</span>
-                <strong>₹{products[1].price.toLocaleString('en-IN')}</strong>
+                <div className="hero-card-top-row">
+                  <span className="card-cat">{products[1].category.toUpperCase()}</span>
+                  <span className="hero-save-badge">SAVE ₹28,900</span>
+                </div>
+                <strong>{products[1].title}</strong>
+                <div className="card-bottom">
+                  <div className="price-stack">
+                    <span className="card-price">₹{products[1].price.toLocaleString('en-IN')}</span>
+                    <span className="card-strike">₹{products[1].originalPrice.toLocaleString('en-IN')}</span>
+                  </div>
+                  <span className="card-loc">📍 {products[1].location}</span>
+                </div>
+                <div className="hero-card-action">
+                  <span>Click to Quick View →</span>
+                </div>
               </div>
             </div>
-            <div className="cm-hero__card cm-hero__card--float1" onClick={() => openProductById('p3')}>
-              <img src={products[2].images[0]} alt="" />
-              <div className="cm-hero__card-info cm-hero__card-info--sm">
-                <span>{products[2].title.slice(0, 20)}…</span>
-                <strong>₹{products[2].price.toLocaleString('en-IN')}</strong>
-              </div>
-            </div>
+
             <div className="cm-hero__pulse">
               <span className="cm-hero__pulse-dot" />
-              Active deals near <b>{activeCampus === 'Punjab Campus' ? 'Galileo Block' : activeCampus === 'Himachal Campus' ? 'Baddi Gate 3' : 'CIET building'}</b> · just now
+              <span>Active hub: <b>{activeCampus === 'Punjab Campus' ? 'Galileo Block' : activeCampus === 'Himachal Campus' ? 'Baddi Gate 3' : 'CIET Hub'}</b> · verified just now</span>
             </div>
           </div>
         </div>
@@ -223,10 +255,10 @@ export default function Home() {
         <div className="container overflow-visible">
           <div className="cm-section__head">
             <div>
-              <span className="cm-section__eyebrow">Explore</span>
-              <h2>Popular Categories</h2>
+              <span className="cm-section__eyebrow">01 · Explore</span>
+              <h2>popular.</h2>
             </div>
-            <Link to="/categories" className="cm-section__link">View all →</Link>
+            <Link to="/categories" className="cm-section__link">View all categories →</Link>
           </div>
           <div className="cm-cat-grid">
             {categories.slice(0, 10).map((c) => <CategoryCard key={c.id} category={c} />)}
@@ -240,9 +272,9 @@ export default function Home() {
           {/* LEFT: Chitkara Value Estimator */}
           <div className="cm-estimator-card">
             <div className="estimator-header">
-              <span className="est-eyebrow">Smart Calculator</span>
+              <span className="est-eyebrow">02 · Valuation Terminal</span>
               <h3>Chitkara Resell Estimator</h3>
-              <p>Wondering how much to list your study gear for? Get an instant valuation based on current campus demand.</p>
+              <p>Calculate realistic second-hand pricing based on real campus exchange history and current student demand.</p>
             </div>
             <form onSubmit={handleEstimateValue} className="estimator-form">
               <div className="form-row justify-between">
@@ -274,16 +306,16 @@ export default function Home() {
                   </select>
                 </div>
               </div>
-              <Button type="submit" variant="primary">Estimate Value</Button>
+              <Button type="submit" variant="primary">Calculate Estimate</Button>
             </form>
             
             {estimatedPrice && (
               <div className="estimate-result scale-in">
                 <span>Recommended Listing Range:</span>
-                <h3>₹{estimatedPrice.min.toLocaleString('en-IN')} - ₹{estimatedPrice.max.toLocaleString('en-IN')}</h3>
-                <p>Based on successful sales under the {activeCampus} catalog.</p>
+                <h3>₹{estimatedPrice.min.toLocaleString('en-IN')} — ₹{estimatedPrice.max.toLocaleString('en-IN')}</h3>
+                <p>Based on successful sales across the {activeCampus} peer network.</p>
                 <Link to="/sell">
-                  <Button size="sm" variant="outline">List This Item Now</Button>
+                  <Button size="sm" variant="secondary">List This Item Now</Button>
                 </Link>
               </div>
             )}
@@ -291,9 +323,9 @@ export default function Home() {
 
           {/* RIGHT: Dynamic Highlights */}
           <div className="cm-campus-highlight">
-            <div className="highlight-tag">🔥 Campus Spotlights</div>
-            <h3>Active Trading Zones</h3>
-            <p>Hotspots on the <strong>{activeCampus}</strong> map with high buying activity this week.</p>
+            <div className="highlight-tag">ZONE RADAR · ACTIVE</div>
+            <h3>Active Handover Hotspots</h3>
+            <p>Monitored meetup spots on the <strong>{activeCampus}</strong> map with high trade traffic.</p>
             <div className="hotspot-list">
               <div className="hotspot-item">
                 <span className="location-pin">📍</span>
@@ -318,7 +350,7 @@ export default function Home() {
               </div>
             </div>
             <div className="campus-notice">
-              <span>💡 Safety reminder: Meet in daylight at one of our active campus hotspots during trade handovers.</span>
+              <span>&gt; Protocol: Meet in open daylight campus zones for seamless physical handovers.</span>
             </div>
           </div>
         </div>
@@ -329,8 +361,8 @@ export default function Home() {
         <div className="container">
           <div className="cm-section__head flex-col items-start gap-12">
             <div>
-              <span className="cm-section__eyebrow">Just In ({activeCampus})</span>
-              <h2>Latest Campus Listings</h2>
+              <span className="cm-section__eyebrow">03 · Live Feed ({activeCampus.toUpperCase()})</span>
+              <h2>catalog.</h2>
             </div>
             {/* Category Ribbon Tabs */}
             <div className="cm-category-tabs">
@@ -338,7 +370,7 @@ export default function Home() {
                 className={`tab-btn ${selectedCategoryTab === 'all' ? 'active' : ''}`}
                 onClick={() => setSelectedCategoryTab('all')}
               >
-                All Items
+                ALL ITEMS
               </button>
               {categories.slice(0, 7).map(cat => (
                 <button
@@ -346,7 +378,7 @@ export default function Home() {
                   className={`tab-btn ${selectedCategoryTab === cat.id ? 'active' : ''}`}
                   onClick={() => setSelectedCategoryTab(cat.id)}
                 >
-                  {cat.icon} {cat.name}
+                  {cat.icon} {cat.name.toUpperCase()}
                 </button>
               ))}
             </div>
@@ -379,10 +411,10 @@ export default function Home() {
         <div className="container">
           <div className="cm-section__head">
             <div>
-              <span className="cm-section__eyebrow">Handpicked</span>
-              <h2>Featured Products</h2>
+              <span className="cm-section__eyebrow">04 · Verified Quality</span>
+              <h2>handpicked.</h2>
             </div>
-            <Link to="/marketplace" className="cm-section__link">View all →</Link>
+            <Link to="/marketplace" className="cm-section__link">Explore all listings →</Link>
           </div>
           <div className="cm-product-grid cm-product-grid--4">
             {featured.map((p, i) => (
@@ -402,10 +434,10 @@ export default function Home() {
         <div className="container">
           <div className="cm-section__head">
             <div>
-              <span className="cm-section__eyebrow">Most viewed</span>
-              <h2>Trending Products</h2>
+              <span className="cm-section__eyebrow">05 · High Velocity</span>
+              <h2>trending.</h2>
             </div>
-            <Link to="/marketplace" className="cm-section__link">View all →</Link>
+            <Link to="/marketplace" className="cm-section__link">Explore all listings →</Link>
           </div>
           <div className="cm-product-grid cm-product-grid--4">
             {trending.map((p, i) => (
@@ -426,8 +458,8 @@ export default function Home() {
           <div className="cm-split__col">
             <div className="cm-section__head cm-section__head--tight">
               <div>
-                <span className="cm-section__eyebrow" style={{ color: 'var(--success)' }}>Pay it forward</span>
-                <h2>Free Items</h2>
+                <span className="cm-section__eyebrow" style={{ color: 'var(--success)' }}>06 · Giveaways</span>
+                <h2>free items.</h2>
               </div>
             </div>
             <div className="cm-product-grid cm-product-grid--3">
@@ -443,8 +475,8 @@ export default function Home() {
           <div className="cm-split__col">
             <div className="cm-section__head cm-section__head--tight">
               <div>
-                <span className="cm-section__eyebrow" style={{ color: 'var(--warning)' }}>Help a peer out</span>
-                <h2>Wanted Items</h2>
+                <span className="cm-section__eyebrow" style={{ color: 'var(--warning)' }}>07 · Requests</span>
+                <h2>wanted items.</h2>
               </div>
             </div>
             <div className="cm-product-grid cm-product-grid--3">
@@ -465,8 +497,8 @@ export default function Home() {
         <div className="container">
           <div className="cm-section__head">
             <div>
-              <span className="cm-section__eyebrow">Word around campus</span>
-              <h2>What Students Say</h2>
+              <span className="cm-section__eyebrow">08 · Verified Peer Feedback</span>
+              <h2>reviews.</h2>
             </div>
           </div>
           <div className="cm-review-grid">
@@ -479,10 +511,11 @@ export default function Home() {
       <section className="cm-cta-band">
         <div className="container cm-cta-band__inner">
           <div>
-            <h2>Got something gathering dust in your hostel room?</h2>
-            <p>List it in under 2 minutes and reach thousands of students across Chitkara University.</p>
+            <span className="cta-mono-tag">JOIN 4,800+ STUDENTS</span>
+            <h2>Got study gear gathering dust in your hostel room?</h2>
+            <p>List it in under 2 minutes and connect directly with fellow Chitkara students.</p>
           </div>
-          <Link to="/sell"><Button size="lg" variant="outline-light">Sell an Item</Button></Link>
+          <Link to="/sell"><Button size="lg" variant="outline-light">Sell an Item Now</Button></Link>
         </div>
       </section>
 

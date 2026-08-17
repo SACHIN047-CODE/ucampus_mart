@@ -5,65 +5,126 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-display);
   font-weight: 600;
+  letter-spacing: -0.01em;
   white-space: nowrap;
-  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), background 0.2s var(--ease), opacity 0.2s;
+  transition: all 0.2s var(--ease);
 }
 
-.cm-btn:active { transform: scale(0.97); }
-.cm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.cm-btn:active { transform: translateY(1px) scale(0.98); }
+.cm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.cm-btn--sm { padding: 8px 16px; font-size: 13px; }
-.cm-btn--md { padding: 12px 24px; font-size: 14.5px; }
-.cm-btn--lg { padding: 15px 32px; font-size: 16px; }
+.cm-btn--sm { padding: 7px 14px; font-size: 13px; border-radius: 6px; }
+.cm-btn--md { padding: 10px 20px; font-size: 14px; }
+.cm-btn--lg { padding: 13px 26px; font-size: 15px; border-radius: 10px; }
 
 .cm-btn--full { width: 100%; }
 
+/* Primary: Crisp High-Contrast Action */
 .cm-btn--primary {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.cm-btn--primary:hover {
+  background: var(--primary);
+  border-color: var(--primary);
   color: #fff;
-  box-shadow: var(--shadow-float);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px var(--primary-glow);
 }
-.cm-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(37,99,235,0.28); }
 
+/* Red Variant: Crisp Chitkara Red */
+.cm-btn--accent,
+.cm-btn--red {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 4px 14px var(--primary-glow);
+}
+.cm-btn--accent:hover,
+.cm-btn--red:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Secondary: Crisp Architectural Outline */
 .cm-btn--secondary {
-  background: var(--card);
-  color: var(--primary);
-  border: 1.5px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
-.cm-btn--secondary:hover { border-color: var(--primary); transform: translateY(-2px); }
+.cm-btn--secondary:hover {
+  border-color: var(--text);
+  background: var(--bg-subtle);
+  transform: translateY(-1px);
+}
 
-.cm-btn--ghost {
+/* Outline: Subtle hairline */
+.cm-btn--outline {
   background: transparent;
   color: var(--text);
+  border: 1px solid var(--border);
 }
-.cm-btn--ghost:hover { background: rgba(var(--primary-rgb), 0.08); }
+.cm-btn--outline:hover {
+  border-color: var(--text);
+  background: rgba(var(--primary-rgb), 0.04);
+  color: var(--primary);
+}
 
+/* Ghost */
+.cm-btn--ghost {
+  background: transparent;
+  color: var(--text-muted);
+}
+.cm-btn--ghost:hover {
+  background: var(--bg-subtle);
+  color: var(--text);
+}
+
+/* Danger */
 .cm-btn--danger {
   background: var(--danger);
   color: #fff;
+  border-color: var(--danger);
 }
-.cm-btn--danger:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(239,68,68,0.3); }
+.cm-btn--danger:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+}
 
+/* Outline Light */
 .cm-btn--outline-light {
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.06);
   color: #fff;
-  border: 1.5px solid rgba(255,255,255,0.5);
-  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
 }
-.cm-btn--outline-light:hover { background: rgba(255,255,255,0.22); transform: translateY(-2px); }
+.cm-btn--outline-light:hover {
+  background: #ffffff;
+  color: #000;
+  border-color: #ffffff;
+  transform: translateY(-1px);
+}
 
-.cm-btn__icon { display: inline-flex; align-items: center; font-size: 1.1em; }
+.cm-btn__icon { display: inline-flex; align-items: center; font-size: 1.05em; }
 
 .cm-ripple {
   position: absolute;
   border-radius: 50%;
   transform: scale(0);
-  background: rgba(255,255,255,0.5);
-  animation: ripple 0.6s linear;
+  background: rgba(255, 255, 255, 0.3);
+  animation: ripple 0.5s linear;
   pointer-events: none;
+}
+@keyframes ripple {
+  to { transform: scale(2.8); opacity: 0; }
 }
