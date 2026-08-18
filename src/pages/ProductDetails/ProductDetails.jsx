@@ -10,13 +10,13 @@ import './ProductDetails.css';
 
 export default function ProductDetails() {
   const { id } = useParams();
-  const product = getProductById(id);
-  const { toggleWishlist, isWishlisted, showToast } = useApp();
+  const { products, toggleWishlist, isWishlisted, showToast } = useApp();
+  const product = products.find((p) => String(p.id) === String(id)) || getProductById(id);
   const [activeImg, setActiveImg] = useState(0);
 
   if (!product) return <Navigate to="/marketplace" replace />;
 
-  const related = getRelatedProducts(product);
+  const related = products.filter((p) => p.category === product.category && String(p.id) !== String(product.id)).slice(0, 4);
   const wished = isWishlisted(product.id);
 
   return (

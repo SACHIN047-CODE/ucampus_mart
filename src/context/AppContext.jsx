@@ -4,7 +4,14 @@ import { products as seedProducts } from '../data/products';
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  const [products] = useState(seedProducts);
+  const [products, setProducts] = useState(() => {
+    try {
+      const saved = localStorage.getItem('campusmart-products');
+      return saved ? JSON.parse(saved) : seedProducts;
+    } catch {
+      return seedProducts;
+    }
+  });
   const [wishlist, setWishlist] = useState(() => {
     const saved = localStorage.getItem('campusmart-wishlist');
     return saved ? JSON.parse(saved) : [];
@@ -22,6 +29,31 @@ export function AppProvider({ children }) {
       setToasts((t) => t.filter((toast) => toast.id !== id));
     }, 3200);
   }, []);
+
+  const addProduct = useCallback((newProduct) => {
+    setProducts((prev) => {
+      const updated = [newProduct, ...prev];
+      try {
+        localStorage.setItem('campusmart-products', JSON.stringify(updated));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return updated;
+    });
+  }, []);
+
+  const deleteProduct = useCallback((productId) => {
+    setProducts((prev) => {
+      const updated = prev.filter((p) => String(p.id) !== String(productId));
+      try {
+        localStorage.setItem('campusmart-products', JSON.stringify(updated));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return updated;
+    });
+    showToast('Listing removed successfully', 'default');
+  }, [showToast]);
 
   const login = useCallback((userData = {}) => {
     const email = userData.email || 'sachin.sharma@chitkara.edu.in';
@@ -63,6 +95,8 @@ export function AppProvider({ children }) {
     <AppContext.Provider
       value={{
         products,
+        addProduct,
+        deleteProduct,
         wishlist,
         toggleWishlist,
         isWishlisted,

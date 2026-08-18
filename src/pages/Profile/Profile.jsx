@@ -16,13 +16,22 @@ const TABS = [
 ];
 
 export default function Profile() {
-  const { products, wishlist, user } = useApp();
+  const { products, wishlist, user, deleteProduct, showToast } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState(searchParams.get('tab') || 'listings');
-  const myListings = products.slice(0, 5);
+  
+  const myListings = products.filter((p) => 
+    p.isMine || p.seller === (user?.name || 'Sachin Sharma') || (user && p.sellerEmail === user.email)
+  );
   const saved = products.filter((p) => wishlist.includes(p.id));
 
   const changeTab = (id) => { setTab(id); setSearchParams({ tab: id }); };
+
+  const handleDeleteListing = (productId, title) => {
+    if (window.confirm(`Are you sure you want to remove "${title}"?`)) {
+      deleteProduct(productId);
+    }
+  };
 
   return (
     <div className="cm-profile container">
@@ -52,23 +61,35 @@ export default function Profile() {
 
         {tab === 'listings' && (
           <section>
-            <h2>My Listings</h2>
-            <div className="cm-profile__table">
-              {myListings.map((p) => (
-                <div className="cm-profile__row" key={p.id}>
-                  <img src={p.images[0]} alt="" />
-                  <div className="cm-profile__row-info">
-                    <strong>{p.title}</strong>
-                    <span>{p.free ? 'Free' : `₹${p.price.toLocaleString('en-IN')}`} · {p.views} views</span>
-                  </div>
-                  <Badge variant="success">Active</Badge>
-                  <div className="cm-profile__row-actions">
-                    <button>Edit</button>
-                    <button className="danger">Delete</button>
-                  </div>
-                </div>
-              ))}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2>My Listings</h2>
+              <Button size="sm" as="a" onClick={() => (window.location.href = '/sell')}>+ List New Item</Button>
             </div>
+            {myListings.length === 0 ? (
+              <EmptyState 
+                icon="📦" 
+                title="No active listings yet" 
+                subtitle="Got items or study material to sell? List them in under 2 minutes." 
+                action={<Button as="a" onClick={() => (window.location.href = '/sell')}>Sell an Item</Button>} 
+              />
+            ) : (
+              <div className="cm-profile__table">
+                {myListings.map((p) => (
+                  <div className="cm-profile__row" key={p.id}>
+                    <img src={p.images[0]} alt="" />
+                    <div className="cm-profile__row-info">
+                      <strong>{p.title}</strong>
+                      <span>{p.free ? 'Free' : `₹${p.price.toLocaleString('en-IN')}`} · {p.views || 1} views</span>
+                    </div>
+                    <Badge variant="success">Active</Badge>
+                    <div className="cm-profile__row-actions">
+                      <button onClick={() => showToast('Edit modal opened for ' + p.title)}>Edit</button>
+                      <button className="danger" onClick={() => handleDeleteListing(p.id, p.title)}>Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
 

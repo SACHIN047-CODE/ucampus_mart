@@ -36,8 +36,11 @@ export default function Marketplace() {
     });
     if (sort === 'price-low') list = [...list].sort((a, b) => a.price - b.price);
     if (sort === 'price-high') list = [...list].sort((a, b) => b.price - a.price);
-    if (sort === 'popular') list = [...list].sort((a, b) => b.views - a.views);
-    if (sort === 'newest') list = [...list].reverse();
+    if (sort === 'popular') list = [...list].sort((a, b) => (b.views || 0) - (a.views || 0));
+    if (sort === 'newest') {
+      // products array is ordered newest first
+      list = [...list];
+    }
     return list;
   }, [products, query, category, condition, maxPrice, sort]);
 

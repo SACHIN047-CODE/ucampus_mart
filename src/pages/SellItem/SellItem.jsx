@@ -8,7 +8,7 @@ import './SellItem.css';
 const CONDITIONS = ['New', 'Like New', 'Good', 'Fair'];
 
 export default function SellItem() {
-  const { showToast } = useApp();
+  const { showToast, addProduct, user } = useApp();
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
   const [dragActive, setDragActive] = useState(false);
@@ -19,9 +19,19 @@ export default function SellItem() {
   const fileRef = useRef(null);
 
   const addFiles = (fileList) => {
-    const files = Array.from(fileList).slice(0, 6 - images.length);
-    const mapped = files.map((f) => ({ url: URL.createObjectURL(f), name: f.name }));
-    setImages((prev) => [...prev, ...mapped]);
+    const remainingSlots = 6 - images.length;
+    const files = Array.from(fileList).slice(0, remainingSlots);
+    
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImages((prev) => {
+          if (prev.length >= 6) return prev;
+          return [...prev, { url: e.target.result, name: file.name }];
+        });
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleDrop = (e) => {
@@ -53,8 +63,38 @@ export default function SellItem() {
       showToast('Please fix the highlighted fields', 'danger');
       return;
     }
-    showToast('Listing published! It\u2019s now live on the marketplace.');
-    navigate('/marketplace');
+
+    const priceNum = Number(form.price);
+    const newId = 'p-' + Date.now();
+    const fallbackImage = `https://picsum.photos/seed/${form.category || 'item'}-${Date.now()}/600/450`;
+    const imageUrls = images.length > 0 ? images.map((img) => img.url) : [fallbackImage];
+
+    const newProduct = {
+      id: newId,
+      title: form.title.trim(),
+      description: form.description.trim(),
+      category: form.category,
+      condition: form.condition,
+      price: priceNum,
+      originalPrice: priceNum > 0 ? Math.round(priceNum * 1.25) : 0,
+      negotiable: Boolean(form.negotiable),
+      location: form.location.trim(),
+      hostel: user?.hostel || form.location.trim(),
+      seller: user?.name || 'Verified Student',
+      sellerAvatar: user?.initials || 'VS',
+      sellerEmail: user?.email || '',
+      postedAt: 'Just now',
+      createdAt: Date.now(),
+      views: 1,
+      free: priceNum === 0,
+      wanted: false,
+      isMine: true,
+      images: imageUrls,
+    };
+
+    addProduct(newProduct);
+    showToast('🎉 Listing published! It’s now live across the campus.');
+    navigate(`/product/${newId}`);
   };
 
   return (
