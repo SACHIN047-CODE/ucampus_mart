@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { categories } from '../../data/categories';
 import { useApp } from '../../context/AppContext';
+import { getRelevantFallbackImage } from '../../utils/imageUtils';
 import Button from '../../components/Button/Button';
 import './SellItem.css';
 
@@ -52,7 +53,6 @@ export default function SellItem() {
     if (!form.condition) errs.condition = 'Choose a condition';
     if (form.price === '' || Number(form.price) < 0) errs.price = 'Enter a valid price (0 for free)';
     if (!form.location.trim()) errs.location = 'Add a pickup location';
-    if (images.length === 0) errs.images = 'Add at least one photo';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -64,9 +64,9 @@ export default function SellItem() {
       return;
     }
 
-    const priceNum = Number(form.price);
     const newId = 'p-' + Date.now();
-    const fallbackImage = `https://picsum.photos/seed/${form.category || 'item'}-${Date.now()}/600/450`;
+    const priceNum = Number(form.price);
+    const fallbackImage = getRelevantFallbackImage(form.title, form.category);
     const imageUrls = images.length > 0 ? images.map((img) => img.url) : [fallbackImage];
 
     const newProduct = {
@@ -107,7 +107,7 @@ export default function SellItem() {
 
       <form className="cm-sell__form" onSubmit={handleSubmit} noValidate>
         <div className="cm-sell__field">
-          <label>Product Images</label>
+          <label>Product Images (Optional)</label>
           <div
             className={`cm-dropzone ${dragActive ? 'is-active' : ''} ${errors.images ? 'has-error' : ''}`}
             onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
@@ -118,7 +118,7 @@ export default function SellItem() {
             <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={(e) => addFiles(e.target.files)} />
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4" /><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>
             <p><b>Drag & drop</b> your photos here, or click to browse</p>
-            <span>Up to 6 images · JPG or PNG</span>
+            <span>Up to 6 images · JPG or PNG (Auto-generates relevant fallback photo if unuploaded)</span>
           </div>
           {errors.images && <span className="cm-field-error">{errors.images}</span>}
 
@@ -126,7 +126,7 @@ export default function SellItem() {
             <div className="cm-sell__previews">
               {images.map((img, i) => (
                 <div key={i} className="cm-sell__preview">
-                  <img src={img.url} alt="" />
+                  <img src={img.url} alt="Uploaded product preview" />
                   <button type="button" onClick={() => removeImage(i)}>×</button>
                 </div>
               ))}

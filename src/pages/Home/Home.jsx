@@ -11,6 +11,7 @@ import StatsCard from '../../components/StatsCard/StatsCard';
 import Button from '../../components/Button/Button';
 import ChitkaraLogo from '../../components/ChitkaraLogo/ChitkaraLogo';
 import QuickViewModal from '../../components/QuickViewModal/QuickViewModal';
+import ProductImage from '../../components/ProductImage/ProductImage';
 import './Home.css';
 
 export default function Home() {
@@ -212,7 +213,7 @@ export default function Home() {
             <div className="cm-hero__card cm-hero__card--main" onClick={() => openProductById('p2')}>
               <div className="cm-pcard__glow-bar" />
               <div className="hero-card-media">
-                <img src={products[1].images[0]} alt={products[1].title} />
+                <ProductImage src={products[1]?.images?.[0]} alt={products[1]?.title} product={products[1]} />
                 <div className="cm-hero__card-tag">⚡ 01 · HOT DEAL OF THE DAY</div>
                 <div className="hero-card-views">👁 512 views</div>
               </div>

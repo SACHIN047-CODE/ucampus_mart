@@ -1,13 +1,50 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { products as seedProducts } from '../data/products';
+import { getRelevantFallbackImage } from '../utils/imageUtils';
 
 const AppContext = createContext();
+
+const seedNotifications = [
+  {
+    id: 'n1',
+    message: 'Ananya Sharma showed interest in your "Engineering Mathematics" book.',
+    createdAt: new Date(Date.now() - 5 * 60000).toISOString(),
+    read: false,
+    type: 'interest'
+  },
+  {
+    id: 'n2',
+    message: 'Rohan Mehta sent you a message: "Great, I can pick it up tomorrow"',
+    createdAt: new Date(Date.now() - 60 * 60000).toISOString(),
+    read: false,
+    type: 'message'
+  },
+  {
+    id: 'n3',
+    message: 'Your listing "MacBook Air M1" has been successfully posted.',
+    createdAt: new Date(Date.now() - 24 * 3600000).toISOString(),
+    read: true,
+    type: 'system'
+  }
+];
 
 export function AppProvider({ children }) {
   const [products, setProducts] = useState(() => {
     try {
       const saved = localStorage.getItem('campusmart-products');
-      return saved ? JSON.parse(saved) : seedProducts;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const hasPicsum = parsed.some((p) => p.images && p.images.some((img) => typeof img === 'string' && img.includes('picsum.photos')));
+        if (hasPicsum) {
+          localStorage.setItem('campusmart-products', JSON.stringify(seedProducts));
+          return seedProducts;
+        }
+        return parsed.map((p) => ({
+          ...p,
+          images: Array.isArray(p.images) && p.images.length > 0 ? p.images : [getRelevantFallbackImage(p.title, p.category)]
+        }));
+      }
+      return seedProducts;
     } catch {
       return seedProducts;
     }
@@ -22,12 +59,64 @@ export function AppProvider({ children }) {
   });
   const [toasts, setToasts] = useState([]);
 
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const saved = localStorage.getItem('campusmart-notifications');
+      return saved ? JSON.parse(saved) : seedNotifications;
+    } catch {
+      return seedNotifications;
+    }
+  });
+
   const showToast = useCallback((message, type = 'success') => {
     const id = Date.now() + Math.random();
     setToasts((t) => [...t, { id, message, type }]);
     setTimeout(() => {
       setToasts((t) => t.filter((toast) => toast.id !== id));
     }, 3200);
+  }, []);
+
+  const addNotification = useCallback((message, type = 'system') => {
+    setNotifications((prev) => {
+      const newNotif = {
+        id: 'notif-' + Date.now() + Math.random(),
+        message,
+        createdAt: new Date().toISOString(),
+        read: false,
+        type
+      };
+      const updated = [newNotif, ...prev];
+      try {
+        localStorage.setItem('campusmart-notifications', JSON.stringify(updated));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return updated;
+    });
+  }, []);
+
+  const markNotificationRead = useCallback((id) => {
+    setNotifications((prev) => {
+      const updated = prev.map((n) => (n.id === id ? { ...n, read: true } : n));
+      try {
+        localStorage.setItem('campusmart-notifications', JSON.stringify(updated));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return updated;
+    });
+  }, []);
+
+  const markAllNotificationsRead = useCallback(() => {
+    setNotifications((prev) => {
+      const updated = prev.map((n) => ({ ...n, read: true }));
+      try {
+        localStorage.setItem('campusmart-notifications', JSON.stringify(updated));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return updated;
+    });
   }, []);
 
   const addProduct = useCallback((newProduct) => {
@@ -40,10 +129,14 @@ export function AppProvider({ children }) {
       }
       return updated;
     });
-  }, []);
+    addNotification(`Your listing "${newProduct.title}" was successfully posted.`, 'system');
+  }, [addNotification]);
 
   const deleteProduct = useCallback((productId) => {
+    let deletedTitle = '';
     setProducts((prev) => {
+      const target = prev.find((p) => String(p.id) === String(productId));
+      if (target) deletedTitle = target.title;
       const updated = prev.filter((p) => String(p.id) !== String(productId));
       try {
         localStorage.setItem('campusmart-products', JSON.stringify(updated));
@@ -52,8 +145,11 @@ export function AppProvider({ children }) {
       }
       return updated;
     });
+    if (deletedTitle) {
+      addNotification(`Your listing "${deletedTitle}" was marked as sold and removed.`, 'system');
+    }
     showToast('Listing removed successfully', 'default');
-  }, [showToast]);
+  }, [addNotification, showToast]);
 
   const login = useCallback((userData = {}) => {
     const email = userData.email || 'sachin.sharma@chitkara.edu.in';
@@ -91,6 +187,8 @@ export function AppProvider({ children }) {
 
   const isWishlisted = (id) => wishlist.includes(id);
 
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
   return (
     <AppContext.Provider
       value={{
@@ -106,6 +204,11 @@ export function AppProvider({ children }) {
         logout,
         toasts,
         showToast,
+        notifications,
+        unreadCount,
+        addNotification,
+        markNotificationRead,
+        markAllNotificationsRead,
       }}
     >
       {children}

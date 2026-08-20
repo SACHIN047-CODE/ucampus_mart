@@ -20,7 +20,7 @@ const SAMPLE_MESSAGES = {
 };
 
 export default function Messages() {
-  const { showToast } = useApp();
+  const { showToast, addNotification } = useApp();
   const [activeId, setActiveId] = useState('t1');
   const [draft, setDraft] = useState('');
   const [messages, setMessages] = useState(SAMPLE_MESSAGES);
@@ -30,11 +30,23 @@ export default function Messages() {
   const send = (e) => {
     e.preventDefault();
     if (!draft.trim()) return;
+    const sentText = draft;
     setMessages((m) => ({
       ...m,
-      [activeId]: [...(m[activeId] || []), { from: 'me', text: draft, time: 'Now' }],
+      [activeId]: [...(m[activeId] || []), { from: 'me', text: sentText, time: 'Now' }],
     }));
     setDraft('');
+
+    // Simulate reply and notification after 2s
+    setTimeout(() => {
+      const replyMsg = `Thanks for your message! Let's arrange a time to meet up.`;
+      setMessages((m) => ({
+        ...m,
+        [activeId]: [...(m[activeId] || []), { from: 'them', text: replyMsg, time: 'Now' }],
+      }));
+      addNotification(`${active.name} sent you a message: "${replyMsg}"`, 'message');
+      showToast(`New message from ${active.name}`);
+    }, 2000);
   };
 
   return (

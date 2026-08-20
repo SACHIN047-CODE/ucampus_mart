@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Avatar from '../../components/Avatar/Avatar';
 import Badge from '../../components/Badge/Badge';
 import Button from '../../components/Button/Button';
+import ProductImage from '../../components/ProductImage/ProductImage';
 import { useApp } from '../../context/AppContext';
 import { categories } from '../../data/categories';
 import '../Auth/Auth.css';
@@ -399,7 +400,7 @@ export default function AdminDashboard() {
                 <tbody>
                   {pending.map((p) => (
                     <tr key={p.id}>
-                      <td className="cm-admin__td-item"><img src={p.images[0]} alt="" />{p.title}</td>
+                      <td className="cm-admin__td-item"><ProductImage src={p.images?.[0]} alt={p.title} product={p} />{p.title}</td>
                       <td>{p.seller}</td>
                       <td>{p.free ? 'Free' : `₹${p.price.toLocaleString('en-IN')}`}</td>
                       <td><Badge variant="warning">Pending</Badge></td>
@@ -440,7 +441,7 @@ export default function AdminDashboard() {
               <tbody>
                 {products.map((p) => (
                   <tr key={p.id}>
-                    <td className="cm-admin__td-item"><img src={p.images[0]} alt="" />{p.title}</td>
+                    <td className="cm-admin__td-item"><ProductImage src={p.images?.[0]} alt={p.title} product={p} />{p.title}</td>
                     <td style={{ textTransform: 'capitalize' }}>{p.category}</td>
                     <td>{p.free ? 'Free' : `₹${p.price.toLocaleString('en-IN')}`}</td>
                     <td>{p.views}</td>

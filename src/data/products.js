@@ -1,5 +1,3 @@
-const img = (seed) => `https://picsum.photos/seed/${seed}/600/450`;
-
 export const products = [
   {
     id: 'p1',
@@ -17,7 +15,11 @@ export const products = [
     views: 143,
     free: false,
     wanted: false,
-    images: [img('math1'), img('math2'), img('math3')],
+    images: [
+      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop',
+    ],
     description:
       'Well-maintained copy with handwritten notes in the margins for tricky derivations. No missing pages, minimal highlighting. Great for 2nd/3rd year mechanical and civil students.',
   },
@@ -37,7 +39,11 @@ export const products = [
     views: 512,
     free: false,
     wanted: false,
-    images: [img('mac1'), img('mac2'), img('mac3')],
+    images: [
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=600&auto=format&fit=crop',
+    ],
     description:
       'Battery health 94%. Barely used this semester, upgrading to a Pro for CAD work. Comes with original charger and box. Screen and body flawless — always kept in a sleeve.',
   },
@@ -57,7 +63,10 @@ export const products = [
     views: 88,
     free: false,
     wanted: false,
-    images: [img('cycle1'), img('cycle2')],
+    images: [
+      'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=600&auto=format&fit=crop',
+    ],
     description:
       'Reliable campus cycle, gets you from hostel to department in under 6 minutes. New tube fitted last month. Basket included. Selling because I am graduating this May.',
   },
@@ -77,7 +86,10 @@ export const products = [
     views: 61,
     free: false,
     wanted: false,
-    images: [img('lab1'), img('lab2')],
+    images: [
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&auto=format&fit=crop',
+    ],
     description:
       'Washed and stain-free lab coat, medium size, plus unused safety goggles still sealed. Perfect for first-year chemistry or biotech labs.',
   },
@@ -97,7 +109,10 @@ export const products = [
     views: 74,
     free: false,
     wanted: false,
-    images: [img('table1'), img('table2')],
+    images: [
+      'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&auto=format&fit=crop',
+    ],
     description:
       'Compact foldable study table, easy to fit in small hostel rooms. Chair has a small scuff on one leg but stands sturdy. Can help carry to your room on campus.',
   },
@@ -117,7 +132,10 @@ export const products = [
     views: 122,
     free: false,
     wanted: false,
-    images: [img('jacket1'), img('jacket2')],
+    images: [
+      'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=600&auto=format&fit=crop',
+    ],
     description:
       'Worn twice, way oversized on me. Classic blue wash, brass buttons. Great campus fest outfit piece.',
   },
@@ -137,7 +155,10 @@ export const products = [
     views: 201,
     free: false,
     wanted: false,
-    images: [img('calc1'), img('calc2')],
+    images: [
+      'https://images.unsplash.com/photo-1611125832047-1d7ad1e8e48b?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop',
+    ],
     description:
       'All functions tested and working, includes cover. Ideal for exams — this exact model is approved for most university exam halls.',
   },
@@ -157,7 +178,10 @@ export const products = [
     views: 55,
     free: false,
     wanted: false,
-    images: [img('badminton1'), img('badminton2')],
+    images: [
+      'https://images.unsplash.com/photo-1626225967045-9440e5a6f2b5?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1613918108466-292b78a8ef95?w=600&auto=format&fit=crop',
+    ],
     description:
       'Yonex-style rackets in good condition with a tube of 6 shuttlecocks. Great for evening matches at the campus courts.',
   },
@@ -177,7 +201,10 @@ export const products = [
     views: 167,
     free: false,
     wanted: false,
-    images: [img('kettle1'), img('kettle2')],
+    images: [
+      'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f6?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&auto=format&fit=crop',
+    ],
     description:
       'Auto shut-off, used for about 3 months. Great for late-night Maggi and tea. Selling because I am moving to a PG with a kitchen.',
   },
@@ -197,7 +224,10 @@ export const products = [
     views: 245,
     free: false,
     wanted: false,
-    images: [img('cormen1'), img('cormen2')],
+    images: [
+      'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop',
+    ],
     description:
       'The CLRS bible. Spine slightly worn from heavy use but every page intact. Solved a lot of problems from this — comes with my rough notes as a bonus.',
   },
@@ -217,7 +247,9 @@ export const products = [
     views: 96,
     free: true,
     wanted: false,
-    images: [img('ncert1')],
+    images: [
+      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop',
+    ],
     description:
       'Clearing out my JEE prep books — free to whoever needs them. Slightly used but complete, no missing pages. First come, first served.',
   },
@@ -237,7 +269,9 @@ export const products = [
     views: 40,
     free: true,
     wanted: false,
-    images: [img('bucket1')],
+    images: [
+      'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop',
+    ],
     description:
       'Graduating and clearing my room. Bucket, mug, and a set of hangers, all functional. Pickup only, ground floor room.',
   },
@@ -257,7 +291,9 @@ export const products = [
     views: 33,
     free: false,
     wanted: true,
-    images: [img('guitar1')],
+    images: [
+      'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&auto=format&fit=crop',
+    ],
     description:
       'Looking for a budget-friendly acoustic guitar, working condition, for the music club. Happy to pick up from anywhere on campus.',
   },
@@ -277,7 +313,9 @@ export const products = [
     views: 21,
     free: false,
     wanted: true,
-    images: [img('drafter1')],
+    images: [
+      'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&auto=format&fit=crop',
+    ],
     description:
       'Second year civil student, need a drawing board with clips before next week\'s submission. Will pay a fair price for a used one.',
   },
@@ -297,7 +335,11 @@ export const products = [
     views: 388,
     free: false,
     wanted: false,
-    images: [img('iphone1'), img('iphone2'), img('iphone3')],
+    images: [
+      'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop',
+    ],
     description:
       'Battery health 88%. Screen has minor edge scratches, doesn\'t affect display. Selling with a case and unused earphones I never opened.',
   },
@@ -317,7 +359,9 @@ export const products = [
     views: 47,
     free: false,
     wanted: false,
-    images: [img('almirah1')],
+    images: [
+      'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600&auto=format&fit=crop',
+    ],
     description:
       'Sturdy steel almirah with lock and key, fits well in standard hostel rooms. Minor rust spot on the back, not visible once placed against wall.',
   },
@@ -337,7 +381,10 @@ export const products = [
     views: 155,
     free: false,
     wanted: false,
-    images: [img('shoes1'), img('shoes2')],
+    images: [
+      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&auto=format&fit=crop',
+    ],
     description:
       'Bought for a half-marathon I ended up not running. Worn twice around the track, basically new. Size UK 9 / EU 43.',
   },
@@ -357,7 +404,10 @@ export const products = [
     views: 178,
     free: false,
     wanted: false,
-    images: [img('jbl1'), img('jbl2')],
+    images: [
+      'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&auto=format&fit=crop',
+    ],
     description:
       'Great sound for the size, waterproof, battery lasts a full study session. Comes with charging cable.',
   },
@@ -377,7 +427,9 @@ export const products = [
     views: 132,
     free: false,
     wanted: false,
-    images: [img('clayden1')],
+    images: [
+      'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600&auto=format&fit=crop',
+    ],
     description:
       'The go-to reference for reaction mechanisms. Some highlighter marks in the first three chapters, rest is clean.',
   },
@@ -397,7 +449,10 @@ export const products = [
     views: 261,
     free: false,
     wanted: false,
-    images: [img('fridge1'), img('fridge2')],
+    images: [
+      'https://images.unsplash.com/photo-1584992236310-6edddc08acff?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&auto=format&fit=crop',
+    ],
     description:
       'Two years old, cools well, minor dent on the side that doesn\'t affect function. Ideal for a shared hostel room.',
   },
@@ -417,7 +472,10 @@ export const products = [
     views: 190,
     free: false,
     wanted: false,
-    images: [img('mtb1'), img('mtb2')],
+    images: [
+      'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&auto=format&fit=crop',
+    ],
     description:
       'Serviced last week — gears, brakes, chain all smooth. Great for the campus hills near the library. Lock included.',
   },
@@ -437,7 +495,9 @@ export const products = [
     views: 58,
     free: false,
     wanted: false,
-    images: [img('drafting1')],
+    images: [
+      'https://images.unsplash.com/photo-1585336261026-875a60a1c92f?w=600&auto=format&fit=crop',
+    ],
     description:
       'Complete drafting kit with compass, set squares, and scale. All pieces present, light wear on the case.',
   },
@@ -457,7 +517,10 @@ export const products = [
     views: 210,
     free: false,
     wanted: false,
-    images: [img('boat1'), img('boat2')],
+    images: [
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&auto=format&fit=crop',
+    ],
     description:
       '15hr battery backup, deep bass, great for online lectures. Ear cushions in good shape, no fraying.',
   },
@@ -477,7 +540,9 @@ export const products = [
     views: 63,
     free: false,
     wanted: false,
-    images: [img('shelf1')],
+    images: [
+      'https://images.unsplash.com/photo-1594620302200-9a762244a156?w=600&auto=format&fit=crop',
+    ],
     description:
       'Solid wood, holds a full semester of textbooks easily. One shelf has a small crack but still fully usable.',
   },

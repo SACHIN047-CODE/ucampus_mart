@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { getProductById, getRelatedProducts } from '../../data/products';
+import { getProductById } from '../../data/products';
 import { useApp } from '../../context/AppContext';
+import { resolveProductImages } from '../../utils/imageUtils';
+import ProductImage from '../../components/ProductImage/ProductImage';
 import Avatar from '../../components/Avatar/Avatar';
 import Badge from '../../components/Badge/Badge';
 import Button from '../../components/Button/Button';
@@ -10,14 +12,30 @@ import './ProductDetails.css';
 
 export default function ProductDetails() {
   const { id } = useParams();
-  const { products, toggleWishlist, isWishlisted, showToast } = useApp();
+  const { products, toggleWishlist, isWishlisted, showToast, addNotification } = useApp();
   const product = products.find((p) => String(p.id) === String(id)) || getProductById(id);
   const [activeImg, setActiveImg] = useState(0);
 
   if (!product) return <Navigate to="/marketplace" replace />;
 
+  const images = resolveProductImages(product);
+  const safeActiveImgIdx = activeImg < images.length ? activeImg : 0;
   const related = products.filter((p) => p.category === product.category && String(p.id) !== String(product.id)).slice(0, 4);
   const wished = isWishlisted(product.id);
+
+  const handleChatSeller = () => {
+    showToast(`Opening chat with ${product.seller}…`);
+    addNotification(`You started a inquiry chat with ${product.seller} regarding "${product.title}".`, 'message');
+
+    // Simulate someone showing interest in one of user's active listings
+    const myOwn = products.filter((p) => p.isMine);
+    if (myOwn.length > 0) {
+      const targetItem = myOwn[Math.floor(Math.random() * myOwn.length)];
+      setTimeout(() => {
+        addNotification(`A buyer sent an inquiry about your listing "${targetItem.title}".`, 'interest');
+      }, 3000);
+    }
+  };
 
   return (
     <div className="cm-pd container">
@@ -28,14 +46,14 @@ export default function ProductDetails() {
       <div className="cm-pd__grid">
         <div className="cm-pd__gallery">
           <div className="cm-pd__main-img">
-            <img src={product.images[activeImg]} alt={product.title} />
+            <ProductImage src={images[safeActiveImgIdx]} alt={product.title} product={product} />
             {product.free && <Badge variant="free">Free</Badge>}
           </div>
-          {product.images.length > 1 && (
+          {images.length > 1 && (
             <div className="cm-pd__thumbs">
-              {product.images.map((img, i) => (
-                <button key={i} className={i === activeImg ? 'is-active' : ''} onClick={() => setActiveImg(i)}>
-                  <img src={img} alt="" />
+              {images.map((img, i) => (
+                <button key={i} className={i === safeActiveImgIdx ? 'is-active' : ''} onClick={() => setActiveImg(i)}>
+                  <ProductImage src={img} alt={`${product.title} preview ${i + 1}`} product={product} />
                 </button>
               ))}
             </div>
@@ -52,7 +70,7 @@ export default function ProductDetails() {
           <h1>{product.title}</h1>
 
           <div className="cm-pd__price">
-            {product.free ? 'Free' : product.wanted ? 'Looking to buy' : `₹${product.price.toLocaleString('en-IN')}`}
+            {product.free ? 'Free' : product.wanted ? 'Looking to buy' : `₹${(product.price || 0).toLocaleString('en-IN')}`}
             {!product.free && !product.wanted && product.originalPrice > product.price && (
               <span>₹{product.originalPrice.toLocaleString('en-IN')}</span>
             )}
@@ -65,7 +83,7 @@ export default function ProductDetails() {
           </div>
 
           <div className="cm-pd__actions">
-            <Button size="lg" onClick={() => showToast('Opening chat with seller…')}>Chat with Seller</Button>
+            <Button size="lg" onClick={handleChatSeller}>Chat with Seller</Button>
             <Button size="lg" variant="secondary" onClick={() => toggleWishlist(product.id)}>
               {wished ? '♥ Saved' : '♡ Save to Wishlist'}
             </Button>

@@ -11,16 +11,18 @@ import './Navbar.css';
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
-  const { wishlist, user, logout } = useApp();
+  const { wishlist, user, logout, notifications, unreadCount, markNotificationRead, markAllNotificationsRead } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedCampus, setSelectedCampus] = useState(
     localStorage.getItem('selected-campus') || 'Punjab Campus'
   );
   const catRef = useRef(null);
   const profileRef = useRef(null);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -41,10 +43,32 @@ export default function Navbar() {
     const handleClick = (e) => {
       if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false);
       if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false);
+      if (notifRef.current && !notifRef.current.contains(e.target)) setNotifOpen(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+
+  const formatNotifTime = (dateStr) => {
+    try {
+      const date = new Date(dateStr);
+      const diffMs = Date.now() - date.getTime();
+      if (isNaN(diffMs) || diffMs < 0) return 'Just now';
+      
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours}h ago`;
+      
+      const diffDays = Math.floor(diffHours / 24);
+      if (diffDays === 1) return 'Yesterday';
+      return `${diffDays}d ago`;
+    } catch {
+      return 'Just now';
+    }
+  };
 
   return (
     <header className={`cm-nav ${scrolled ? 'is-scrolled' : ''}`}>
@@ -118,13 +142,55 @@ export default function Navbar() {
             </svg>
           </NavLink>
 
-          <button className="cm-nav__icon-btn" aria-label="Notifications">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-            <span className="cm-nav__badge">3</span>
-          </button>
+          <div className="cm-nav__notif" ref={notifRef}>
+            <button
+              className={`cm-nav__icon-btn cm-nav__notif-btn ${notifOpen ? 'active' : ''}`}
+              aria-label="Notifications"
+              onClick={() => setNotifOpen((v) => !v)}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              {unreadCount > 0 && <span className="cm-nav__badge">{unreadCount}</span>}
+            </button>
+
+            {notifOpen && (
+              <div className="cm-nav__notif-menu scale-in">
+                <div className="cm-nav__notif-header">
+                  <h3>Notifications</h3>
+                  {unreadCount > 0 && (
+                    <button onClick={markAllNotificationsRead} className="cm-nav__notif-clear">
+                      Mark all as read
+                    </button>
+                  )}
+                </div>
+                <div className="cm-nav__notif-sep" />
+                <div className="cm-nav__notif-list">
+                  {notifications.length === 0 ? (
+                    <div className="cm-nav__notif-empty">
+                      <span style={{ fontSize: '24px' }}>🔔</span>
+                      <p>No new notifications</p>
+                    </div>
+                  ) : (
+                    notifications.map((n) => (
+                      <div
+                        key={n.id}
+                        className={`cm-nav__notif-item ${!n.read ? 'is-unread' : ''}`}
+                        onClick={() => markNotificationRead(n.id)}
+                      >
+                        <div className="cm-nav__notif-item-body">
+                          <p>{n.message}</p>
+                          <span>{formatNotifTime(n.createdAt)}</span>
+                        </div>
+                        {!n.read && <span className="cm-nav__notif-dot" />}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
 
           <button className="cm-nav__icon-btn cm-nav__theme" aria-label="Toggle dark mode" onClick={toggleTheme}>
             {theme === 'dark' ? (
@@ -169,7 +235,6 @@ export default function Navbar() {
                   </div>
                   <div className="cm-nav__profile-sep" />
                   <Link to="/profile" onClick={() => setProfileOpen(false)}>My Dashboard</Link>
-                  <Link to="/profile?tab=listings" onClick={() => setProfileOpen(false)}>My Listings</Link>
                   <Link to="/wishlist" onClick={() => setProfileOpen(false)}>Wishlist</Link>
                   <Link to="/admin" onClick={() => setProfileOpen(false)}>Admin Panel</Link>
                   <div className="cm-nav__profile-sep" />

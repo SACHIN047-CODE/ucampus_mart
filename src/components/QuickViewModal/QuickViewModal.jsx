@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
+import { resolveProductImages } from '../../utils/imageUtils';
+import ProductImage from '../ProductImage/ProductImage';
 import Button from '../Button/Button';
 import Avatar from '../Avatar/Avatar';
 import './QuickViewModal.css';
@@ -19,7 +21,8 @@ export default function QuickViewModal({ product, onClose }) {
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef(null);
 
-  const images = product.images || [`https://picsum.photos/seed/${product.id}/600/450`];
+  const images = resolveProductImages(product);
+  const safeActiveIdx = activeImageIdx < images.length ? activeImageIdx : 0;
   const isSaved = isWishlisted(product.id);
 
   useEffect(() => {
@@ -112,7 +115,7 @@ export default function QuickViewModal({ product, onClose }) {
           {/* LEFT: Pictures & Swipers */}
           <div className="cm-qv-media">
             <div className="cm-qv-main-img">
-              <img src={images[activeImageIdx]} alt={product.title} />
+              <ProductImage src={images[safeActiveIdx]} alt={product.title} product={product} />
               {product.negotiable && <span className="cm-qv-tag negotiable">🤝 Negotiable</span>}
               {!product.negotiable && <span className="cm-qv-tag fixed">🏷️ Fixed Price</span>}
               {product.price === 0 && <span className="cm-qv-tag free-tag">🎁 Free Item</span>}
@@ -123,10 +126,10 @@ export default function QuickViewModal({ product, onClose }) {
                 {images.map((img, idx) => (
                   <button
                     key={idx}
-                    className={`cm-qv-thumb-btn ${activeImageIdx === idx ? 'active' : ''}`}
+                    className={`cm-qv-thumb-btn ${safeActiveIdx === idx ? 'active' : ''}`}
                     onClick={() => setActiveImageIdx(idx)}
                   >
-                    <img src={img} alt="" />
+                    <ProductImage src={img} alt="" product={product} />
                   </button>
                 ))}
               </div>
@@ -135,7 +138,7 @@ export default function QuickViewModal({ product, onClose }) {
             <div className="cm-qv-quick-details">
               <h4>Item Specifications</h4>
               <ul className="spec-list">
-                <li><strong>Condition:</strong> <span className={`cond-badge ${product.condition.toLowerCase().replace(' ', '-')}`}>{product.condition}</span></li>
+                <li><strong>Condition:</strong> <span className={`cond-badge ${(product.condition || '').toLowerCase().replace(' ', '-')}`}>{product.condition}</span></li>
                 <li><strong>Seller:</strong> {product.seller}</li>
                 <li><strong>Location:</strong> {product.location || 'Campus Wide'}</li>
                 <li><strong>Hostel:</strong> {product.hostel || 'Day Scholar'}</li>
@@ -147,10 +150,10 @@ export default function QuickViewModal({ product, onClose }) {
           {/* RIGHT: Info & Interactive Chat Simulator */}
           <div className="cm-qv-info">
             <div className="cm-qv-header">
-              <span className="info-category">{product.category.toUpperCase()}</span>
+              <span className="info-category">{(product.category || '').toUpperCase()}</span>
               <h2>{product.title}</h2>
               <div className="price-set">
-                <span className="price-tag">₹{product.price.toLocaleString('en-IN')}</span>
+                <span className="price-tag">₹{(product.price || 0).toLocaleString('en-IN')}</span>
                 {product.originalPrice > 0 && (
                   <>
                     <span className="orig-price">₹{product.originalPrice.toLocaleString('en-IN')}</span>

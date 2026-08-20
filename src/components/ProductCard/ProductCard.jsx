@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import ProductImage from '../ProductImage/ProductImage';
 import './ProductCard.css';
 
 export default function ProductCard({ product, style, onQuickView }) {
@@ -32,9 +33,13 @@ export default function ProductCard({ product, style, onQuickView }) {
       case 'furniture': return '🪑';
       case 'fashion': return '👕';
       case 'sports': return '🏸';
+      case 'calculators': return '🧮';
       default: return '🏷️';
     }
   };
+
+  const images = Array.isArray(product.images) && product.images.length > 0 ? product.images : [];
+  const currentImgSrc = images[activeImgIdx] || images[0];
 
   return (
     <article className="cm-pcard scale-in" style={style}>
@@ -50,9 +55,10 @@ export default function ProductCard({ product, style, onQuickView }) {
       {/* MEDIA AREA */}
       <div className="cm-pcard__media">
         <Link to={`/product/${product.id}`} className="cm-pcard__img-link">
-          <img
-            src={product.images && product.images[activeImgIdx] ? product.images[activeImgIdx] : (product.images ? product.images[0] : '')}
+          <ProductImage
+            src={currentImgSrc}
             alt={product.title}
+            product={product}
             loading="lazy"
           />
           <div className="cm-pcard__media-scrim" />
@@ -67,7 +73,7 @@ export default function ProductCard({ product, style, onQuickView }) {
           ) : discount > 0 ? (
             <span className="cm-pill cm-pill--discount">⚡ -{discount}% OFF</span>
           ) : (
-            <span className="cm-pill cm-pill--cat">{getCatIcon(product.category)} {product.category.toUpperCase()}</span>
+            <span className="cm-pill cm-pill--cat">{getCatIcon(product.category)} {(product.category || '').toUpperCase()}</span>
           )}
 
           {product.negotiable && !product.free && !product.wanted && (
@@ -107,9 +113,9 @@ export default function ProductCard({ product, style, onQuickView }) {
         </div>
 
         {/* Multi-image indicators if present */}
-        {product.images && product.images.length > 1 && (
+        {images.length > 1 && (
           <div className="cm-pcard__dots">
-            {product.images.map((_, i) => (
+            {images.map((_, i) => (
               <span
                 key={i}
                 className={`pcard-dot ${i === activeImgIdx ? 'active' : ''}`}
@@ -156,7 +162,7 @@ export default function ProductCard({ product, style, onQuickView }) {
         <div className="cm-pcard__top">
           <div className="cm-pcard__price-wrap">
             <span className="cm-pcard__price">
-              {product.free ? 'Free' : product.wanted ? 'Looking to buy' : `₹${product.price.toLocaleString('en-IN')}`}
+              {product.free ? 'Free' : product.wanted ? 'Looking to buy' : `₹${(product.price || 0).toLocaleString('en-IN')}`}
             </span>
             {!product.free && !product.wanted && product.originalPrice > product.price && (
               <span className="cm-pcard__strike">₹{product.originalPrice.toLocaleString('en-IN')}</span>
@@ -194,7 +200,7 @@ export default function ProductCard({ product, style, onQuickView }) {
           </div>
           <span className="cm-pcard__time">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-            {product.postedAt}
+            {product.postedAt || 'Recently'}
           </span>
         </div>
       </div>

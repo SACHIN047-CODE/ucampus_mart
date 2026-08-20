@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import ProductImage from '../../components/ProductImage/ProductImage';
 import Avatar from '../../components/Avatar/Avatar';
 import Badge from '../../components/Badge/Badge';
 import Button from '../../components/Button/Button';
@@ -8,7 +9,7 @@ import EmptyState from '../../components/EmptyState/EmptyState';
 import './Profile.css';
 
 const TABS = [
-  { id: 'listings', label: 'My Listings', icon: '📦' },
+  { id: 'dashboard', label: 'My Dashboard', icon: '📊' },
   { id: 'wishlist', label: 'Wishlist', icon: '🤍' },
   { id: 'messages', label: 'Messages', icon: '💬' },
   { id: 'history', label: 'Purchase History', icon: '🧾' },
@@ -16,9 +17,9 @@ const TABS = [
 ];
 
 export default function Profile() {
-  const { products, wishlist, user, deleteProduct, showToast } = useApp();
+  const { products, wishlist, user, deleteProduct, showToast, addNotification } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [tab, setTab] = useState(searchParams.get('tab') || 'listings');
+  const [tab, setTab] = useState(searchParams.get('tab') || 'dashboard');
   
   const myListings = products.filter((p) => 
     p.isMine || p.seller === (user?.name || 'Sachin Sharma') || (user && p.sellerEmail === user.email)
@@ -31,6 +32,11 @@ export default function Profile() {
     if (window.confirm(`Are you sure you want to remove "${title}"?`)) {
       deleteProduct(productId);
     }
+  };
+
+  const handleEditListing = (p) => {
+    showToast('Edit modal opened for ' + p.title);
+    addNotification(`Your listing "${p.title}" was edited/updated successfully.`, 'system');
   };
 
   return (
@@ -59,10 +65,10 @@ export default function Profile() {
           <div className="cm-profile__stat"><strong>{saved.length}</strong><span>Wishlist Items</span></div>
         </div>
 
-        {tab === 'listings' && (
+        {tab === 'dashboard' && (
           <section>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h2>My Listings</h2>
+              <h2>My Dashboard</h2>
               <Button size="sm" as="a" onClick={() => (window.location.href = '/sell')}>+ List New Item</Button>
             </div>
             {myListings.length === 0 ? (
@@ -76,14 +82,14 @@ export default function Profile() {
               <div className="cm-profile__table">
                 {myListings.map((p) => (
                   <div className="cm-profile__row" key={p.id}>
-                    <img src={p.images[0]} alt="" />
+                    <ProductImage src={p.images?.[0]} alt={p.title} product={p} />
                     <div className="cm-profile__row-info">
                       <strong>{p.title}</strong>
-                      <span>{p.free ? 'Free' : `₹${p.price.toLocaleString('en-IN')}`} · {p.views || 1} views</span>
+                      <span>{p.free ? 'Free' : `₹${(p.price || 0).toLocaleString('en-IN')}`} · {p.views || 1} views</span>
                     </div>
                     <Badge variant="success">Active</Badge>
                     <div className="cm-profile__row-actions">
-                      <button onClick={() => showToast('Edit modal opened for ' + p.title)}>Edit</button>
+                      <button onClick={() => handleEditListing(p)}>Edit</button>
                       <button className="danger" onClick={() => handleDeleteListing(p.id, p.title)}>Delete</button>
                     </div>
                   </div>
@@ -102,10 +108,10 @@ export default function Profile() {
               <div className="cm-profile__table">
                 {saved.map((p) => (
                   <div className="cm-profile__row" key={p.id}>
-                    <img src={p.images[0]} alt="" />
+                    <ProductImage src={p.images?.[0]} alt={p.title} product={p} />
                     <div className="cm-profile__row-info">
                       <strong>{p.title}</strong>
-                      <span>{p.free ? 'Free' : `₹${p.price.toLocaleString('en-IN')}`}</span>
+                      <span>{p.free ? 'Free' : `₹${(p.price || 0).toLocaleString('en-IN')}`}</span>
                     </div>
                   </div>
                 ))}
@@ -127,10 +133,10 @@ export default function Profile() {
             <div className="cm-profile__table">
               {products.slice(5, 8).map((p) => (
                 <div className="cm-profile__row" key={p.id}>
-                  <img src={p.images[0]} alt="" />
+                  <ProductImage src={p.images?.[0]} alt={p.title} product={p} />
                   <div className="cm-profile__row-info">
                     <strong>{p.title}</strong>
-                    <span>Purchased for {p.free ? 'Free' : `₹${p.price.toLocaleString('en-IN')}`}</span>
+                    <span>Purchased for {p.free ? 'Free' : `₹${(p.price || 0).toLocaleString('en-IN')}`}</span>
                   </div>
                   <Badge>Completed</Badge>
                 </div>
