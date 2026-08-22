@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { getProductById } from '../../data/products';
 import { useApp } from '../../context/AppContext';
 import { resolveProductImages } from '../../utils/imageUtils';
@@ -12,7 +12,8 @@ import './ProductDetails.css';
 
 export default function ProductDetails() {
   const { id } = useParams();
-  const { products, toggleWishlist, isWishlisted, showToast, addNotification } = useApp();
+  const { products, toggleWishlist, isWishlisted, showToast, addNotification, startChat } = useApp();
+  const navigate = useNavigate();
   const product = products.find((p) => String(p.id) === String(id)) || getProductById(id);
   const [activeImg, setActiveImg] = useState(0);
 
@@ -24,8 +25,14 @@ export default function ProductDetails() {
   const wished = isWishlisted(product.id);
 
   const handleChatSeller = () => {
-    showToast(`Opening chat with ${product.seller}…`);
-    addNotification(`You started a inquiry chat with ${product.seller} regarding "${product.title}".`, 'message');
+    startChat({
+      seller: product.seller,
+      sellerAvatar: product.sellerAvatar,
+      sellerEmail: product.sellerEmail,
+      title: product.title,
+    });
+    addNotification(`You started an inquiry chat with ${product.seller} regarding "${product.title}".`, 'message');
+    navigate('/messages');
 
     // Simulate someone showing interest in one of user's active listings
     const myOwn = products.filter((p) => p.isMine);
@@ -100,7 +107,7 @@ export default function ProductDetails() {
               <div className="cm-pd__seller-name">{product.seller}</div>
               <div className="cm-pd__seller-sub">Verified Student · Usually replies within an hour</div>
             </div>
-            <Link to="/messages" className="cm-pd__seller-btn">Message</Link>
+            <button className="cm-pd__seller-btn" onClick={handleChatSeller}>Message</button>
           </div>
 
           <div className="cm-pd__desc">

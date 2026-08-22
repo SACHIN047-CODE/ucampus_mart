@@ -17,9 +17,15 @@ const TABS = [
 ];
 
 export default function Profile() {
-  const { products, wishlist, user, deleteProduct, showToast, addNotification } = useApp();
+  const { products, wishlist, user, deleteProduct, showToast, addNotification, updateUser } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState(searchParams.get('tab') || 'dashboard');
+  const [settings, setSettings] = useState({
+    name: user?.name || 'Sachin Sharma',
+    email: user?.email || 'sachin.sharma@chitkara.edu.in',
+    hostel: user?.hostel || 'CS Dept Hostel',
+    phone: user?.phone || '+91 98765 43210',
+  });
   
   const myListings = products.filter((p) => 
     p.isMine || p.seller === (user?.name || 'Sachin Sharma') || (user && p.sellerEmail === user.email)
@@ -37,6 +43,20 @@ export default function Profile() {
   const handleEditListing = (p) => {
     showToast('Edit modal opened for ' + p.title);
     addNotification(`Your listing "${p.title}" was edited/updated successfully.`, 'system');
+  };
+
+  const updateSetting = (field, value) => setSettings((s) => ({ ...s, [field]: value }));
+
+  const handleSaveSettings = () => {
+    if (!settings.name.trim()) {
+      showToast('Full Name cannot be empty', 'danger');
+      return;
+    }
+    if (!settings.email.trim()) {
+      showToast('Campus Email cannot be empty', 'danger');
+      return;
+    }
+    updateUser(settings);
   };
 
   return (
@@ -149,11 +169,11 @@ export default function Profile() {
           <section className="cm-profile__settings">
             <h2>Profile Settings</h2>
             <div className="cm-profile__form">
-              <div className="cm-sell__field"><label>Full Name</label><input type="text" defaultValue={user?.name || 'Sachin Sharma'} /></div>
-              <div className="cm-sell__field"><label>Campus Email</label><input type="email" defaultValue={user?.email || 'sachin.sharma@chitkara.edu.in'} /></div>
-              <div className="cm-sell__field"><label>Hostel / Block</label><input type="text" defaultValue={user?.hostel || 'CS Dept Hostel'} /></div>
-              <div className="cm-sell__field"><label>Phone Number</label><input type="tel" defaultValue={user?.phone || '+91 98765 43210'} /></div>
-              <Button>Save Changes</Button>
+              <div className="cm-sell__field"><label>Full Name</label><input type="text" value={settings.name} onChange={(e) => updateSetting('name', e.target.value)} /></div>
+              <div className="cm-sell__field"><label>Campus Email</label><input type="email" value={settings.email} onChange={(e) => updateSetting('email', e.target.value)} /></div>
+              <div className="cm-sell__field"><label>Hostel / Block</label><input type="text" value={settings.hostel} onChange={(e) => updateSetting('hostel', e.target.value)} /></div>
+              <div className="cm-sell__field"><label>Phone Number</label><input type="tel" value={settings.phone} onChange={(e) => updateSetting('phone', e.target.value)} /></div>
+              <Button onClick={handleSaveSettings}>Save Changes</Button>
             </div>
           </section>
         )}

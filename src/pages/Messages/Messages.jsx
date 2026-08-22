@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '../../components/Avatar/Avatar';
 import { useApp } from '../../context/AppContext';
 import './Messages.css';
 
-const THREADS = [
+const SEED_THREADS = [
   { id: 't1', name: 'Ananya Sharma', initials: 'AS', last: 'Is the price negotiable?', time: '2m', unread: 2, online: true, product: 'Engineering Mathematics' },
   { id: 't2', name: 'Rohan Mehta', initials: 'RM', last: 'Great, I can pick it up tomorrow', time: '1h', unread: 0, online: true, product: 'MacBook Air M1' },
   { id: 't3', name: 'Priya Nair', initials: 'PN', last: 'Sounds good, thank you!', time: '3h', unread: 0, online: false, product: 'Lab Coat Combo' },
@@ -19,31 +19,94 @@ const SAMPLE_MESSAGES = {
   ],
 };
 
+const THREADS_KEY = 'campusmart-threads';
+const MESSAGES_KEY = 'campusmart-messages';
+
+function loadThreads() {
+  try {
+    const saved = localStorage.getItem(THREADS_KEY);
+    return saved ? JSON.parse(saved) : SEED_THREADS;
+  } catch {
+    return SEED_THREADS;
+  }
+}
+
+function loadMessages() {
+  try {
+    const saved = localStorage.getItem(MESSAGES_KEY);
+    return saved ? JSON.parse(saved) : SAMPLE_MESSAGES;
+  } catch {
+    return SAMPLE_MESSAGES;
+  }
+}
+
 export default function Messages() {
-  const { showToast, addNotification } = useApp();
+  const { showToast, addNotification, activeChat } = useApp();
+  const [threads, setThreads] = useState(loadThreads);
+  const [messages, setMessages] = useState(loadMessages);
   const [activeId, setActiveId] = useState('t1');
   const [draft, setDraft] = useState('');
-  const [messages, setMessages] = useState(SAMPLE_MESSAGES);
-  const active = THREADS.find((t) => t.id === activeId);
+
+  useEffect(() => {
+    if (!activeChat) return;
+    setActiveId(activeChat.id);
+    setThreads((prev) => {
+      if (prev.some((t) => t.id === activeChat.id)) return prev;
+      const updated = [activeChat, ...prev];
+      try {
+        localStorage.setItem(THREADS_KEY, JSON.stringify(updated));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return updated;
+    });
+    setMessages((prev) => {
+      if (prev[activeChat.id]) return prev;
+      const updated = {
+        ...prev,
+        [activeChat.id]: [
+          { from: 'them', text: `Hi! You're interested in "${activeChat.product}" — happy to help. What would you like to know?`, time: 'Now' },
+        ],
+      };
+      try {
+        localStorage.setItem(MESSAGES_KEY, JSON.stringify(updated));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return updated;
+    });
+  }, [activeChat]);
+
+  const active = threads.find((t) => t.id === activeId) || threads[0];
   const thread = messages[activeId] || [];
 
   const send = (e) => {
     e.preventDefault();
-    if (!draft.trim()) return;
+    if (!draft.trim() || !active) return;
     const sentText = draft;
-    setMessages((m) => ({
-      ...m,
-      [activeId]: [...(m[activeId] || []), { from: 'me', text: sentText, time: 'Now' }],
-    }));
+    setMessages((m) => {
+      const updated = { ...m, [active.id]: [...(m[active.id] || []), { from: 'me', text: sentText, time: 'Now' }] };
+      try {
+        localStorage.setItem(MESSAGES_KEY, JSON.stringify(updated));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return updated;
+    });
     setDraft('');
 
     // Simulate reply and notification after 2s
     setTimeout(() => {
       const replyMsg = `Thanks for your message! Let's arrange a time to meet up.`;
-      setMessages((m) => ({
-        ...m,
-        [activeId]: [...(m[activeId] || []), { from: 'them', text: replyMsg, time: 'Now' }],
-      }));
+      setMessages((m) => {
+        const updated = { ...m, [active.id]: [...(m[active.id] || []), { from: 'them', text: replyMsg, time: 'Now' }] };
+        try {
+          localStorage.setItem(MESSAGES_KEY, JSON.stringify(updated));
+        } catch (err) {
+          console.warn('LocalStorage save failed', err);
+        }
+        return updated;
+      });
       addNotification(`${active.name} sent you a message: "${replyMsg}"`, 'message');
       showToast(`New message from ${active.name}`);
     }, 2000);
@@ -56,7 +119,7 @@ export default function Messages() {
           <h2>Messages</h2>
         </div>
         <div className="cm-msg__threads">
-          {THREADS.map((t) => (
+          {threads.map((t) => (
             <button key={t.id} className={`cm-msg__thread ${activeId === t.id ? 'is-active' : ''}`} onClick={() => setActiveId(t.id)}>
               <Avatar initials={t.initials} size={46} online={t.online} />
               <div className="cm-msg__thread-info">
@@ -74,16 +137,16 @@ export default function Messages() {
 
       <section className="cm-msg__chat">
         <div className="cm-msg__chat-head">
-          <Avatar initials={active.initials} size={40} online={active.online} />
+          <Avatar initials={active?.initials} size={40} online={active?.online} />
           <div>
-            <strong>{active.name}</strong>
-            <span>{active.online ? 'Online now' : 'Offline'} · about "{active.product}"</span>
+            <strong>{active?.name}</strong>
+            <span>{active?.online ? 'Online now' : 'Offline'} · about "{active?.product}"</span>
           </div>
         </div>
 
         <div className="cm-msg__body">
           {thread.length === 0 ? (
-            <p className="cm-msg__empty">Say hi to start the conversation about {active.product}.</p>
+            <p className="cm-msg__empty">Say hi to start the conversation about {active?.product}.</p>
           ) : thread.map((m, i) => (
             <div key={i} className={`cm-bubble cm-bubble--${m.from}`}>
               <p>{m.text}</p>

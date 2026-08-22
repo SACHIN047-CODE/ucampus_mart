@@ -57,6 +57,14 @@ export function AppProvider({ children }) {
     const saved = localStorage.getItem('campusmart-user');
     return saved ? JSON.parse(saved) : null;
   });
+  const [activeChat, setActiveChat] = useState(() => {
+    try {
+      const saved = localStorage.getItem('campusmart-active-chat');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [toasts, setToasts] = useState([]);
 
   const [notifications, setNotifications] = useState(() => {
@@ -169,6 +177,52 @@ export function AppProvider({ children }) {
     return newUser;
   }, []);
 
+  const updateUser = useCallback((updates = {}) => {
+    setUser((prev) => {
+      const base = prev || {
+        name: 'Sachin Sharma',
+        email: 'sachin.sharma@chitkara.edu.in',
+        department: 'B.Tech CSE, 2nd Year',
+        hostel: 'CS Dept Hostel',
+        phone: '+91 98765 43210',
+        initials: 'SS',
+      };
+      const next = { ...base, ...updates };
+      if (updates.name) {
+        next.initials = updates.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || base.initials;
+      }
+      try {
+        localStorage.setItem('campusmart-user', JSON.stringify(next));
+      } catch (err) {
+        console.warn('LocalStorage save failed', err);
+      }
+      return next;
+    });
+    showToast('Profile updated successfully', 'success');
+  }, [showToast]);
+
+  const startChat = useCallback(({ seller, sellerAvatar, sellerEmail, title }) => {
+    const name = seller || 'Verified Student';
+    const initials = sellerAvatar || (name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || 'VS');
+    const chat = {
+      id: 'seller-' + String(sellerEmail || name).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      name,
+      initials,
+      last: `Interested in "${title}"`,
+      time: 'now',
+      unread: 0,
+      online: true,
+      product: title,
+    };
+    setActiveChat(chat);
+    try {
+      localStorage.setItem('campusmart-active-chat', JSON.stringify(chat));
+    } catch (err) {
+      console.warn('LocalStorage save failed', err);
+    }
+    return chat;
+  }, []);
+
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem('campusmart-user');
@@ -202,6 +256,9 @@ export function AppProvider({ children }) {
         isLoggedIn: Boolean(user),
         login,
         logout,
+        updateUser,
+        activeChat,
+        startChat,
         toasts,
         showToast,
         notifications,
