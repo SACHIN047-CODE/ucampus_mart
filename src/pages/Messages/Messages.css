@@ -85,3 +85,10 @@
   .cm-msg { grid-template-columns: 1fr; }
   .cm-msg__sidebar { display: none; }
 }
+
+@media (max-width: 640px) {
+  .cm-bubble { max-width: 85%; }
+  .cm-msg__body { padding: 12px; }
+  .cm-msg__input { padding: 8px 12px; }
+}
+

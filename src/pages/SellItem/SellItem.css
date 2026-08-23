@@ -117,7 +117,13 @@
 .cm-sell__submit { margin-top: 6px; }
 
 @media (max-width: 640px) {
-  .cm-sell { padding: 28px 18px 70px; }
+  .cm-sell { padding: 20px 0 60px; }
   .cm-sell__form { padding: 20px; }
   .cm-sell__row--3 { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 480px) {
+  .cm-sell__form { padding: 14px; gap: 16px; }
+  .cm-dropzone { padding: 24px 14px; }
+}
+

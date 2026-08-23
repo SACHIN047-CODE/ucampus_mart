@@ -2,3 +2,8 @@
 .cm-wishlist__head { margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
 .cm-wishlist__head h1 { font-size: clamp(26px, 3.5vw, 36px); margin: 6px 0 6px; letter-spacing: -0.04em; }
 .cm-wishlist__head p { color: var(--text-muted); font-size: 14px; }
+
+@media (max-width: 768px) {
+  .cm-wishlist { padding: 20px 0 60px; }
+}
+

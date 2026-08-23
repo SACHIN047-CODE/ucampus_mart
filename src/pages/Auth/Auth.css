@@ -232,3 +232,23 @@
   .cm-auth { grid-template-columns: 1fr; }
   .cm-auth__art { display: none; }
 }
+
+@media (max-width: 640px) {
+  .cm-auth__form-side { padding: 24px 16px; }
+}
+
+@media (max-width: 480px) {
+  .cm-auth__otp { gap: 4px; }
+  .cm-auth__otp input {
+    width: 100%;
+    max-width: 42px;
+    height: 46px;
+    font-size: 17px;
+    padding: 0;
+  }
+  .cm-auth__social button {
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+}
+

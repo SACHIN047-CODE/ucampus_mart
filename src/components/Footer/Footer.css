@@ -81,4 +81,16 @@
 }
 @media (max-width: 560px) {
   .cm-footer__top { grid-template-columns: 1fr; padding: 40px 20px 28px; }
+  .cm-footer__bottom {
+    padding: 16px 14px;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  .cm-footer__legal {
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
 }
+
