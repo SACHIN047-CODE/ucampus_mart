@@ -89,6 +89,18 @@
   .cm-admin__table { display: block; overflow-x: auto; }
 }
 
+@media (max-width: 640px) {
+  .cm-admin__main { padding: 16px 12px 40px; }
+}
+
+@media (max-width: 480px) {
+  .cm-admin-auth-card { padding: 24px 16px; }
+  .cm-admin__cards { gap: 10px; }
+  .cm-admin__card { padding: 12px; }
+  .cm-admin__card strong { font-size: 20px; }
+}
+
+
 /* Admin Auth Screen */
 .cm-admin-auth-container {
   display: flex;

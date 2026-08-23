@@ -458,6 +458,9 @@
 }
 
 @media (max-width: 768px) {
+  .cm-qv-overlay {
+    padding: 12px;
+  }
   .cm-qv-grid {
     grid-template-columns: 1fr;
     gap: 18px;
@@ -466,3 +469,17 @@
     padding: 18px;
   }
 }
+
+@media (max-width: 480px) {
+  .cm-qv-overlay {
+    padding: 8px;
+  }
+  .cm-qv-modal {
+    padding: 14px;
+    max-height: 94vh;
+  }
+  .cm-qv-actions {
+    flex-direction: column;
+  }
+}
+

@@ -159,6 +159,15 @@
 }
 
 @media (max-width: 900px) {
-  .cm-profile { grid-template-columns: 1fr; }
+  .cm-profile { grid-template-columns: 1fr; padding: 20px 0 60px; }
   .cm-profile__stats { grid-template-columns: repeat(2, 1fr); }
 }
+
+@media (max-width: 480px) {
+  .cm-profile__stats { gap: 10px; }
+  .cm-profile__stat { padding: 12px; }
+  .cm-profile__stat strong { font-size: 20px; }
+  .cm-profile__row { flex-wrap: wrap; gap: 10px; padding: 10px; }
+  .cm-profile__row-actions { width: 100%; justify-content: flex-end; }
+}
+

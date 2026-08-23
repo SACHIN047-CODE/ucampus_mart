@@ -156,9 +156,16 @@
   letter-spacing: -0.03em;
 }
 
+.cm-pd__thumbs { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; }
+
 @media (max-width: 900px) {
+  .cm-pd { padding: 20px 0 60px; }
   .cm-pd__grid { grid-template-columns: 1fr; gap: 28px; }
 }
 @media (max-width: 560px) {
   .cm-pd__actions { flex-direction: column; }
+  .cm-pd__price { font-size: 24px; }
+  .cm-pd__seller { flex-wrap: wrap; gap: 10px; }
+  .cm-pd__seller-btn { margin-left: 0; width: 100%; text-align: center; }
 }
+

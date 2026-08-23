@@ -485,3 +485,42 @@
   font-size: 10.5px;
   flex-shrink: 0;
 }
+
+@media (max-width: 480px) {
+  .cm-pcard__body {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  .cm-pcard__price {
+    font-size: 17px;
+  }
+  .cm-pcard__title {
+    font-size: 13px;
+    min-height: 2.6em;
+  }
+  .cm-drawer-btn {
+    font-size: 10px;
+    padding: 5px 6px;
+    gap: 3px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cm-pcard__body {
+    padding: 8px 10px;
+  }
+  .cm-pcard__top {
+    flex-wrap: wrap;
+  }
+  .cm-pcard__price {
+    font-size: 15px;
+  }
+  .cm-pcard__save-tag {
+    font-size: 9px;
+    padding: 1px 4px;
+  }
+  .cm-seller-name {
+    font-size: 10px;
+  }
+}
+
