@@ -269,6 +269,40 @@
   .cm-nav__profile { display: none; }
   .cm-nav__login { display: none; }
   .cm-nav__burger { display: flex; }
+  .cm-nav__inner { gap: 10px; }
+  .cm-nav__left { gap: 10px; }
+}
+
+@media (max-width: 480px) {
+  .cm-nav__inner { gap: 6px; }
+  .cm-nav__left { gap: 6px; }
+  .cm-nav__campus-pill select {
+    padding: 3px 6px !important;
+    font-size: 11px !important;
+    max-width: 135px;
+    height: 28px !important;
+  }
+  .cm-nav__notif-menu {
+    position: fixed;
+    top: calc(var(--nav-h) + 5px);
+    left: 10px;
+    right: 10px;
+    width: calc(100vw - 20px);
+    max-height: 75vh;
+  }
+  .cm-nav__mobile {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cm-nav__inner { gap: 4px; }
+  .cm-nav__left { gap: 4px; }
+  .cm-nav__campus-pill select {
+    padding: 2px 4px !important;
+    font-size: 10px !important;
+    max-width: 115px;
+  }
 }
 
 /* Notification Dropdown Positioning & Styling */
@@ -289,20 +323,6 @@
   display: flex;
   flex-direction: column;
   z-index: 1100;
-}
-
-@media (max-width: 480px) {
-  .cm-nav__notif-menu {
-    position: fixed;
-    top: calc(var(--nav-h) + 5px);
-    left: 10px;
-    right: 10px;
-    width: calc(100vw - 20px);
-    max-height: 75vh;
-  }
-  .cm-nav__mobile {
-    padding: 16px;
-  }
 }
 
 
