@@ -829,11 +829,13 @@
 }
 
 @media (max-width: 900px) {
+  .cm-hero__ambient-glow { display: none; }
   .cm-hero__inner { grid-template-columns: 1fr; }
   .cm-hero__art { margin-top: 20px; }
   .cm-split { grid-template-columns: 1fr; gap: 40px; }
   .grid-two-cols { grid-template-columns: 1fr; }
 }
+
 
 @media (max-width: 640px) {
   .cm-stats-strip__grid { grid-template-columns: 1fr; gap: 12px; }
