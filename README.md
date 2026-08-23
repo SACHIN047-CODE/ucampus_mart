@@ -10,7 +10,7 @@
 
 ---
 
-> 🚀 Live Website: https://ucampusmart.vercel.app/
+[![Live Website](https://img.shields.io/badge/Live%20Demo-CampusMart-ff69b4?style=for-the-badge&logo=vercel&logoColor=white)](https://ucampusmart.vercel.app/)
 
 ## 🌟 Key Features
 
