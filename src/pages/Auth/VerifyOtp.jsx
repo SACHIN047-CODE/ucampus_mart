@@ -41,8 +41,12 @@ export default function VerifyOtp() {
       <AuthArt />
       <div className="cm-auth__form-side">
         <form className="cm-auth__box" onSubmit={submit} noValidate>
+          <div className="cm-auth__eyebrow"><span className="cm-auth__eyebrow-dot" /> Account setup <span>02 / 02</span></div>
+          <div className="cm-auth__icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+          </div>
           <h1>Verify your email</h1>
-          <p>We sent a 6-digit code to your campus email. Enter it below.</p>
+          <p>We sent a 6-digit code to your campus email. Enter it below to finish setting up your account.</p>
 
           <div className="cm-auth__otp">
             {digits.map((d, i) => (
@@ -53,11 +57,14 @@ export default function VerifyOtp() {
                 inputMode="numeric"
                 maxLength={1}
                 value={d}
+                aria-label={`Verification code digit ${i + 1}`}
                 onChange={(e) => handleChange(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
               />
             ))}
           </div>
+
+          <div className="cm-auth__hint"><span>●</span> Code expires in 10 minutes</div>
 
           <Button type="submit" size="lg" fullWidth>Verify Account</Button>
 
