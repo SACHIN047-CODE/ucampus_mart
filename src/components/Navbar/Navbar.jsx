@@ -80,27 +80,28 @@ export default function Navbar() {
 
           <div className="cm-nav__campus-pill" style={{ marginLeft: '4px' }}>
             <select
-              value={selectedCampus}
-              onChange={(e) => {
-                const val = e.target.value;
-                setSelectedCampus(val);
-                localStorage.setItem('selected-campus', val);
-                window.dispatchEvent(new Event('campusChanged'));
-              }}
-              style={{
-                background: 'rgba(226, 26, 34, 0.06)',
-                border: '1px solid rgba(226, 26, 34, 0.15)',
-                borderRadius: '20px',
-                padding: '4px 10px',
-                fontSize: '12px',
-                fontWeight: '700',
-                color: 'var(--primary)',
-                cursor: 'pointer',
-                outline: 'none',
-                height: '30px',
-                transition: 'all 0.2s var(--ease)',
-              }}
-            >
+  value={selectedCampus}
+  onChange={(e) => {
+    const val = e.target.value;
+    setSelectedCampus(val);
+    localStorage.setItem('selected-campus', val);
+    window.dispatchEvent(new Event('campusChanged'));
+  }}
+  style={{
+    background: '#FAFAFA',
+    border: '1px solid #E5E5E5',
+    borderRadius: '20px',
+    padding: '4px 10px',
+    fontSize: '12px',
+    fontWeight: '600',
+    color: '#111111',
+    cursor: 'pointer',
+    outline: 'none',
+    height: '30px',
+    transition: 'all 0.2s var(--ease)',
+  }}
+>
+            
               <option value="Punjab Campus">📍 Punjab Campus</option>
               <option value="Himachal Campus">📍 Himachal Campus</option>
               <option value="Online Campus">📍 Online Campus</option>
