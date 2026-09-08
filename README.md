@@ -12,7 +12,7 @@
 
 ## 🌐 Live Website
 
-[![Live Website](https://img.shields.io/badge/🚀_Live_Website-Open_Now-blue?style=for-the-badge&logo=vercel)](https://ucampusmart.vercel.app/)
+[![Live Website](https://img.shields.io/badge/🚀_Live_Website-Open_Now-blue?style=for-the-badge&logo=vercel)](https://ucampus-mart.vercel.app/)
 
 ## 🌟 Key Features
 
