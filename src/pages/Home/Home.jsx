@@ -110,6 +110,8 @@ export default function Home() {
     }
   };
 
+  const heroProduct = products.find(p => p.id === 'p1') || products[0];
+
   return (
     <div className="cm-home">
       {/* ---------- LIVE ACTIVITY & TELEMETRY TICKER ---------- */}
@@ -153,92 +155,91 @@ export default function Home() {
         <div className="container cm-hero__inner">
           <div className="cm-hero__copy slide-up">
             <div className="cm-hero__telemetry-header">
-              <span className="mono-badge">HSB · CHITKARA P2P</span>
-              <span className="mono-badge mono-badge--status">STATUS: ONLINE</span>
+              <span className="mono-badge mono-badge--brand">
+                <span className="mono-badge__dot" />
+                CHITKARA · STUDENT MARKETPLACE
+              </span>
             </div>
             
             <h1 className="cm-hero__title">
-              Alright. Let’s fly.
+              <span className="cm-hero__title-intro">Buy. Sell. Exchange.</span>
+              <strong className="cm-hero__title-highlight">Zero middleman fees.</strong>
             </h1>
             <p className="cm-hero__subtitle">
-              Buy, sell, and exchange books, electronics, cycles, and hostel gear directly with verified peers across Chitkara University. Zero middleman fees.
+              Trade books, electronics, cycles, hostel essentials and more with students across Chitkara University.
             </p>
 
-            {/* Micro-Telemetry Console */}
-            <div className="cm-hero__console">
-              <div className="cm-console-line">&gt; waking edge node <span>online</span></div>
-              <div className="cm-console-line">&gt; indexing campus catalog <span>095 active listings</span></div>
-              <div className="cm-console-line">&gt; verified student network <span>4,800+ peers</span></div>
-              <div className="cm-console-line">&gt; trade protocol <span>100% direct handover</span></div>
-            </div>
-            
-            {/* Campus Selector Buttons */}
-            <div className="cm-hero__campus-picker">
-              <button 
-                className={`campus-btn ${activeCampus === 'Punjab Campus' ? 'active' : ''}`}
-                onClick={() => changeCampus('Punjab Campus')}
-              >
-                PUNJAB CAMPUS (RAJPURA)
-              </button>
-              <button 
-                className={`campus-btn ${activeCampus === 'Himachal Campus' ? 'active' : ''}`}
-                onClick={() => changeCampus('Himachal Campus')}
-              >
-                HIMACHAL CAMPUS (BADDI)
-              </button>
-              <button 
-                className={`campus-btn ${activeCampus === 'Online Campus' ? 'active' : ''}`}
-                onClick={() => changeCampus('Online Campus')}
-              >
-                ONLINE CAMPUS
-              </button>
+            <div className="cm-hero__metrics" aria-label="Marketplace metrics">
+              <div className="cm-hero__metric">
+                <strong>{products.length}</strong>
+                <span>Active Listings</span>
+              </div>
+              <div className="cm-hero__metric">
+                <strong>100%</strong>
+                <span>Direct Handover</span>
+              </div>
+              <div className="cm-hero__metric">
+                <strong>0%</strong>
+                <span>Platform Fee</span>
+              </div>
             </div>
 
-            <div className="cm-hero__cta">
-              <Link to="/marketplace"><Button size="lg" variant="primary">Browse Marketplace</Button></Link>
-              <Link to="/sell"><Button size="lg" variant="secondary">Sell an Item</Button></Link>
+            <div className="cm-hero__cta cm-hero__cta--reference">
+              <Link to="/marketplace" className="cm-hero__btn-wrap">
+                <Button size="lg" variant="primary">Browse Listings <span className="btn-arrow">→</span></Button>
+              </Link>
+              <Link to="/sell" className="cm-hero__btn-wrap">
+                <Button size="lg" variant="secondary">Sell an Item <span className="btn-plus">＋</span></Button>
+              </Link>
             </div>
             <div className="cm-hero__search"><SearchBar size="lg" /></div>
+            <div className="cm-hero__pulse cm-hero__pulse--under-search">
+              <span className="cm-hero__pulse-dot" />
+              <span>Active hub: <b>{activeCampus === 'Punjab Campus' ? 'Galileo Block' : activeCampus === 'Himachal Campus' ? 'Baddi Gate 3' : 'CIET Hub'}</b> · verified just now</span>
+            </div>
           </div>
 
           <div className="cm-hero__art slide-up" style={{ animationDelay: '0.1s' }}>
-            {/* Large Tech Numeral from Reference Screenshot 1 */}
+            {/* Large Tech Numeral */}
             <div className="cm-hero__giant-number">
-              <span className="giant-num">095</span>
+              <span className="giant-num">{String(products.length).padStart(3, '0')}</span>
               <span className="giant-num-label">LIVE CAMPUS DEALS</span>
             </div>
 
             {/* Featured Product Floating Card */}
-            <div className="cm-hero__card cm-hero__card--main" onClick={() => openProductById('p2')}>
-              <div className="cm-pcard__glow-bar" />
-              <div className="hero-card-media">
-                <ProductImage src={products[1]?.images?.[0]} alt={products[1]?.title} product={products[1]} />
-                <div className="cm-hero__card-tag">⚡ 01 · HOT DEAL OF THE DAY</div>
-                <div className="hero-card-views">👁 512 views</div>
-              </div>
-              <div className="cm-hero__card-info">
-                <div className="hero-card-top-row">
-                  <span className="card-cat">{products[1].category.toUpperCase()}</span>
-                  <span className="hero-save-badge">SAVE ₹28,900</span>
+            {heroProduct && (
+              <div className="cm-hero__card cm-hero__card--main" onClick={() => openProductById(heroProduct.id)}>
+                <div className="cm-pcard__glow-bar" />
+                <div className="hero-card-media">
+                  <ProductImage src={heroProduct?.images?.[0]} alt={heroProduct?.title} product={heroProduct} />
+                  <div className="hero-card-views">{heroProduct.views || 512} views</div>
                 </div>
-                <strong>{products[1].title}</strong>
-                <div className="card-bottom">
-                  <div className="price-stack">
-                    <span className="card-price">₹{products[1].price.toLocaleString('en-IN')}</span>
-                    <span className="card-strike">₹{products[1].originalPrice.toLocaleString('en-IN')}</span>
+                <div className="cm-hero__card-info">
+                  <div className="hero-card-top-row">
+                    <span className="card-cat">{heroProduct.category?.toUpperCase()}</span>
+                    {heroProduct.originalPrice > heroProduct.price && (
+                      <span className="hero-save-badge">
+                        SAVE ₹{(heroProduct.originalPrice - heroProduct.price).toLocaleString('en-IN')}
+                      </span>
+                    )}
                   </div>
-                  <span className="card-loc">📍 {products[1].location}</span>
-                </div>
-                <div className="hero-card-action">
-                  <span>Click to Quick View →</span>
+                  <strong>{heroProduct.title}</strong>
+                  <div className="card-bottom">
+                    <div className="price-stack">
+                      <span className="card-price">₹{heroProduct.price?.toLocaleString('en-IN')}</span>
+                      {heroProduct.originalPrice && (
+                        <span className="card-strike">₹{heroProduct.originalPrice?.toLocaleString('en-IN')}</span>
+                      )}
+                    </div>
+                    <span className="card-loc">{heroProduct.location}</span>
+                  </div>
+                  <div className="hero-card-action">
+                    <span>View details <b className="action-arrow">→</b></span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="cm-hero__pulse">
-              <span className="cm-hero__pulse-dot" />
-              <span>Active hub: <b>{activeCampus === 'Punjab Campus' ? 'Galileo Block' : activeCampus === 'Himachal Campus' ? 'Baddi Gate 3' : 'CIET Hub'}</b> · verified just now</span>
-            </div>
           </div>
         </div>
       </section>
