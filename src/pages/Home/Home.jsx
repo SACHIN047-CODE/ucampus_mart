@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { categories } from '../../data/categories';
-import { reviews, stats } from '../../data/reviews';
+import { reviews } from '../../data/reviews';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import CategoryCard from '../../components/CategoryCard/CategoryCard';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import ReviewCard from '../../components/ReviewCard/ReviewCard';
-import StatsCard from '../../components/StatsCard/StatsCard';
 import Button from '../../components/Button/Button';
 import ChitkaraLogo from '../../components/ChitkaraLogo/ChitkaraLogo';
 import QuickViewModal from '../../components/QuickViewModal/QuickViewModal';
@@ -241,13 +240,6 @@ export default function Home() {
               <span>Active hub: <b>{activeCampus === 'Punjab Campus' ? 'Galileo Block' : activeCampus === 'Himachal Campus' ? 'Baddi Gate 3' : 'CIET Hub'}</b> · verified just now</span>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ---------- STATS ---------- */}
-      <section className="cm-stats-strip">
-        <div className="container cm-stats-strip__grid">
-          {stats.map((s) => <StatsCard key={s.id} value={s.value} suffix={s.suffix} label={`${s.label} (${activeCampus === 'Punjab Campus' ? 'Punjab' : 'Other'})`} />)}
         </div>
       </section>
 
