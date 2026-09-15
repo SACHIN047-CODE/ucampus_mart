@@ -172,7 +172,7 @@ Make sure you have [Node.js](https://nodejs.org/) (version 18.0.0 or higher) ins
 
 ---
 
-## 🔌 Backend Integration Guide
+## 🔌 Backend Integration Guide 
 
 This project is currently structured as a client-side single-page application with mock datasets in `src/data/` and global state management in `AppContext.jsx`.
 
