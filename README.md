@@ -6,7 +6,7 @@
 [![CSS3](https://img.shields.io/badge/Styling-Pure_CSS-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> A modern, responsive peer-to-peer campus marketplace designed for university students to buy, sell, and trade textbooks, electronics, bicycles, hostel essentials, and stationery within a verified student community.
+> A modern , responsive peer-to-peer campus marketplace designed for university students to buy, sell, and trade textbooks, electronics, bicycles, hostel essentials, and stationery within a verified student community.
 
 ---
 
