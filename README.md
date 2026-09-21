@@ -190,6 +190,6 @@ To integrate with a real backend (e.g., **Node.js / Express + PostgreSQL / Mongo
 
 ---
 
-## 📄 License
+## 📄License
 
 This project is licensed under the [MIT License](LICENSE).
