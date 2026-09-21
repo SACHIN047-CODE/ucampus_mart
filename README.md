@@ -186,7 +186,7 @@ To integrate with a real backend (e.g., **Node.js / Express + PostgreSQL / Mongo
 2. **Replace Mock Imports**:
    Update `AppContext.jsx` and page components to fetch listings, conversations, and user profiles from your REST or GraphQL endpoints using `useEffect` or React Query.
 3. **Persist Authentication**:
-   Replace mock authentication states with JWT / session storage tokens to secure user-specific routes (`/sell`, `/messages`, `/profile`, `/admin`).
+   Replace mock authentication states with JWT / session storage tokens to secure user-specific routes (`/sell`, `/messages`, `/profile`, `/admin`). 
 
 ---
 
