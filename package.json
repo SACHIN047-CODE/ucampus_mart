@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "npm --prefix server run dev",
+    "server:start": "npm --prefix server start",
+    "server:init": "npm --prefix server run db:init",
+    "server:seed": "npm --prefix server run db:seed"
   },
   "dependencies": {
     "react": "^18.3.1",

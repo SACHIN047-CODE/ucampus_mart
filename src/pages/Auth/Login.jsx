@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import Button from '../../components/Button/Button';
 import AuthArt from './AuthArt';
+import { apiLogin } from '../../utils/api';
 import './Auth.css';
 
 export default function Login() {
@@ -11,27 +12,57 @@ export default function Login() {
   const [showPw, setShowPw] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     const errs = {};
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) errs.email = 'Enter a valid email address';
+    if (!/^\S+@\S+\.\S+$/.test(form.email)) errs.email = 'Enter a valid campus email address';
     if (form.password.length < 6) errs.password = 'Password must be at least 6 characters';
     setErrors(errs);
-    if (Object.keys(errs).length === 0) {
-      const emailPrefix = form.email.split('@')[0];
-      const displayName = emailPrefix.includes('.')
-        ? emailPrefix.split('.').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-        : emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
-      const initials = displayName.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'SS';
 
-      login({
-        email: form.email,
-        name: displayName,
-        initials,
-      });
-      showToast('Welcome back! Logged in successfully.');
-      navigate('/profile');
+    if (Object.keys(errs).length === 0) {
+      setIsLoading(true);
+      try {
+        const response = await apiLogin(form.email.trim(), form.password);
+
+        if (response.success && response.user) {
+          // Store token in localStorage for cross-check alongside HTTP-only cookie
+          if (response.token) {
+            localStorage.setItem('campusmart-token', response.token);
+          }
+
+          login(response.user);
+          showToast(`Welcome back, ${response.user.name}! Logged in successfully.`);
+          navigate('/profile');
+        }
+      } catch (err) {
+        setErrors({ general: err.message || 'Login failed. Please check your credentials.' });
+        showToast(err.message || 'Login failed', 'error');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleDemoLogin = async (email, password, label) => {
+    setIsLoading(true);
+    setErrors({});
+    try {
+      const response = await apiLogin(email, password);
+      if (response.success && response.user) {
+        if (response.token) {
+          localStorage.setItem('campusmart-token', response.token);
+        }
+        login(response.user);
+        showToast(`Welcome back, ${response.user.name}! Logged in via ${label}.`);
+        navigate('/profile');
+      }
+    } catch (err) {
+      setErrors({ general: err.message });
+      showToast(err.message, 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,45 +74,70 @@ export default function Login() {
           <h1>Welcome back</h1>
           <p>Log in to continue buying and selling on your campus.</p>
 
+          {errors.general && (
+            <div className="cm-field-error" style={{ marginBottom: '1rem', padding: '0.6rem 0.8rem', background: '#fee2e2', borderRadius: '6px', color: '#dc2626' }}>
+              {errors.general}
+            </div>
+          )}
+
           <div className="cm-auth__social">
             <button
               type="button"
-              onClick={() => {
-                login({ name: 'Sachin Sharma', email: 'sachin.sharma@chitkara.edu.in', initials: 'SS' });
-                showToast('Welcome back, Sachin! Logged in with Google.');
-                navigate('/profile');
-              }}
+              disabled={isLoading}
+              onClick={() => handleDemoLogin('sachin.sharma@chitkara.edu.in', 'student123', 'Demo Student')}
             >
-              Google
+              Demo Student
             </button>
             <button
               type="button"
-              onClick={() => {
-                login({ name: 'Sachin Sharma', email: 'sachin.sharma@chitkara.edu.in', initials: 'SS' });
-                showToast('Welcome back, Sachin! Logged in via Campus SSO.');
-                navigate('/profile');
-              }}
+              disabled={isLoading}
+              onClick={() => handleDemoLogin('admin@campusmart.edu', 'admin123', 'Admin Account')}
             >
-              Campus SSO
+              Demo Admin
             </button>
           </div>
           <div className="cm-auth__divider">or continue with email</div>
 
           <div className={`cm-auth__field ${errors.email ? 'has-error' : ''}`}>
             <label htmlFor="email">Campus Email</label>
-            <input id="email" type="email" placeholder="you@university.edu" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <input
+              id="email"
+              type="email"
+              placeholder="you@university.edu"
+              value={form.email}
+              disabled={isLoading}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
             {errors.email && <span className="cm-field-error">{errors.email}</span>}
           </div>
 
           <div className={`cm-auth__field ${errors.password ? 'has-error' : ''}`}>
             <label htmlFor="password">Password</label>
             <div className="cm-auth__pw-wrap">
-              <input id="password" type={showPw ? 'text' : 'password'} placeholder="••••••••" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-              <button type="button" className="cm-auth__pw-toggle" onClick={() => setShowPw((v) => !v)} aria-label="Toggle password visibility">
+              <input
+                id="password"
+                type={showPw ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={form.password}
+                disabled={isLoading}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+              />
+              <button
+                type="button"
+                className="cm-auth__pw-toggle"
+                onClick={() => setShowPw((v) => !v)}
+                aria-label="Toggle password visibility"
+              >
                 {showPw ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.6 10.6 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.6 10.6 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
                 ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
                 )}
               </button>
             </div>
@@ -89,13 +145,19 @@ export default function Login() {
           </div>
 
           <div className="cm-auth__row">
-            <label><input type="checkbox" /> Remember me</label>
+            <label>
+              <input type="checkbox" /> Remember me
+            </label>
             <Link to="/forgot-password">Forgot password?</Link>
           </div>
 
-          <Button type="submit" size="lg" fullWidth>Log In</Button>
+          <Button type="submit" size="lg" fullWidth disabled={isLoading}>
+            {isLoading ? 'Logging In...' : 'Log In'}
+          </Button>
 
-          <p className="cm-auth__foot">New to CampusMart? <Link to="/register">Create an account</Link></p>
+          <p className="cm-auth__foot">
+            New to CampusMart? <Link to="/register">Create an account</Link>
+          </p>
         </form>
       </div>
     </div>

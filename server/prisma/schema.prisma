@@ -1,0 +1,211 @@
+// Prisma Schema for CampusMart
+// Conforms to CampusMart PRD.md Section 8 (Core Data Model)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                        String             @id @default(uuid())
+  name                      String
+  email                     String             @unique
+  passwordHash              String
+  role                      String             @default("STUDENT") // STUDENT | ADMIN
+  isVerified                Boolean            @default(false)
+  verifiedAt                DateTime?
+  verificationCode          String?
+  verificationCodeExpiresAt DateTime?
+  status                    String             @default("ACTIVE") // ACTIVE | SUSPENDED
+  department                String?
+  hostel                    String?
+  phone                     String?
+  avatar                    String?
+  createdAt                 DateTime           @default(now())
+  updatedAt                 DateTime           @updatedAt
+
+  // Relationships
+  listings                  Listing[]          @relation("UserListings")
+  wishlistEntries           WishlistEntry[]
+  buyerConversations        Conversation[]     @relation("BuyerConversations")
+  sellerConversations       Conversation[]     @relation("SellerConversations")
+  sentMessages              Message[]
+  notifications             Notification[]
+  filedReports              Report[]           @relation("ReporterUser")
+  moderatedReports          Report[]           @relation("ModeratorUser")
+  adminAudits               ModerationAudit[]  @relation("AdminAudits")
+  passwordResets            PasswordReset[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model PasswordReset {
+  id        String    @id @default(uuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([token])
+}
+
+model Category {
+  id          String    @id
+  name        String    @unique
+  slug        String    @unique
+  icon        String?
+  color       String?
+  description String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  listings    Listing[]
+}
+
+model Listing {
+  id              String          @id @default(uuid())
+  sellerId        String
+  seller          User            @relation("UserListings", fields: [sellerId], references: [id], onDelete: Cascade)
+  categoryId      String
+  category        Category        @relation(fields: [categoryId], references: [id])
+  title           String
+  description     String
+  price           Int             // in INR (minor units or integer rupees)
+  condition       String          // NEW | LIKE_NEW | GOOD | FAIR
+  isNegotiable    Boolean         @default(false)
+  pickupLocation  String
+  status          String          @default("ACTIVE") // ACTIVE | SOLD | ARCHIVED | HIDDEN
+  moderationState String          @default("APPROVED") // APPROVED | PENDING_REVIEW | REJECTED
+  viewCount       Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  images          ListingImage[]
+  wishlistEntries WishlistEntry[]
+  conversations   Conversation[]
+  reports         Report[]
+
+  @@index([sellerId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([moderationState])
+  @@index([createdAt])
+  @@index([price])
+}
+
+model ListingImage {
+  id           String   @id @default(uuid())
+  listingId    String
+  listing      Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url          String
+  altText      String?
+  displayOrder Int      @default(0)
+
+  @@index([listingId])
+}
+
+model WishlistEntry {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+  @@index([userId])
+  @@index([listingId])
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  listingId String
+  listing   Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId   String
+  buyer     User      @relation("BuyerConversations", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId  String
+  seller    User      @relation("SellerConversations", fields: [sellerId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  messages  Message[]
+
+  @@unique([listingId, buyerId, sellerId])
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([listingId])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body           String
+  isRead         Boolean      @default(false)
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+model Report {
+  id              String    @id @default(uuid())
+  reporterId      String
+  reporter        User      @relation("ReporterUser", fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType      String    // LISTING | USER
+  targetListingId String?
+  targetListing   Listing?  @relation(fields: [targetListingId], references: [id], onDelete: Cascade)
+  targetUserId    String?
+  reason          String
+  details         String?
+  status          String    @default("OPEN") // OPEN | RESOLVED | DISMISSED
+  moderatorId     String?
+  moderator       User?     @relation("ModeratorUser", fields: [moderatorId], references: [id])
+  resolutionNote  String?
+  createdAt       DateTime  @default(now())
+  resolvedAt      DateTime?
+
+  @@index([reporterId])
+  @@index([targetListingId])
+  @@index([status])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  recipientId String
+  recipient   User     @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  type        String   // INTEREST | MESSAGE | SYSTEM | MODERATION
+  title       String
+  message     String
+  link        String?
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([recipientId])
+  @@index([isRead])
+}
+
+model ModerationAudit {
+  id         String   @id @default(uuid())
+  adminId    String
+  admin      User     @relation("AdminAudits", fields: [adminId], references: [id], onDelete: Cascade)
+  action     String   // HIDE_LISTING | RESTORE_LISTING | DELETE_LISTING | SUSPEND_USER | ACTIVATE_USER | RESOLVE_REPORT
+  targetType String   // LISTING | USER | REPORT
+  targetId   String
+  reason     String
+  createdAt  DateTime @default(now())
+
+  @@index([adminId])
+  @@index([targetType, targetId])
+}
