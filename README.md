@@ -6,7 +6,7 @@
 [![CSS3](https://img.shields.io/badge/Styling-Pure_CSS-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> A modern, responsive peer-to-peer campus marketplace designed for university students to buy, sell, and trade textbooks, electronics, bicycles, hostel essentials, and stationery within a verified student community.
+> A modern , responsive peer-to-peer campus marketplace designed for university students to buy, sell, and trade textbooks, electronics, bicycles, hostel essentials, and stationery within a verified student community.
 
 ---
 
@@ -172,7 +172,7 @@ Make sure you have [Node.js](https://nodejs.org/) (version 18.0.0 or higher) ins
 
 ---
 
-## 🔌 Backend Integration Guide
+## 🔌 Backend Integration Guide 
 
 This project is currently structured as a client-side single-page application with mock datasets in `src/data/` and global state management in `AppContext.jsx`.
 
@@ -186,10 +186,10 @@ To integrate with a real backend (e.g., **Node.js / Express + PostgreSQL / Mongo
 2. **Replace Mock Imports**:
    Update `AppContext.jsx` and page components to fetch listings, conversations, and user profiles from your REST or GraphQL endpoints using `useEffect` or React Query.
 3. **Persist Authentication**:
-   Replace mock authentication states with JWT / session storage tokens to secure user-specific routes (`/sell`, `/messages`, `/profile`, `/admin`).
+   Replace mock authentication states with JWT / session storage tokens to secure user-specific routes (`/sell`, `/messages`, `/profile`, `/admin`). 
 
 ---
 
-## 📄 License
+## 📄License
 
 This project is licensed under the [MIT License](LICENSE).
