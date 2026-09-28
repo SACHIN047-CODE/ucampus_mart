@@ -11,6 +11,7 @@ export function getPool() {
       user: config.db.user,
       password: config.db.password,
       database: config.db.database,
+      ssl: config.db.ssl,
       connectionLimit: config.db.connectionLimit,
       waitForConnections: config.db.waitForConnections,
       queueLimit: config.db.queueLimit,

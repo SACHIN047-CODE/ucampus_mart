@@ -8,25 +8,26 @@ export async function initDatabase() {
 
   let rootConn;
   try {
-    // 1. Connect without database to ensure database exists
+    // 1. Attempt to connect without database to ensure database exists (for local MySQL)
     rootConn = await mysql.createConnection({
       host: config.db.host,
       port: config.db.port,
       user: config.db.user,
       password: config.db.password,
+      ssl: config.db.ssl,
     });
 
-    console.log(`Creating database '${config.db.database}' if not exists...`);
+    console.log(`Checking/Creating database '${config.db.database}'...`);
     await rootConn.query(
       `CREATE DATABASE IF NOT EXISTS \`${config.db.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
     );
     await rootConn.end();
   } catch (err) {
-    console.error('❌ Failed to connect to MySQL server:');
-    console.error(`Error Code: ${err.code}`);
-    console.error(`Message: ${err.message}`);
-    console.error('\n👉 Please check server/.env to ensure DB_PASSWORD and DB_USER match your MySQL settings.');
-    throw err;
+    if (rootConn) {
+      try { await rootConn.end(); } catch (_) {}
+    }
+    // Managed databases like Aiven already create the database (e.g. 'defaultdb') and restrict CREATE DATABASE
+    console.log(`ℹ️ Root connection note: (${err.message}). Connecting directly to target database '${config.db.database}'...`);
   }
 
   // 2. Connect to the target database and build tables
@@ -36,6 +37,7 @@ export async function initDatabase() {
     user: config.db.user,
     password: config.db.password,
     database: config.db.database,
+    ssl: config.db.ssl,
   });
 
   try {
