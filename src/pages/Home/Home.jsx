@@ -28,6 +28,70 @@ export default function Home() {
   const [estCondition, setEstCondition] = useState('good');
   const [estimatedPrice, setEstimatedPrice] = useState(null);
 
+  // Editorial Reference Carousel State
+  const [heroSlideIdx, setHeroSlideIdx] = useState(0);
+  const [isSlidePlaying, setIsSlidePlaying] = useState(true);
+
+  const heroSlides = [
+    {
+      id: 'slide-1',
+      tag: 'CHITKARA · STUDENT COMMERCE',
+      headline: 'Gear That Defies Your Every day Routine',
+      sub: 'Trade laptops, course books, bicycles and dorm essentials directly with campus peers with zero platform fees.',
+      ctaText: 'Explore Marketplace',
+      ctaLink: '/marketplace',
+      secondaryCta: 'Sell an Item',
+      secondaryLink: '/sell',
+      imgSrc: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&auto=format&fit=crop',
+      alt: 'Campus Student Lifestyle',
+      badge: 'CAMPUS TRENDING',
+    },
+    {
+      id: 'slide-2',
+      tag: 'ACADEMIC ESSENTIALS',
+      headline: 'Books That Elevate Your Semester Grades',
+      sub: 'Save up to 80% on verified engineering, medical, and management textbooks with notes from seniors.',
+      ctaText: 'Browse Textbooks',
+      ctaLink: '/marketplace?category=books',
+      secondaryCta: 'List Your Notes',
+      secondaryLink: '/sell',
+      imgSrc: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&auto=format&fit=crop',
+      alt: 'University Study Essentials',
+      badge: 'SAVE UP TO 80%',
+    },
+    {
+      id: 'slide-3',
+      tag: 'CAMPUS MOBILITY',
+      headline: 'Rides That Beat The Morning Lecture Rush',
+      sub: 'Verified bicycles, calculators, and lab equipment ready for instant physical hostel handovers.',
+      ctaText: 'View Bicycles',
+      ctaLink: '/marketplace?category=cycles',
+      secondaryCta: 'List a Cycle',
+      secondaryLink: '/sell',
+      imgSrc: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1200&auto=format&fit=crop',
+      alt: 'Campus Mobility',
+      badge: 'COMMUTE READY',
+    },
+  ];
+
+  useEffect(() => {
+    if (!isSlidePlaying) return;
+    const interval = setInterval(() => {
+      setHeroSlideIdx((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isSlidePlaying, heroSlides.length]);
+
+  const currentSlide = heroSlides[heroSlideIdx];
+
+  const handlePrevSlide = () => {
+    setHeroSlideIdx((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  const handleNextSlide = () => {
+    setHeroSlideIdx((prev) => (prev + 1) % heroSlides.length);
+  };
+
   // Sync Campus selector with Navbar
   useEffect(() => {
     const handleCampusChange = () => {
@@ -149,97 +213,194 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ---------- HERO ---------- */}
-      <section className="cm-hero">
-        <div className="cm-hero__ambient-glow" />
-        <div className="container cm-hero__inner">
-          <div className="cm-hero__copy slide-up">
-            <div className="cm-hero__telemetry-header">
-              <span className="mono-badge mono-badge--brand">
-                <span className="mono-badge__dot" />
-                CHITKARA · STUDENT MARKETPLACE
-              </span>
-            </div>
-            
-            <h1 className="cm-hero__title">
-              <span className="cm-hero__title-intro">Buy. Sell. Exchange.</span>
-              <strong className="cm-hero__title-highlight">Zero middleman fees.</strong>
-            </h1>
-            <p className="cm-hero__subtitle">
-              Trade books, electronics, cycles, hostel essentials and more with students across Chitkara University.
-            </p>
+      {/* ---------- EDITORIAL HERO (REFERENCE DESIGN ARCHITECTURE) ---------- */}
+      <section className="cm-hero-editorial">
+        <div className="container">
+          <div className="cm-hero-banner">
+            <div className="cm-hero-banner__bg-art" />
 
-            <div className="cm-hero__metrics" aria-label="Marketplace metrics">
-              <div className="cm-hero__metric">
-                <strong>{products.length}</strong>
-                <span>Active Listings</span>
-              </div>
-              <div className="cm-hero__metric">
-                <strong>100%</strong>
-                <span>Direct Handover</span>
-              </div>
-              <div className="cm-hero__metric">
-                <strong>0%</strong>
-                <span>Platform Fee</span>
-              </div>
-            </div>
+            <div className="cm-hero-banner__inner">
+              {/* Left Copy Column */}
+              <div className="cm-hero-banner__copy slide-up" key={currentSlide.id}>
+                <div className="cm-hero-banner__telemetry">
+                  <span className="editorial-mono-badge">
+                    <span className="editorial-dot" />
+                    {currentSlide.tag}
+                  </span>
+                  <span className="editorial-slide-num">
+                    0{heroSlideIdx + 1} / 0{heroSlides.length}
+                  </span>
+                </div>
 
-            <div className="cm-hero__cta cm-hero__cta--reference">
-              <Link to="/marketplace" className="cm-hero__btn-wrap">
-                <Button size="lg" variant="primary">Browse Listings <span className="btn-arrow">→</span></Button>
-              </Link>
-              <Link to="/sell" className="cm-hero__btn-wrap">
-                <Button size="lg" variant="secondary">Sell an Item <span className="btn-plus">＋</span></Button>
-              </Link>
-            </div>
-            <div className="cm-hero__search"><SearchBar size="lg" /></div>
-            <div className="cm-hero__pulse cm-hero__pulse--under-search">
-              <span className="cm-hero__pulse-dot" />
-              <span>Active hub: <b>{activeCampus === 'Punjab Campus' ? 'Galileo Block' : activeCampus === 'Himachal Campus' ? 'Baddi Gate 3' : 'CIET Hub'}</b> · verified just now</span>
+                <h1 className="cm-hero-banner__headline">
+                  {currentSlide.headline}
+                </h1>
+
+                <p className="cm-hero-banner__sub">
+                  {currentSlide.sub}
+                </p>
+
+                {/* Pill-shaped CTA Buttons matching reference photo */}
+                <div className="cm-hero-banner__actions">
+                  <Link to={currentSlide.ctaLink} className="editorial-pill-btn editorial-pill-btn--primary">
+                    <span>{currentSlide.ctaText}</span>
+                    <span className="editorial-pill-arrow">→</span>
+                  </Link>
+                  <Link to={currentSlide.secondaryLink} className="editorial-pill-btn editorial-pill-btn--secondary">
+                    <span>{currentSlide.secondaryCta}</span>
+                    <span className="editorial-pill-plus">＋</span>
+                  </Link>
+                </div>
+
+                {/* Integrated Search Bar */}
+                <div className="cm-hero-banner__search">
+                  <SearchBar size="lg" />
+                </div>
+
+                {/* Metrics & Campus Radar */}
+                <div className="cm-hero-banner__metrics">
+                  <div className="banner-metric">
+                    <strong>{products.length}</strong>
+                    <span>Campus Listings</span>
+                  </div>
+                  <div className="banner-metric">
+                    <strong>100%</strong>
+                    <span>Direct Meetup</span>
+                  </div>
+                  <div className="banner-metric">
+                    <strong>0%</strong>
+                    <span>Middleman Fee</span>
+                  </div>
+                </div>
+
+                <div className="cm-hero-banner__status">
+                  <span className="status-ping" />
+                  <span>
+                    Active Hub: <b>{activeCampus}</b> · Direct peer handovers
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Media / Lifestyle Image Column */}
+              <div className="cm-hero-banner__media slide-up" style={{ animationDelay: '0.1s' }}>
+                <div className="cm-hero-banner__img-wrapper">
+                  <img
+                    src={currentSlide.imgSrc}
+                    alt={currentSlide.alt}
+                    className="cm-hero-banner__img"
+                    key={`hero-img-${currentSlide.id}`}
+                  />
+                  <div className="cm-hero-banner__img-scrim" />
+
+                  {/* Floating Deal Card */}
+                  {heroProduct && (
+                    <div 
+                      className="cm-hero-banner__featured-pill"
+                      onClick={() => openProductById(heroProduct.id)}
+                    >
+                      <div className="hero-pill-badge">{currentSlide.badge}</div>
+                      <div className="hero-pill-info">
+                        <strong>{heroProduct.title}</strong>
+                        <span>₹{heroProduct.price?.toLocaleString('en-IN')} · {heroProduct.location}</span>
+                      </div>
+                      <div className="hero-pill-arrow">→</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Circular Slider Controls (Exact match to reference bottom-right buttons) */}
+                <div className="cm-hero-banner__controls" aria-label="Carousel navigation">
+                  <button
+                    type="button"
+                    className={`cm-ctrl-circle ${isSlidePlaying ? 'is-active' : ''}`}
+                    onClick={() => setIsSlidePlaying(!isSlidePlaying)}
+                    title={isSlidePlaying ? 'Pause slide rotation' : 'Resume slide rotation'}
+                  >
+                    {isSlidePlaying ? (
+                      <span className="ctrl-pause-icon">❚❚</span>
+                    ) : (
+                      <span className="ctrl-play-icon">▶</span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className="cm-ctrl-circle"
+                    onClick={handlePrevSlide}
+                    title="Previous slide"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    className="cm-ctrl-circle"
+                    onClick={handleNextSlide}
+                    title="Next slide"
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="cm-hero__art slide-up" style={{ animationDelay: '0.1s' }}>
-            {/* Large Tech Numeral */}
-            <div className="cm-hero__giant-number">
-              <span className="giant-num">{String(products.length).padStart(3, '0')}</span>
-              <span className="giant-num-label">LIVE CAMPUS DEALS</span>
-            </div>
-
-            {/* Featured Product Floating Card */}
-            {heroProduct && (
-              <div className="cm-hero__card cm-hero__card--main" onClick={() => openProductById(heroProduct.id)}>
-                <div className="cm-pcard__glow-bar" />
-                <div className="hero-card-media">
-                  <ProductImage src={heroProduct?.images?.[0]} alt={heroProduct?.title} product={heroProduct} />
-                  <div className="hero-card-views">{heroProduct.views || 512} views</div>
-                </div>
-                <div className="cm-hero__card-info">
-                  <div className="hero-card-top-row">
-                    <span className="card-cat">{heroProduct.category?.toUpperCase()}</span>
-                    {heroProduct.originalPrice > heroProduct.price && (
-                      <span className="hero-save-badge">
-                        SAVE ₹{(heroProduct.originalPrice - heroProduct.price).toLocaleString('en-IN')}
-                      </span>
-                    )}
-                  </div>
-                  <strong>{heroProduct.title}</strong>
-                  <div className="card-bottom">
-                    <div className="price-stack">
-                      <span className="card-price">₹{heroProduct.price?.toLocaleString('en-IN')}</span>
-                      {heroProduct.originalPrice && (
-                        <span className="card-strike">₹{heroProduct.originalPrice?.toLocaleString('en-IN')}</span>
-                      )}
-                    </div>
-                    <span className="card-loc">{heroProduct.location}</span>
-                  </div>
-                  <div className="hero-card-action">
-                    <span>View details <b className="action-arrow">→</b></span>
-                  </div>
-                </div>
+          {/* ---------- 3 SPOTLIGHT SHOWCASE CARDS (MATCHING REFERENCE CARDS ROW) ---------- */}
+          <div className="cm-spotlight-row">
+            <Link to="/marketplace?category=electronics" className="cm-spotlight-card">
+              <div className="cm-spotlight-card__header">
+                <span className="cm-spotlight-card__badge">TECH DEALS</span>
+                <span className="cm-spotlight-card__arrow">↗</span>
               </div>
-            )}
+              <div className="cm-spotlight-card__visual">
+                <img
+                  src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop"
+                  alt="Apple & Tech"
+                  loading="lazy"
+                />
+              </div>
+              <div className="cm-spotlight-card__footer">
+                <h3>MacBooks &amp; Tech</h3>
+                <p>Laptops, iPads, chargers &amp; accessories</p>
+                <span className="cm-spotlight-card__btn">Shop Now →</span>
+              </div>
+            </Link>
 
+            <Link to="/marketplace?category=books" className="cm-spotlight-card">
+              <div className="cm-spotlight-card__header">
+                <span className="cm-spotlight-card__badge">ACADEMIC BOOKS</span>
+                <span className="cm-spotlight-card__arrow">↗</span>
+              </div>
+              <div className="cm-spotlight-card__visual">
+                <img
+                  src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop"
+                  alt="Academic Books"
+                  loading="lazy"
+                />
+              </div>
+              <div className="cm-spotlight-card__footer">
+                <h3>Verified Textbooks</h3>
+                <p>Semester books, solved papers &amp; notes</p>
+                <span className="cm-spotlight-card__btn">Shop Now →</span>
+              </div>
+            </Link>
+
+            <Link to="/marketplace?category=cycles" className="cm-spotlight-card">
+              <div className="cm-spotlight-card__header">
+                <span className="cm-spotlight-card__badge">CAMPUS COMMUTE</span>
+                <span className="cm-spotlight-card__arrow">↗</span>
+              </div>
+              <div className="cm-spotlight-card__visual">
+                <img
+                  src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&auto=format&fit=crop"
+                  alt="Campus Bicycles"
+                  loading="lazy"
+                />
+              </div>
+              <div className="cm-spotlight-card__footer">
+                <h3>Pre-Owned Bicycles</h3>
+                <p>Gear cycles &amp; campus runabouts</p>
+                <span className="cm-spotlight-card__btn">Shop Now →</span>
+              </div>
+            </Link>
           </div>
         </div>
       </section>

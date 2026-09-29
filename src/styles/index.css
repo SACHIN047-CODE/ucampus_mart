@@ -37,12 +37,23 @@
   --shadow-float: 0 12px 28px rgba(225, 29, 36, 0.14);
   
   /* Typography */
+  --font-editorial: 'Playfair Display', Georgia, serif;
   --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-heading: 'Plus Jakarta Sans', 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', 'Space Grotesk', monospace;
   
+  /* Editorial Layout & Studio Atmosphere (Exact reference style) */
+  --hero-bg: #ded6c9;
+  --hero-bg-gradient: linear-gradient(135deg, #e6ded1 0%, #d6cbba 100%);
+  --hero-text: #1c1b18;
+  --hero-subtitle: #4a4843;
+  --hero-pill-bg: #fcfbf9;
+  --hero-pill-text: #1c1b18;
+  --hero-pill-border: rgba(28, 27, 24, 0.14);
+  --card-radius-editorial: 20px;
+  
   /* Sizing & Geometry */
-  --radius: 12px;
+  --radius: 14px;
   --radius-sm: 8px;
   --radius-lg: 20px;
   --radius-full: 9999px;
@@ -53,19 +64,28 @@
 
 [data-theme='dark'] {
   /* Dark Theme (Matte Obsidian / Carbon / Precision Lighting) */
-  --bg: #090a0d;
-  --bg-elevated: #111318;
-  --bg-subtle: #151820;
-  --card: #111318;
-  --card-subtle: #161820;
-  --dark-bg: #050608;
+  --bg: #0b0c0f;
+  --bg-elevated: #121419;
+  --bg-subtle: #171920;
+  --card: #12141a;
+  --card-subtle: #181a22;
+  --dark-bg: #07080a;
   
-  --text: #f4f4f7;
-  --text-muted: #9da3af;
-  --text-soft: #676d79;
+  --text: #f5f4f0;
+  --text-muted: #a3a8b5;
+  --text-soft: #6d7382;
   --border: rgba(255, 255, 255, 0.085);
   --border-strong: rgba(255, 255, 255, 0.22);
   --border-hairline: rgba(255, 255, 255, 0.05);
+  
+  /* Editorial Dark Mode */
+  --hero-bg: #121418;
+  --hero-bg-gradient: linear-gradient(135deg, #171920 0%, #0d0f13 100%);
+  --hero-text: #f7f5f0;
+  --hero-subtitle: #a8adb8;
+  --hero-pill-bg: #f7f5f0;
+  --hero-pill-text: #0d0f13;
+  --hero-pill-border: rgba(255, 255, 255, 0.25);
   
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
