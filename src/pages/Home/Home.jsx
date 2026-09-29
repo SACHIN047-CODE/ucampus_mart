@@ -36,9 +36,9 @@ export default function Home() {
     {
       id: 'slide-1',
       tag: 'CHITKARA · STUDENT COMMERCE',
-      headline: 'Gear That Defies Your Every day Routine',
+      headline: 'Gear That Defines Your Campus Life',
       sub: 'Trade laptops, course books, bicycles and dorm essentials directly with campus peers with zero platform fees.',
-      ctaText: 'Explore Marketplace',
+      ctaText: 'Explore Now',
       ctaLink: '/marketplace',
       secondaryCta: 'Sell an Item',
       secondaryLink: '/sell',
@@ -178,41 +178,6 @@ export default function Home() {
 
   return (
     <div className="cm-home">
-      {/* ---------- LIVE ACTIVITY & TELEMETRY TICKER ---------- */}
-      <div className="cm-live-ticker">
-        <div className="cm-live-ticker__inner">
-          <div className="cm-live-ticker__badge">READY ▍</div>
-          <div className="cm-live-ticker__mono-tag">CHITKARA · EDGE P2P</div>
-          <div className="cm-live-ticker__marquee-wrap">
-            <div className="cm-live-ticker__marquee">
-              <span onClick={() => openProductById('p4')} className="ticker-item">
-                &gt; Priya N. listed <b>Lab Coat + Safety Goggles</b> for ₹180 near Chemistry Block
-              </span>
-              <span onClick={() => openProductById('p7')} className="ticker-item">
-                &gt; Aditya R. listed <b>Casio FX-991CW Calculator</b> for ₹550 at Engineering Block
-              </span>
-              <span onClick={() => openProductById('p2')} className="ticker-item">
-                &gt; Rohan M. listed <b>MacBook Air M1</b> at Einstein Block C
-              </span>
-              <span onClick={() => openProductById('p5')} className="ticker-item">
-                &gt; Karan S. saved <b>Foldable Study Table</b> near Socrates Hostel
-              </span>
-              <span onClick={() => openProductById('p22')} className="ticker-item">
-                &gt; Harsh V. listed <b>Drafting Kit (Civil Lab)</b> for ₹220 at Nehru Hostel
-              </span>
-              {/* Duplicate for seamless infinite loop */}
-              <span onClick={() => openProductById('p4')} className="ticker-item">
-                &gt; Priya N. listed <b>Lab Coat + Safety Goggles</b> for ₹180 near Chemistry Block
-              </span>
-              <span onClick={() => openProductById('p7')} className="ticker-item">
-                &gt; Aditya R. listed <b>Casio FX-991CW Calculator</b> for ₹550 at Engineering Block
-              </span>
-            </div>
-          </div>
-          <div className="cm-live-ticker__right-tag">MMXXVI</div>
-        </div>
-      </div>
-
       {/* ---------- EDITORIAL HERO (REFERENCE DESIGN ARCHITECTURE) ---------- */}
       <section className="cm-hero-editorial">
         <div className="container">
@@ -346,59 +311,50 @@ export default function Home() {
           {/* ---------- 3 SPOTLIGHT SHOWCASE CARDS (MATCHING REFERENCE CARDS ROW) ---------- */}
           <div className="cm-spotlight-row">
             <Link to="/marketplace?category=electronics" className="cm-spotlight-card">
-              <div className="cm-spotlight-card__header">
-                <span className="cm-spotlight-card__badge">TECH DEALS</span>
-                <span className="cm-spotlight-card__arrow">↗</span>
+              <div className="cm-spotlight-card__top">
+                <span className="cm-spotlight-card__badge">Minimilist Badge</span>
               </div>
-              <div className="cm-spotlight-card__visual">
-                <img
-                  src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop"
-                  alt="Apple & Tech"
-                  loading="lazy"
-                />
-              </div>
-              <div className="cm-spotlight-card__footer">
-                <h3>MacBooks &amp; Tech</h3>
-                <p>Laptops, iPads, chargers &amp; accessories</p>
-                <span className="cm-spotlight-card__btn">Shop Now →</span>
+              <div className="cm-spotlight-card__body">
+                <h3 className="cm-spotlight-card__title">Apple<br />MacBooks</h3>
+                <div className="cm-spotlight-card__visual">
+                  <img
+                    src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop"
+                    alt="Apple MacBooks"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </Link>
 
             <Link to="/marketplace?category=books" className="cm-spotlight-card">
-              <div className="cm-spotlight-card__header">
-                <span className="cm-spotlight-card__badge">ACADEMIC BOOKS</span>
-                <span className="cm-spotlight-card__arrow">↗</span>
+              <div className="cm-spotlight-card__top">
+                <span className="cm-spotlight-card__badge">Academic Books</span>
               </div>
-              <div className="cm-spotlight-card__visual">
-                <img
-                  src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop"
-                  alt="Academic Books"
-                  loading="lazy"
-                />
-              </div>
-              <div className="cm-spotlight-card__footer">
-                <h3>Verified Textbooks</h3>
-                <p>Semester books, solved papers &amp; notes</p>
-                <span className="cm-spotlight-card__btn">Shop Now →</span>
+              <div className="cm-spotlight-card__body">
+                <h3 className="cm-spotlight-card__title">Academic<br />Books</h3>
+                <div className="cm-spotlight-card__visual">
+                  <img
+                    src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop"
+                    alt="Academic Books"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </Link>
 
             <Link to="/marketplace?category=cycles" className="cm-spotlight-card">
-              <div className="cm-spotlight-card__header">
-                <span className="cm-spotlight-card__badge">CAMPUS COMMUTE</span>
-                <span className="cm-spotlight-card__arrow">↗</span>
+              <div className="cm-spotlight-card__top">
+                <span className="cm-spotlight-card__badge">Minimalist City Bike</span>
               </div>
-              <div className="cm-spotlight-card__visual">
-                <img
-                  src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&auto=format&fit=crop"
-                  alt="Campus Bicycles"
-                  loading="lazy"
-                />
-              </div>
-              <div className="cm-spotlight-card__footer">
-                <h3>Pre-Owned Bicycles</h3>
-                <p>Gear cycles &amp; campus runabouts</p>
-                <span className="cm-spotlight-card__btn">Shop Now →</span>
+              <div className="cm-spotlight-card__body">
+                <h3 className="cm-spotlight-card__title">Minimalist<br />City Bike</h3>
+                <div className="cm-spotlight-card__visual">
+                  <img
+                    src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&auto=format&fit=crop"
+                    alt="Minimalist City Bike"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </Link>
           </div>
