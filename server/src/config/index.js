@@ -30,7 +30,9 @@ export const config = {
     cookieMaxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
   },
 
-  clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+  clientUrl: process.env.CLIENT_URL || 'https://ucampus-mart.vercel.app',
+
+  googleClientId: process.env.GOOGLE_CLIENT_ID || '407241904104-u4ckitgki81o6j9mep0r6g8ev1fi2mej.apps.googleusercontent.com',
 
   allowedCampusDomains: (process.env.CAMPUS_EMAIL_DOMAINS || 'chitkara.edu.in,edu.in,ac.in,edu,gmail.com')
     .split(',')

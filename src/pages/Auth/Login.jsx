@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import Button from '../../components/Button/Button';
 import AuthArt from './AuthArt';
-import { apiLogin } from '../../utils/api';
+import { apiLogin, apiGoogleAuth } from '../../utils/api';
+import { GoogleLogin } from '@react-oauth/google';
 import './Auth.css';
 
 export default function Login() {
@@ -45,22 +46,23 @@ export default function Login() {
     }
   };
 
-  const handleDemoLogin = async (email, password, label) => {
+  const handleGoogleSuccess = async (credentialResponse) => {
     setIsLoading(true);
     setErrors({});
     try {
-      const response = await apiLogin(email, password);
+      const response = await apiGoogleAuth(credentialResponse.credential);
       if (response.success && response.user) {
         if (response.token) {
           localStorage.setItem('campusmart-token', response.token);
         }
         login(response.user);
-        showToast(`Welcome back, ${response.user.name}! Logged in via ${label}.`);
+        showToast(`Welcome back, ${response.user.name}! Logged in with Google.`);
         navigate('/profile');
       }
     } catch (err) {
-      setErrors({ general: err.message });
-      showToast(err.message, 'error');
+      const errMsg = err.message || 'Google sign in failed';
+      setErrors({ general: errMsg });
+      showToast(errMsg, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -72,7 +74,7 @@ export default function Login() {
       <div className="cm-auth__form-side">
         <form className="cm-auth__box" onSubmit={submit} noValidate>
           <h1>Welcome back</h1>
-          <p>Log in to continue buying and selling on your campus.</p>
+          <p>Log in with your real Google account or campus credentials.</p>
 
           {errors.general && (
             <div className="cm-field-error" style={{ marginBottom: '1rem', padding: '0.6rem 0.8rem', background: '#fee2e2', borderRadius: '6px', color: '#dc2626' }}>
@@ -80,22 +82,20 @@ export default function Login() {
             </div>
           )}
 
-          <div className="cm-auth__social">
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleDemoLogin('sachin.sharma@chitkara.edu.in', 'student123', 'Demo Student')}
-            >
-              Demo Student
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleDemoLogin('admin@campusmart.edu', 'admin123', 'Admin Account')}
-            >
-              Demo Admin
-            </button>
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => {
+                showToast('Google Sign In was cancelled or failed.', 'error');
+              }}
+              shape="rectangular"
+              theme="outline"
+              size="large"
+              width="100%"
+              text="signin_with"
+            />
           </div>
+
           <div className="cm-auth__divider">or continue with email</div>
 
           <div className={`cm-auth__field ${errors.email ? 'has-error' : ''}`}>

@@ -2,8 +2,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { z } from 'zod';
+import { OAuth2Client } from 'google-auth-library';
 import { config } from '../config/index.js';
 import { query } from '../db/pool.js';
+
+const googleClient = new OAuth2Client(config.googleClientId);
 
 /**
  * Generate 6-digit verification code
@@ -570,3 +573,92 @@ export async function changePassword(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * POST /api/v1/auth/google
+ */
+export async function googleAuth(req, res, next) {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'MISSING_CREDENTIAL', message: 'Google credential token is required' },
+      });
+    }
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: config.googleClientId,
+    });
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'INVALID_TOKEN', message: 'Invalid Google token payload' },
+      });
+    }
+
+    const email = payload.email.toLowerCase().trim();
+    const name = payload.name || email.split('@')[0];
+    const picture = payload.picture || null;
+
+    const [existing] = await query('SELECT * FROM users WHERE email = ?', [email]);
+    let user;
+
+    if (existing.length === 0) {
+      const userId = 'user-' + crypto.randomUUID();
+      const tempHash = await bcrypt.hash(crypto.randomBytes(16).toString('hex'), 10);
+
+      await query(
+        `INSERT INTO users (id, name, email, password_hash, role, is_verified, verified_at, avatar, status)
+         VALUES (?, ?, ?, ?, 'STUDENT', TRUE, NOW(), ?, 'ACTIVE')`,
+        [userId, name, email, tempHash, picture]
+      );
+
+      const [newUser] = await query('SELECT * FROM users WHERE id = ?', [userId]);
+      user = newUser[0];
+    } else {
+      user = existing[0];
+      if (user.status === 'SUSPENDED') {
+        return res.status(403).json({
+          success: false,
+          error: { code: 'ACCOUNT_SUSPENDED', message: 'Your account has been suspended.' },
+        });
+      }
+
+      // Update avatar if missing or if verified was false
+      if (!user.is_verified || (!user.avatar && picture)) {
+        await query(
+          'UPDATE users SET is_verified = TRUE, verified_at = COALESCE(verified_at, NOW()), avatar = COALESCE(avatar, ?) WHERE id = ?',
+          [picture, user.id]
+        );
+        user.is_verified = 1;
+        if (!user.avatar) user.avatar = picture;
+      }
+    }
+
+    const token = signToken(user);
+    setAuthCookie(res, token);
+
+    res.json({
+      success: true,
+      message: 'Google login successful',
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVerified: Boolean(user.is_verified),
+        department: user.department,
+        hostel: user.hostel,
+        phone: user.phone,
+        avatar: user.avatar,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+

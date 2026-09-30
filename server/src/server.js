@@ -28,11 +28,15 @@ app.use(
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, postman) or matching clientUrl
-      if (!origin || origin === config.clientUrl || origin.startsWith('http://localhost:')) {
+      if (
+        !origin ||
+        origin === config.clientUrl ||
+        origin.startsWith('http://localhost:') ||
+        origin.endsWith('.vercel.app')
+      ) {
         callback(null, true);
       } else {
-        callback(new Error('Blocked by CORS policy'));
+        callback(new Error(`Blocked by CORS policy: origin ${origin} not allowed`));
       }
     },
     credentials: true,

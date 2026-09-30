@@ -3,11 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import Button from '../../components/Button/Button';
 import AuthArt from './AuthArt';
-import { apiRegister } from '../../utils/api';
+import { apiRegister, apiGoogleAuth } from '../../utils/api';
+import { GoogleLogin } from '@react-oauth/google';
 import './Auth.css';
 
 export default function Register() {
-  const { showToast } = useApp();
+  const { showToast, login } = useApp();
   const navigate = useNavigate();
   const [showPw, setShowPw] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', password: '', department: '', hostel: '', phone: '' });
@@ -53,19 +54,57 @@ export default function Register() {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setIsLoading(true);
+    setErrors({});
+    try {
+      const response = await apiGoogleAuth(credentialResponse.credential);
+      if (response.success && response.user) {
+        if (response.token) {
+          localStorage.setItem('campusmart-token', response.token);
+        }
+        login(response.user);
+        showToast(`Welcome to CampusMart, ${response.user.name}!`);
+        navigate('/profile');
+      }
+    } catch (err) {
+      const errMsg = err.message || 'Google registration failed';
+      setErrors({ general: errMsg });
+      showToast(errMsg, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="cm-auth">
       <AuthArt />
       <div className="cm-auth__form-side">
         <form className="cm-auth__box" onSubmit={submit} noValidate>
           <h1>Create your account</h1>
-          <p>Sign up with your campus email to get a verified badge.</p>
+          <p>Sign up instantly with your Google account or email.</p>
 
           {errors.general && (
             <div className="cm-field-error" style={{ marginBottom: '1rem', padding: '0.6rem 0.8rem', background: '#fee2e2', borderRadius: '6px', color: '#dc2626' }}>
               {errors.general}
             </div>
           )}
+
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => {
+                showToast('Google Sign Up was cancelled or failed.', 'error');
+              }}
+              shape="rectangular"
+              theme="outline"
+              size="large"
+              width="100%"
+              text="signup_with"
+            />
+          </div>
+
+          <div className="cm-auth__divider">or register with campus email</div>
 
           <div className={`cm-auth__field ${errors.name ? 'has-error' : ''}`}>
             <label htmlFor="name">Full Name</label>

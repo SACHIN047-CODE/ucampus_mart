@@ -10,6 +10,7 @@ import {
   getMe,
   updateProfile,
   changePassword,
+  googleAuth,
   registerSchema,
   loginSchema,
   verifyOtpSchema,
@@ -29,6 +30,7 @@ router.post('/register', authLimiter, validate(registerSchema), register);
 router.post('/verify-email', authLimiter, validate(verifyOtpSchema), verifyEmail);
 router.post('/resend-code', authLimiter, validate(resendOtpSchema), resendVerificationCode);
 router.post('/login', authLimiter, validate(loginSchema), login);
+router.post('/google', authLimiter, googleAuth);
 router.post('/logout', logout);
 router.post('/forgot-password', authLimiter, validate(forgotPasswordSchema), forgotPassword);
 router.post('/reset-password', authLimiter, validate(resetPasswordSchema), resetPassword);

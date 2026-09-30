@@ -1,32 +1,8 @@
-import { createContext, useContext, useState, useCallback } from 'react';
-import { products as seedProducts } from '../data/products';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { getRelevantFallbackImage } from '../utils/imageUtils';
+import { apiGetMe } from '../utils/api';
 
 const AppContext = createContext();
-
-const seedNotifications = [
-  {
-    id: 'n1',
-    message: 'Ananya Sharma showed interest in your "Engineering Mathematics" book.',
-    createdAt: new Date(Date.now() - 5 * 60000).toISOString(),
-    read: false,
-    type: 'interest'
-  },
-  {
-    id: 'n2',
-    message: 'Rohan Mehta sent you a message: "Great, I can pick it up tomorrow"',
-    createdAt: new Date(Date.now() - 60 * 60000).toISOString(),
-    read: false,
-    type: 'message'
-  },
-  {
-    id: 'n3',
-    message: 'Your listing "MacBook Air M1" has been successfully posted.',
-    createdAt: new Date(Date.now() - 24 * 3600000).toISOString(),
-    read: true,
-    type: 'system'
-  }
-];
 
 export function AppProvider({ children }) {
   const [products, setProducts] = useState(() => {
@@ -34,29 +10,37 @@ export function AppProvider({ children }) {
       const saved = localStorage.getItem('campusmart-products');
       if (saved) {
         const parsed = JSON.parse(saved);
-        const hasPicsum = parsed.some((p) => p.images && p.images.some((img) => typeof img === 'string' && img.includes('picsum.photos')));
-        if (hasPicsum) {
-          localStorage.setItem('campusmart-products', JSON.stringify(seedProducts));
-          return seedProducts;
-        }
-        return parsed.map((p) => ({
+        // Exclude mock seed products that had id p1..p20 or fake picsum images
+        const realOnly = parsed.filter((p) => {
+          if (!p.id) return false;
+          if (typeof p.id === 'string' && p.id.match(/^p([1-9]|1[0-9]|20)$/)) return false;
+          return true;
+        });
+        return realOnly.map((p) => ({
           ...p,
-          images: Array.isArray(p.images) && p.images.length > 0 ? p.images : [getRelevantFallbackImage(p.title, p.category)]
+          images: Array.isArray(p.images) && p.images.length > 0 ? p.images : [getRelevantFallbackImage(p.title, p.category)],
         }));
       }
-      return seedProducts;
+      return [];
     } catch {
-      return seedProducts;
+      return [];
     }
   });
+
   const [wishlist, setWishlist] = useState(() => {
     const saved = localStorage.getItem('campusmart-wishlist');
     return saved ? JSON.parse(saved) : [];
   });
+
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('campusmart-user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('campusmart-user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
   });
+
   const [activeChat, setActiveChat] = useState(() => {
     try {
       const saved = localStorage.getItem('campusmart-active-chat');
@@ -65,16 +49,39 @@ export function AppProvider({ children }) {
       return null;
     }
   });
+
   const [toasts, setToasts] = useState([]);
 
   const [notifications, setNotifications] = useState(() => {
     try {
       const saved = localStorage.getItem('campusmart-notifications');
-      return saved ? JSON.parse(saved) : seedNotifications;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Filter out legacy mock notifications
+        return parsed.filter((n) => !['n1', 'n2', 'n3'].includes(n.id));
+      }
+      return [];
     } catch {
-      return seedNotifications;
+      return [];
     }
   });
+
+  // Verify real user session on mount
+  useEffect(() => {
+    const token = localStorage.getItem('campusmart-token');
+    if (token) {
+      apiGetMe()
+        .then((res) => {
+          if (res?.success && res?.user) {
+            setUser((prev) => ({ ...(prev || {}), ...res.user }));
+            localStorage.setItem('campusmart-user', JSON.stringify(res.user));
+          }
+        })
+        .catch(() => {
+          // If session expired, let them log in again
+        });
+    }
+  }, []);
 
   const showToast = useCallback((message, type = 'success') => {
     const id = Date.now() + Math.random();
@@ -160,16 +167,20 @@ export function AppProvider({ children }) {
   }, [addNotification, showToast]);
 
   const login = useCallback((userData = {}) => {
-    const email = userData.email || 'sachin.sharma@chitkara.edu.in';
-    const name = userData.name || (email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()));
-    const initials = userData.initials || (name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || 'SS');
+    const email = userData.email || '';
+    const name = userData.name || (email ? email.split('@')[0] : 'Student');
+    const initials = userData.initials || (name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || 'ST');
     const newUser = {
+      id: userData.id,
       name,
       email,
-      department: userData.department || 'B.Tech CSE, 2nd Year',
-      hostel: userData.hostel || 'CS Dept Hostel',
-      phone: userData.phone || '+91 98765 43210',
+      department: userData.department || '',
+      hostel: userData.hostel || '',
+      phone: userData.phone || '',
+      avatar: userData.avatar || null,
       initials,
+      role: userData.role || 'STUDENT',
+      isVerified: Boolean(userData.isVerified),
       ...userData,
     };
     setUser(newUser);
@@ -179,14 +190,7 @@ export function AppProvider({ children }) {
 
   const updateUser = useCallback((updates = {}) => {
     setUser((prev) => {
-      const base = prev || {
-        name: 'Sachin Sharma',
-        email: 'sachin.sharma@chitkara.edu.in',
-        department: 'B.Tech CSE, 2nd Year',
-        hostel: 'CS Dept Hostel',
-        phone: '+91 98765 43210',
-        initials: 'SS',
-      };
+      const base = prev || {};
       const next = { ...base, ...updates };
       if (updates.name) {
         next.initials = updates.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || base.initials;
