@@ -8,17 +8,20 @@ function getTransporter() {
 
   const { user, pass, service, host, port, secure } = config.email || {};
 
-  if (!user || !pass) {
+  const cleanUser = user ? user.trim() : '';
+  const cleanPass = pass ? pass.trim().replace(/\s+/g, '') : '';
+
+  if (!cleanUser || !cleanPass) {
     return null;
   }
 
   try {
-    if (service === 'gmail' || host.includes('gmail')) {
+    if (service === 'gmail' || (host && host.includes('gmail'))) {
       transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user,
-          pass,
+          user: cleanUser,
+          pass: cleanPass,
         },
       });
     } else {
@@ -27,8 +30,8 @@ function getTransporter() {
         port,
         secure,
         auth: {
-          user,
-          pass,
+          user: cleanUser,
+          pass: cleanPass,
         },
       });
     }
