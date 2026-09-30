@@ -1,4 +1,5 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const rawApiUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1').trim().replace(/\/+$/, '');
+export const API_BASE_URL = rawApiUrl.endsWith('/api/v1') ? rawApiUrl : `${rawApiUrl}/api/v1`;
 
 /**
  * Universal fetch wrapper for CampusMart REST API
@@ -35,7 +36,7 @@ export async function apiFetch(endpoint, options = {}) {
     return data;
   } catch (err) {
     if (err.name === 'TypeError' && err.message.includes('fetch')) {
-      throw new Error('Unable to connect to backend server. Make sure the server is running on http://localhost:5000');
+      throw new Error(`Unable to connect to backend server (${API_BASE_URL}). Please verify your network or try again.`);
     }
     throw err;
   }
