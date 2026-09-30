@@ -112,10 +112,33 @@ export default function VerifyOtp() {
             </svg>
           </div>
           <h1>Verify your email</h1>
-          <p>
-            We sent a 6-digit code to{' '}
-            <strong>{email || 'your campus email'}</strong>. Enter it below to finish setting up your account.
-          </p>
+          {!email ? (
+            <div className="cm-auth__field" style={{ marginBottom: '1.25rem', textAlign: 'left' }}>
+              <label htmlFor="otp-email" style={{ fontSize: '0.85rem', color: '#64748b' }}>Enter the campus email you registered with:</label>
+              <input
+                id="otp-email"
+                type="email"
+                placeholder="you@university.edu"
+                value={email}
+                autoFocus
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  sessionStorage.setItem('campusmart-pending-email', e.target.value.trim());
+                }}
+              />
+            </div>
+          ) : (
+            <p style={{ marginBottom: '1.25rem' }}>
+              We sent a 6-digit code to <strong>{email}</strong>.{' '}
+              <button
+                type="button"
+                style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.85rem', padding: 0 }}
+                onClick={() => setEmail('')}
+              >
+                (Change email)
+              </button>
+            </p>
+          )}
 
           <div className="cm-auth__otp">
             {digits.map((d, i) => (
