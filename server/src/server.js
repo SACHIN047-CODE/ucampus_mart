@@ -17,8 +17,8 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Trust reverse proxy (Render, Vercel, AWS) so express-rate-limit correctly identifies client IPs
-app.set('trust proxy', 1);
+// Trust reverse proxy (Render, Vercel, AWS) so Express & rate-limit trust proxy headers
+app.set('trust proxy', true);
 
 // Security HTTP headers
 app.use(
@@ -98,7 +98,7 @@ app.use(globalErrorHandler);
 
 // Start server
 const server = app.listen(config.port, async () => {
-  console.log(`\n🚀 CampusMart API Server running on http://localhost:${config.port}`);
+  console.log(`\n🚀 CampusMart API Server v1.0.3 [Proxy Ready] running on http://localhost:${config.port}`);
   console.log(`📡 Environment: ${config.nodeEnv}`);
   console.log(`🔗 Allowed Client Origin: ${config.clientUrl}`);
   console.log(`📁 Uploads served from: ${config.uploadDir}`);
