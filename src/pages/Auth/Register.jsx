@@ -58,7 +58,7 @@ export default function Register() {
     setIsLoading(true);
     setErrors({});
     try {
-      const response = await apiGoogleAuth(credentialResponse.credential);
+      const response = await apiGoogleAuth(credentialResponse.credential, 'register');
       if (response.success && response.user) {
         if (response.token) {
           localStorage.setItem('campusmart-token', response.token);

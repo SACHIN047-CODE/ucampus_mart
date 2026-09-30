@@ -52,10 +52,10 @@ export async function apiLogin(email, password) {
   });
 }
 
-export async function apiGoogleAuth(credential) {
+export async function apiGoogleAuth(credential, mode = 'any') {
   return apiFetch('/auth/google', {
     method: 'POST',
-    body: JSON.stringify({ credential }),
+    body: JSON.stringify({ credential, mode }),
   });
 }
 

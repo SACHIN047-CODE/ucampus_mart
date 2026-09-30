@@ -46,4 +46,14 @@ export const config = {
 
   uploadDir: path.resolve(__dirname, '../../', process.env.UPLOAD_DIR || 'uploads'),
   maxFileSize: 5 * 1024 * 1024, // 5MB
+
+  email: {
+    service: process.env.EMAIL_SERVICE || 'gmail',
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT || '465', 10),
+    secure: process.env.SMTP_SECURE === 'true' || true,
+    user: process.env.EMAIL_USER || '',
+    pass: process.env.EMAIL_PASS || '',
+    from: process.env.EMAIL_FROM || (process.env.EMAIL_USER ? `CampusMart <${process.env.EMAIL_USER}>` : 'CampusMart <no-reply@campusmart.edu>'),
+  },
 };

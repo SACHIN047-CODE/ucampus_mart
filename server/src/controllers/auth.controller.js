@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { OAuth2Client } from 'google-auth-library';
 import { config } from '../config/index.js';
 import { query } from '../db/pool.js';
+import { sendOtpEmail } from '../utils/mailer.js';
 
 const googleClient = new OAuth2Client(config.googleClientId);
 
@@ -134,7 +135,13 @@ export async function register(req, res, next) {
       [userId, name, normalizedEmail, passwordHash, verificationCode, expiresAt, department || null, hostel || null, phone || null]
     );
 
-    console.log(`✉️ [Campus Verification Code] Sent code '${verificationCode}' to ${normalizedEmail}`);
+    // Send verification OTP email via Nodemailer
+    await sendOtpEmail({
+      to: normalizedEmail,
+      name,
+      code: verificationCode,
+      purpose: 'verification',
+    });
 
     res.status(201).json({
       success: true,
@@ -174,17 +181,7 @@ export async function verifyEmail(req, res, next) {
 
     const user = users[0];
 
-    if (user.is_verified) {
-      const token = signToken(user);
-      setAuthCookie(res, token);
-      return res.json({
-        success: true,
-        message: 'Account is already verified.',
-        token,
-        user: { id: user.id, name: user.name, email: user.email, role: user.role, isVerified: true },
-      });
-    }
-
+    // Check if code was generated and matches
     if (!user.verification_code || user.verification_code !== code.trim()) {
       return res.status(400).json({
         success: false,
@@ -259,7 +256,12 @@ export async function resendVerificationCode(req, res, next) {
       [verificationCode, expiresAt, users[0].id]
     );
 
-    console.log(`✉️ [Campus Verification Code Resend] Sent code '${verificationCode}' to ${normalizedEmail}`);
+    await sendOtpEmail({
+      to: normalizedEmail,
+      name: users[0].name || 'Student',
+      code: verificationCode,
+      purpose: 'verification',
+    });
 
     res.json({
       success: true,
@@ -309,24 +311,31 @@ export async function login(req, res, next) {
       });
     }
 
-    const token = signToken(user);
-    setAuthCookie(res, token);
+    // Generate login OTP
+    const verificationCode = generateOtp();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+
+    await query(
+      `UPDATE users
+       SET verification_code = ?, verification_code_expires_at = ?
+       WHERE id = ?`,
+      [verificationCode, expiresAt, user.id]
+    );
+
+    // Send OTP email
+    await sendOtpEmail({
+      to: normalizedEmail,
+      name: user.name,
+      code: verificationCode,
+      purpose: 'login',
+    });
 
     res.json({
       success: true,
-      message: 'Logged in successfully.',
-      token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        isVerified: Boolean(user.is_verified),
-        department: user.department,
-        hostel: user.hostel,
-        phone: user.phone,
-        avatar: user.avatar,
-      },
+      requiresOtp: true,
+      email: normalizedEmail,
+      message: 'Login verification code sent to your campus email.',
+      ...(config.isDev ? { devVerificationCode: verificationCode } : {}),
     });
   } catch (error) {
     next(error);
@@ -579,7 +588,7 @@ export async function changePassword(req, res, next) {
  */
 export async function googleAuth(req, res, next) {
   try {
-    const { credential } = req.body;
+    const { credential, mode = 'any' } = req.body;
     if (!credential) {
       return res.status(400).json({
         success: false,
@@ -607,6 +616,17 @@ export async function googleAuth(req, res, next) {
     let user;
 
     if (existing.length === 0) {
+      // If user came from Login screen, do NOT silently create account!
+      if (mode === 'login') {
+        return res.status(404).json({
+          success: false,
+          error: {
+            code: 'ACCOUNT_NOT_FOUND',
+            message: 'No account found with this Google email. Please create an account first.',
+          },
+        });
+      }
+
       const userId = 'user-' + crypto.randomUUID();
       const tempHash = await bcrypt.hash(crypto.randomBytes(16).toString('hex'), 10);
 

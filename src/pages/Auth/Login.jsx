@@ -27,6 +27,16 @@ export default function Login() {
       try {
         const response = await apiLogin(form.email.trim(), form.password);
 
+        if (response.requiresOtp) {
+          sessionStorage.setItem('campusmart-pending-email', form.email.trim());
+          if (response.devVerificationCode) {
+            sessionStorage.setItem('campusmart-dev-otp', response.devVerificationCode);
+          }
+          showToast('Verification code sent to your email! Please enter your OTP.');
+          navigate('/verify-otp');
+          return;
+        }
+
         if (response.success && response.user) {
           // Store token in localStorage for cross-check alongside HTTP-only cookie
           if (response.token) {
@@ -50,7 +60,7 @@ export default function Login() {
     setIsLoading(true);
     setErrors({});
     try {
-      const response = await apiGoogleAuth(credentialResponse.credential);
+      const response = await apiGoogleAuth(credentialResponse.credential, 'login');
       if (response.success && response.user) {
         if (response.token) {
           localStorage.setItem('campusmart-token', response.token);

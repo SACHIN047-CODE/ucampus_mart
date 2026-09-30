@@ -45,12 +45,17 @@ export default function VerifyOtp() {
       return;
     }
 
+    if (!email) {
+      showToast('No pending email found. Please log in or register first.', 'error');
+      navigate('/login');
+      return;
+    }
+
     const code = digits.join('');
-    const targetEmail = email || 'sachin.sharma@chitkara.edu.in';
 
     setIsLoading(true);
     try {
-      const response = await apiVerifyEmail(targetEmail, code);
+      const response = await apiVerifyEmail(email, code);
 
       if (response.success && response.user) {
         if (response.token) {
@@ -59,7 +64,7 @@ export default function VerifyOtp() {
         login(response.user);
         sessionStorage.removeItem('campusmart-pending-email');
         sessionStorage.removeItem('campusmart-dev-otp');
-        showToast('Email verified successfully! Welcome to CampusMart.');
+        showToast('Verified successfully! Welcome to CampusMart.');
         navigate('/profile');
       }
     } catch (err) {
@@ -70,12 +75,15 @@ export default function VerifyOtp() {
   };
 
   const resendCode = async () => {
-    const targetEmail = email || 'sachin.sharma@chitkara.edu.in';
+    if (!email) {
+      showToast('No email found to resend code to.', 'error');
+      return;
+    }
     setIsResending(true);
     try {
       const response = await apiFetch('/auth/resend-code', {
         method: 'POST',
-        body: JSON.stringify({ email: targetEmail }),
+        body: JSON.stringify({ email }),
       });
 
       if (response.data?.devVerificationCode) {
