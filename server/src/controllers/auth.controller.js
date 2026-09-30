@@ -135,13 +135,13 @@ export async function register(req, res, next) {
       [userId, name, normalizedEmail, passwordHash, verificationCode, expiresAt, department || null, hostel || null, phone || null]
     );
 
-    // Send verification OTP email via Nodemailer
-    await sendOtpEmail({
+    // Send verification OTP email via Nodemailer asynchronously
+    sendOtpEmail({
       to: normalizedEmail,
       name,
       code: verificationCode,
       purpose: 'verification',
-    });
+    }).catch(err => console.error('Background email dispatch error:', err?.message || err));
 
     res.status(201).json({
       success: true,
@@ -256,12 +256,12 @@ export async function resendVerificationCode(req, res, next) {
       [verificationCode, expiresAt, users[0].id]
     );
 
-    await sendOtpEmail({
+    sendOtpEmail({
       to: normalizedEmail,
       name: users[0].name || 'Student',
       code: verificationCode,
       purpose: 'verification',
-    });
+    }).catch(err => console.error('Background email dispatch error:', err?.message || err));
 
     res.json({
       success: true,
@@ -322,13 +322,13 @@ export async function login(req, res, next) {
       [verificationCode, expiresAt, user.id]
     );
 
-    // Send OTP email
-    await sendOtpEmail({
+    // Send OTP email asynchronously
+    sendOtpEmail({
       to: normalizedEmail,
       name: user.name,
       code: verificationCode,
       purpose: 'login',
-    });
+    }).catch(err => console.error('Background email dispatch error:', err?.message || err));
 
     res.json({
       success: true,

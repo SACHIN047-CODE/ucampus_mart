@@ -18,21 +18,32 @@ function getTransporter() {
   try {
     if (service === 'gmail' || (host && host.includes('gmail'))) {
       transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
           user: cleanUser,
           pass: cleanPass,
+        },
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 10000,
+        tls: {
+          rejectUnauthorized: false,
         },
       });
     } else {
       transporter = nodemailer.createTransport({
         host,
-        port,
-        secure,
+        port: parseInt(port || '465', 10),
+        secure: Boolean(secure),
         auth: {
           user: cleanUser,
           pass: cleanPass,
         },
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 10000,
       });
     }
     return transporter;
