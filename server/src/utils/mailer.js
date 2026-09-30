@@ -21,13 +21,14 @@ function getTransporter() {
         host: 'smtp.gmail.com',
         port: 465,
         secure: true,
+        family: 4, // Force IPv4 to eliminate Render IPv6 ENETUNREACH
         auth: {
           user: cleanUser,
           pass: cleanPass,
         },
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 10000,
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
+        socketTimeout: 8000,
         tls: {
           rejectUnauthorized: false,
         },
@@ -37,13 +38,14 @@ function getTransporter() {
         host,
         port: parseInt(port || '465', 10),
         secure: Boolean(secure),
+        family: 4,
         auth: {
           user: cleanUser,
           pass: cleanPass,
         },
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 10000,
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
+        socketTimeout: 8000,
       });
     }
     return transporter;
@@ -112,6 +114,34 @@ export async function sendOtpEmail({ to, name = 'Student', code, purpose = 'veri
     </body>
     </html>
   `;
+
+  const resendKey = process.env.RESEND_API_KEY;
+  if (resendKey) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${resendKey.trim()}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: config.email.from || 'CampusMart <onboarding@resend.dev>',
+          to: [to],
+          subject,
+          text: `${headline}\n\nHello ${name},\n\nYour OTP code is: ${code}\n\nThis code will expire in 15 minutes.\n\nCampusMart Team`,
+          html,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        console.log(`✅ [RESEND EMAIL SENT] Successfully sent ${purpose} OTP to ${to} (ID: ${data.id})`);
+        return true;
+      }
+      console.error(`❌ [RESEND API ERROR]:`, data);
+    } catch (err) {
+      console.error(`❌ [RESEND FETCH ERROR]:`, err.message);
+    }
+  }
 
   const mailClient = getTransporter();
 
