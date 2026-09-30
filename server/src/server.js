@@ -17,6 +17,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Trust reverse proxy (Render, Vercel, AWS) so express-rate-limit correctly identifies client IPs
+app.set('trust proxy', 1);
+
 // Security HTTP headers
 app.use(
   helmet({
