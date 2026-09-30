@@ -37,9 +37,9 @@ export default function Register() {
 
         if (response.success) {
           // Store email temporarily so VerifyOtp screen knows where to send verification code
-          sessionStorage.setItem('campusmart-pending-email', form.email.trim());
+          localStorage.setItem('campusmart-pending-email', form.email.trim());
           if (response.data?.devVerificationCode) {
-            sessionStorage.setItem('campusmart-dev-otp', response.data.devVerificationCode);
+            localStorage.setItem('campusmart-dev-otp', response.data.devVerificationCode);
           }
 
           showToast('Account created! Verification code sent to your campus email.');

@@ -28,9 +28,9 @@ export default function Login() {
         const response = await apiLogin(form.email.trim(), form.password);
 
         if (response.requiresOtp) {
-          sessionStorage.setItem('campusmart-pending-email', form.email.trim());
+          localStorage.setItem('campusmart-pending-email', form.email.trim());
           if (response.devVerificationCode) {
-            sessionStorage.setItem('campusmart-dev-otp', response.devVerificationCode);
+            localStorage.setItem('campusmart-dev-otp', response.devVerificationCode);
           }
           showToast('Verification code sent to your email! Please enter your OTP.');
           navigate('/verify-otp');

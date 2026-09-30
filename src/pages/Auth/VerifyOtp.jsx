@@ -16,11 +16,11 @@ export default function VerifyOtp() {
   const refs = useRef([]);
 
   useEffect(() => {
-    const pendingEmail = sessionStorage.getItem('campusmart-pending-email') || '';
+    const pendingEmail = localStorage.getItem('campusmart-pending-email') || sessionStorage.getItem('campusmart-pending-email') || '';
     setEmail(pendingEmail);
 
     // Auto-fill dev OTP if available in development mode
-    const devOtp = sessionStorage.getItem('campusmart-dev-otp');
+    const devOtp = localStorage.getItem('campusmart-dev-otp') || sessionStorage.getItem('campusmart-dev-otp');
     if (devOtp && devOtp.length === 6) {
       setDigits(devOtp.split(''));
     }
@@ -45,23 +45,26 @@ export default function VerifyOtp() {
       return;
     }
 
-    if (!email) {
-      showToast('No pending email found. Please log in or register first.', 'error');
+    const code = digits.join('');
+    const targetEmail = email || localStorage.getItem('campusmart-pending-email') || '';
+
+    if (!targetEmail) {
+      showToast('No pending email found. Please register or log in first.', 'error');
       navigate('/login');
       return;
     }
 
-    const code = digits.join('');
-
     setIsLoading(true);
     try {
-      const response = await apiVerifyEmail(email, code);
+      const response = await apiVerifyEmail(targetEmail, code);
 
       if (response.success && response.user) {
         if (response.token) {
           localStorage.setItem('campusmart-token', response.token);
         }
         login(response.user);
+        localStorage.removeItem('campusmart-pending-email');
+        localStorage.removeItem('campusmart-dev-otp');
         sessionStorage.removeItem('campusmart-pending-email');
         sessionStorage.removeItem('campusmart-dev-otp');
         showToast('Verified successfully! Welcome to CampusMart.');
@@ -75,7 +78,8 @@ export default function VerifyOtp() {
   };
 
   const resendCode = async () => {
-    if (!email) {
+    const targetEmail = email || localStorage.getItem('campusmart-pending-email') || '';
+    if (!targetEmail) {
       showToast('No email found to resend code to.', 'error');
       return;
     }
@@ -83,7 +87,7 @@ export default function VerifyOtp() {
     try {
       const response = await apiFetch('/auth/resend-code', {
         method: 'POST',
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: targetEmail }),
       });
 
       if (response.data?.devVerificationCode) {
@@ -112,33 +116,10 @@ export default function VerifyOtp() {
             </svg>
           </div>
           <h1>Verify your email</h1>
-          {!email ? (
-            <div className="cm-auth__field" style={{ marginBottom: '1.25rem', textAlign: 'left' }}>
-              <label htmlFor="otp-email" style={{ fontSize: '0.85rem', color: '#64748b' }}>Enter the campus email you registered with:</label>
-              <input
-                id="otp-email"
-                type="email"
-                placeholder="you@university.edu"
-                value={email}
-                autoFocus
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  sessionStorage.setItem('campusmart-pending-email', e.target.value.trim());
-                }}
-              />
-            </div>
-          ) : (
-            <p style={{ marginBottom: '1.25rem' }}>
-              We sent a 6-digit code to <strong>{email}</strong>.{' '}
-              <button
-                type="button"
-                style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.85rem', padding: 0 }}
-                onClick={() => setEmail('')}
-              >
-                (Change email)
-              </button>
-            </p>
-          )}
+          <p>
+            We sent a 6-digit code to{' '}
+            <strong>{email || localStorage.getItem('campusmart-pending-email') || 'your campus email'}</strong>. Enter it below to finish setting up your account.
+          </p>
 
           <div className="cm-auth__otp">
             {digits.map((d, i) => (
