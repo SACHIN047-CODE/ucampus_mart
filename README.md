@@ -1,195 +1,234 @@
 # 🎓 CampusMart
 
+[![Live Website](https://img.shields.io/badge/🚀_Live_Website-ucampus--mart.vercel.app-blue?style=for-the-badge&logo=vercel)](https://ucampus-mart.vercel.app/)
+[![API Backend](https://img.shields.io/badge/⚡_API_Server-Render_Live-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://campusmart-api-0nz9.onrender.com/)
+
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-5.4.1-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![React Router](https://img.shields.io/badge/React_Router-v6-CA4245?logo=react-router&logoColor=white)](https://reactrouter.com/)
-[![CSS3](https://img.shields.io/badge/Styling-Pure_CSS-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![Vite](https://img.shields.io/badge/Vite-5.4.21-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express-4.21-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Pure CSS](https://img.shields.io/badge/Styling-Pure_CSS-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> A modern , responsive peer-to-peer campus marketplace designed for university students to buy, sell, and trade textbooks, electronics, bicycles, hostel essentials, and stationery within a verified student community.
+> A modern, full-stack peer-to-peer campus marketplace designed for university students to buy, sell, and trade textbooks, electronics, bicycles, hostel essentials, and stationery within a verified student community.
 
 ---
 
-## 🌐 Live Website
+## 🌟 Key Highlights
 
-[![Live Website](https://img.shields.io/badge/🚀_Live_Website-Open_Now-blue?style=for-the-badge&logo=vercel)](https://ucampus-mart.vercel.app/)
-
-## 🌟 Key Features
-
-### 🛍️ Marketplace & Product Discovery
-- **Faceted Filtering & Search**: Instant keyword search, category filtering, price range sliders, item condition filters, and sorting (price, popularity, newest).
-- **Interactive Product Cards**: Dynamic badges (Verified, Urgent, Featured, Negotiable), instant wishlist toggling, and rating indicators.
-- **Quick View Modal**: Inspect product specifications, high-res image previews, seller badges, and location without leaving the catalog.
-- **Detailed Product Pages**: Multi-image galleries, seller verification badges, condition breakdown, safety tips, similar product recommendations, and direct contact actions.
-
-### 📦 Seamless Listing & Selling
-- **Interactive Sell Flow**: Upload product photos with preview and removal capabilities.
-- **Rich Metadata**: Categorization, condition tags (Brand New, Like New, Good, Fair), negotiable pricing flag, location/hostel details, and description inputs.
-- **Form Validation & Notifications**: Real-time feedback with animated toast notifications.
-
-### 💬 Real-Time In-App Messaging
-- **Messenger-Style Chat UI**: Sidebar with conversation threads, unread counts, and active chat states.
-- **Context-Aware Headers**: Direct product reference attached to chats for streamlined negotiations.
-
-### 👤 Student Dashboard & Profile
-- **Active Listings Management**: Monitor status (Active, Sold, Pending) with quick action controls.
-- **Wishlist / Saved Items**: Dedicated wishlist section persisted to local storage.
-- **Order & Transaction History**: Summary of past campus trades and purchases.
-- **Account & Security Settings**: Manage profile details, campus verification status, and notification preferences.
-
-### 🛡️ Admin Moderation Center
-- **Overview Analytics**: Key performance metrics (Total Users, Active Listings, Resolved Reports, Gross Value).
-- **Listing & User Management**: Review flagged items, verify student credentials, and manage category listings.
-
-### 🌓 Adaptive Theming & UX Excellence
-- **Full Dark / Light Mode**: Smooth theme transitions powered by CSS custom properties (variables) and persistent across browser sessions via `localStorage`.
-- **Pure CSS Architecture**: Zero UI framework dependencies; handcrafted with modern CSS Grid, Flexbox, glassmorphic surfaces, and micro-interactions.
-- **Responsive Layout**: Designed mobile-first, ensuring an optimal experience across phones, tablets, and desktops.
+* **🔐 Dual Authentication Flow**:
+  * **Google OAuth 2.0**: Instant, secure sign-in with campus/personal Google accounts. Automatically validates existing accounts before login.
+  * **Campus Email & Password + 2FA OTP**: Real-time 6-digit one-time password (OTP) verification powered by **Brevo HTTPS API** and Nodemailer.
+* **🛍️ Faceted Marketplace & Search**:
+  * Instant search query filtering, category browsing, price range filters, item condition selectors, and sort orders.
+  * Interactive product cards with dynamic badges (*Verified Student*, *Urgent*, *Featured*, *Negotiable*).
+* **💬 Real-Time In-App Messaging**:
+  * Built-in messaging system connecting buyers and sellers directly about specific listings.
+* **🌓 Adaptive Theming (Pure CSS)**:
+  * Zero heavy CSS framework dependencies. 100% handcrafted with custom CSS variables, glassmorphism, responsive grid/flexbox layouts, and instant Dark/Light mode switching.
+* **🛡️ Security & Performance**:
+  * HTTP-only JWT cookies, Helmet protection, CORS policy, and Express rate limiting with proxy trust for high-concurrency production deployments.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Full-Stack Architecture
 
-- **Core Framework**: [React 18](https://react.dev/)
-- **Routing**: [React Router DOM v6](https://reactrouter.com/)
-- **Build Tooling**: [Vite](https://vitejs.dev/)
-- **Styling**: Vanilla CSS (CSS Variables, Flexbox, CSS Grid, Glassmorphism)
-- **State Management**: React Context API (`AppContext`, `ThemeContext`)
-- **Data Persistence**: Browser `localStorage` (theme preferences, wishlist state)
+### Frontend (Client)
+* **Framework**: React 18 with Vite
+* **Routing**: React Router DOM v6
+* **Styling**: Pure Vanilla CSS with Design System Tokens
+* **State Management**: React Context (`AppContext`, `ThemeContext`)
+* **Hosting**: [Vercel](https://ucampus-mart.vercel.app/)
+
+### Backend (Server)
+* **Runtime**: Node.js (ES Modules)
+* **Server Framework**: Express.js
+* **Database**: MySQL (Hosted on Aiven Cloud / Local MySQL)
+* **Authentication**: JWT, bcryptjs, `@react-oauth/google` / `google-auth-library`
+* **Email Delivery**: Brevo (Sendinblue) HTTPS API & Nodemailer SMTP
+* **Hosting**: [Render](https://campusmart-api-0nz9.onrender.com/)
 
 ---
 
-## 📁 Project Structure
+## 📁 Repository Structure
 
 ```text
 ucampus_mart/
-├── index.html                  # HTML entry point
-├── package.json                # Project dependencies and scripts
-├── vite.config.js              # Vite configuration
-└── src/
-    ├── main.jsx                # Application root mount
-    ├── App.jsx                 # Route definitions and layout wrappers
-    ├── layouts/
-    │   └── MainLayout.jsx      # Global layout (Navbar, Footer, Toast container)
-    ├── pages/
-    │   ├── Home/               # Hero banner, featured listings, categories
-    │   ├── Marketplace/        # Search, faceted filters, product grid/list
-    │   ├── ProductDetails/     # Image gallery, seller bio, safety guide
-    │   ├── Categories/         # Category catalog & exploration
-    │   ├── SellItem/           # Listing creation form with image upload
-    │   ├── Wishlist/           # Saved products collection
-    │   ├── Messages/           # Chat interface with sellers
-    │   ├── Profile/            # Student dashboard, active listings, settings
-    │   ├── Admin/              # Admin metrics, user & listing moderation
-    │   ├── Auth/               # Split-screen Login, Register, Forgot Password, OTP
-    │   └── NotFound/           # Custom 404 page
-    ├── components/             # Reusable UI component library
-    │   ├── Avatar/             # User avatar with fallback initials
-    │   ├── Badge/              # Dynamic status and tag badges
-    │   ├── Button/             # Multi-variant button component
-    │   ├── CategoryCard/       # Category exploration cards
-    │   ├── ChitkaraLogo/       # Campus branding SVG logo
-    │   ├── EmptyState/         # Zero-data feedback displays
-    │   ├── Footer/             # Main footer with links & newsletter
-    │   ├── Navbar/             # Responsive header with search, theme switch & menu
-    │   ├── ProductCard/        # Product presentation tile
-    │   ├── QuickViewModal/     # Fast preview modal for product cards
-    │   ├── ReviewCard/         # Customer reviews & ratings
-    │   ├── SearchBar/          # Header search with suggestions
-    │   ├── StatsCard/          # Metric card for dashboard statistics
-    │   └── Toast/              # Animated toast notification manager
-    ├── context/
-    │   ├── AppContext.jsx      # Global state (wishlist, listings, notifications)
-    │   └── ThemeContext.jsx    # Dark/Light mode theme state & toggling
-    ├── data/
-    │   ├── categories.js       # Predefined campus categories
-    │   ├── mockData.js         # Initial mock products and reviews
-    │   └── products.js         # Product seed dataset
-    ├── styles/
-    │   ├── index.css           # Global resets, typography & CSS tokens
-    │   └── variables.css       # Color palettes, shadows, border-radii
-    └── utils/
-        └── ScrollToTop.jsx     # Route-change scroll restoration
+├── index.html                     # Frontend entry point
+├── package.json                   # Frontend scripts & dependencies
+├── vite.config.js                 # Vite bundler configuration
+├── vercel.json                    # Single-Page Application rewrite rules
+│
+├── src/                           # Frontend React Application
+│   ├── main.jsx                   # Application bootstrap
+│   ├── App.jsx                    # Route definitions & layout wrappers
+│   ├── context/                   # Global state (AppContext, ThemeContext)
+│   ├── pages/                     # Application pages
+│   │   ├── Home/                  # Hero showcase & category highlights
+│   │   ├── Marketplace/           # Product catalog with faceted filters
+│   │   ├── ProductDetails/        # Listing info, seller details & contact
+│   │   ├── SellItem/              # New listing creation with photo upload
+│   │   ├── Messages/              # In-app buyer/seller chat interface
+│   │   ├── Wishlist/              # Saved favorites collection
+│   │   ├── Profile/               # Student dashboard & listing manager
+│   │   ├── Admin/                 # Moderation & marketplace metrics
+│   │   └── Auth/                  # Login, Register, OTP Verification
+│   ├── components/                # Reusable UI component library
+│   ├── styles/                    # Global CSS variables & tokens
+│   └── utils/                     # API fetch client & helpers
+│
+└── server/                        # Express.js REST API Backend
+    ├── package.json               # Backend dependencies
+    ├── .env                       # Local backend environment variables
+    └── src/
+        ├── server.js              # Server initialization, CORS & middleware
+        ├── config/index.js        # Environment config loader
+        ├── db/                    # MySQL connection pool & migration scripts
+        │   ├── pool.js            # mysql2 promise pool
+        │   ├── init.js            # Table schema creation script
+        │   └── seed.js            # Pre-populated categories & demo seed
+        ├── controllers/           # API request controllers (Auth, Listings, Chat)
+        ├── middleware/            # JWT Auth, Rate limiting & Error handlers
+        ├── routes/                # Versioned API routes (/api/v1)
+        └── utils/mailer.js        # Email dispatch service (Brevo & Nodemailer)
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start Guide
 
 ### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) (version 18.0.0 or higher) installed on your system.
+* [Node.js](https://nodejs.org/) (version 18.0.0 or higher)
+* [MySQL](https://www.mysql.com/) (local database or cloud instance like Aiven)
+* [Git](https://git-scm.com/)
 
-### Installation
+---
 
-1. **Clone the repository**:
+### 1. Clone the Repository
+```bash
+git clone https://github.com/SACHIN047-CODE/ucampus_mart.git
+cd ucampus_mart
+```
+
+---
+
+### 2. Backend Setup (`server/`)
+
+1. Navigate to the server directory:
    ```bash
-   git clone https://github.com/your-username/ucampus_mart.git
-   cd ucampus_mart
-   ```
-
-2. **Install dependencies**:
-   ```bash
+   cd server
    npm install
    ```
 
-3. **Start the local development server**:
+2. Configure environment variables in `server/.env`:
+   ```env
+   PORT=5000
+   NODE_ENV=development
+
+   # MySQL Database
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=your_mysql_password
+   DB_NAME=campusmart_db
+   DB_SSL=false
+
+   # JWT Auth
+   JWT_SECRET=your_super_secret_jwt_key
+   JWT_EXPIRES_IN=7d
+
+   # CORS Allowed Client Origin
+   CLIENT_URL=http://localhost:5173
+
+   # Campus Email Domains Allowed (comma separated)
+   CAMPUS_EMAIL_DOMAINS=chitkara.edu.in,edu.in,ac.in,edu,gmail.com
+
+   # Brevo Email API (for real OTP delivery)
+   BREVO_API_KEY=xkeysib-your-brevo-api-key
+   BREVO_SENDER_EMAIL=your-brevo-registered-email@gmail.com
+   ```
+
+3. Initialize and seed the MySQL database:
+   ```bash
+   npm run db:init
+   ```
+
+4. Start the backend development server:
    ```bash
    npm run dev
    ```
-
-4. **Access the application**:
-   Open your browser and navigate to `http://localhost:5173` (or the URL displayed in your terminal).
+   *API will run at `http://localhost:5000`.*
 
 ---
 
-## 📜 Available Scripts
+### 3. Frontend Setup
 
-| Command | Description |
-| :--- | :--- |
-| `npm run dev` | Starts Vite development server with Hot Module Replacement (HMR) |
-| `npm run build` | Compiles and optimizes assets for production into the `dist/` directory |
-| `npm run preview` | Runs a local web server to preview the production build output |
-
----
-
-## 🧭 Application Routes
-
-| Path | View / Purpose |
-| :--- | :--- |
-| `/` | **Home**: Featured categories, recent listings, campus perks, call-to-actions |
-| `/marketplace` | **Marketplace**: Complete catalog with filtering, search, sorting & quick views |
-| `/product/:id` | **Product Details**: Complete listing info, image gallery & seller contact |
-| `/categories` | **Categories**: Browse all product groups and departments |
-| `/sell` | **Sell Item**: Create and publish a new campus listing |
-| `/wishlist` | **Wishlist**: View and manage saved items |
-| `/messages` | **Messages**: In-app chat interface with buyers and sellers |
-| `/profile` | **Profile**: Student dashboard, listings manager, purchase history & settings |
-| `/admin` | **Admin Dashboard**: Moderation, analytics, user & listing management |
-| `/login` | **Login**: User sign-in with remember me & social auth options |
-| `/register` | **Register**: New student account onboarding |
-| `/forgot-password` | **Forgot Password**: Password reset request |
-| `/verify-otp` | **OTP Verification**: One-time passcode security verification |
-
----
-
-## 🔌 Backend Integration Guide 
-
-This project is currently structured as a client-side single-page application with mock datasets in `src/data/` and global state management in `AppContext.jsx`.
-
-To integrate with a real backend (e.g., **Node.js / Express + PostgreSQL / MongoDB / Firebase**):
-
-1. **Create an API Service Layer**:
-   Add an API client (such as Axios or native `fetch`) under `src/services/api.js` configured with your base API URL and token interceptors:
-   ```javascript
-   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+1. Open a new terminal in the root project folder:
+   ```bash
+   cd ..
+   npm install
    ```
-2. **Replace Mock Imports**:
-   Update `AppContext.jsx` and page components to fetch listings, conversations, and user profiles from your REST or GraphQL endpoints using `useEffect` or React Query.
-3. **Persist Authentication**:
-   Replace mock authentication states with JWT / session storage tokens to secure user-specific routes (`/sell`, `/messages`, `/profile`, `/admin`). 
+
+2. Configure `.env` in the root folder:
+   ```env
+   VITE_API_URL=http://localhost:5000/api/v1
+   VITE_GOOGLE_CLIENT_ID=your_google_oauth_client_id.apps.googleusercontent.com
+   ```
+
+3. Start the Vite development server:
+   ```bash
+   npm run dev
+   ```
+   *Frontend will run at `http://localhost:5173`.*
 
 ---
 
-## 📄License
+## 📡 REST API Reference
+
+All API routes are versioned under `/api/v1`:
+
+### 🔐 Authentication (`/api/v1/auth`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/auth/register` | Register new student account & trigger OTP |
+| `POST` | `/auth/verify-email` | Verify 6-digit OTP code to activate account |
+| `POST` | `/auth/resend-code` | Resend fresh 6-digit OTP to user email |
+| `POST` | `/auth/login` | Email/password sign-in (dispatches login OTP) |
+| `POST` | `/auth/google` | Google OAuth verification & instant login |
+| `POST` | `/auth/logout` | Clear HTTP-only authentication cookie |
+| `GET` | `/auth/me` | Fetch currently authenticated user session |
+
+### 📦 Marketplace Listings (`/api/v1/listings`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/listings` | Query listings with search, category & price filters |
+| `GET` | `/listings/:id` | Get full listing specifications & seller profile |
+| `POST` | `/listings` | Create a new listing with image upload |
+| `PUT` | `/listings/:id` | Update existing listing details |
+| `DELETE`| `/listings/:id` | Remove a listing |
+
+### 💬 In-App Messaging (`/api/v1/conversations`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/conversations` | List all active conversation threads for user |
+| `POST` | `/conversations` | Start or retrieve conversation for a listing |
+| `GET` | `/conversations/:id/messages` | Fetch chat history for a thread |
+| `POST` | `/conversations/:id/messages` | Send message to buyer/seller |
+
+---
+
+## 🌐 Production Deployment
+
+| Service | Platform | Configuration |
+| :--- | :--- | :--- |
+| **Frontend** | [Vercel](https://vercel.com/) | Build: `npm run build` & Output: `dist/`. SPA rewrites managed in [`vercel.json`](vercel.json). |
+| **Backend** | [Render](https://render.com/) | Build: `npm install` & Start: `npm start` (Root: `server`). Configured with reverse proxy trust. |
+| **Database** | [Aiven MySQL](https://aiven.io/) | Managed cloud MySQL with SSL encryption. |
+| **Email API** | [Brevo](https://brevo.com/) | HTTPS REST API delivery bypassing cloud SMTP port restrictions. |
+
+---
+
+## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
