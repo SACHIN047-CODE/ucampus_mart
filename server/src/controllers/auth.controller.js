@@ -10,6 +10,57 @@ import { sendOtpEmail } from '../utils/mailer.js';
 const googleClient = new OAuth2Client(config.googleClientId);
 
 /**
+ * Helper to generate user avatar initials:
+ * - Single word ("Krishna") -> "K"
+ * - Multi-word ("Krishna Kirola") -> "KK" (first + surname)
+ * - Three words ("Krishna Kumar Kirola") -> "KK"
+ */
+function getInitials(name, email = '') {
+  const cleanName = (typeof name === 'string' ? name : '').trim();
+  if (cleanName) {
+    const spaceParts = cleanName.split(/\s+/).filter(Boolean);
+    if (spaceParts.length >= 2) {
+      const first = spaceParts[0].replace(/[^a-zA-Z0-9]/g, '');
+      const last = spaceParts[spaceParts.length - 1].replace(/[^a-zA-Z0-9]/g, '');
+      const firstChar = first ? first.charAt(0).toUpperCase() : spaceParts[0].charAt(0).toUpperCase();
+      const lastChar = last ? last.charAt(0).toUpperCase() : spaceParts[spaceParts.length - 1].charAt(0).toUpperCase();
+      return `${firstChar}${lastChar}`;
+    }
+
+    const dotParts = cleanName.split(/[._-]+/).filter(Boolean);
+    if (dotParts.length >= 2) {
+      const first = dotParts[0].replace(/[^a-zA-Z0-9]/g, '');
+      const last = dotParts[dotParts.length - 1].replace(/[^a-zA-Z0-9]/g, '');
+      const firstChar = first ? first.charAt(0).toUpperCase() : dotParts[0].charAt(0).toUpperCase();
+      const lastChar = last ? last.charAt(0).toUpperCase() : dotParts[dotParts.length - 1].charAt(0).toUpperCase();
+      return `${firstChar}${lastChar}`;
+    }
+
+    const single = cleanName.replace(/[^a-zA-Z0-9]/g, '') || cleanName;
+    return single.charAt(0).toUpperCase() || 'U';
+  }
+
+  const cleanEmail = (typeof email === 'string' ? email : '').trim();
+  if (cleanEmail) {
+    const prefix = cleanEmail.split('@')[0].trim();
+    const parts = prefix.split(/[._-]+/).filter(Boolean);
+    if (parts.length >= 2) {
+      const first = parts[0].replace(/[^a-zA-Z0-9]/g, '');
+      const last = parts[parts.length - 1].replace(/[^a-zA-Z0-9]/g, '');
+      const firstChar = first ? first.charAt(0).toUpperCase() : parts[0].charAt(0).toUpperCase();
+      const lastChar = last ? last.charAt(0).toUpperCase() : parts[parts.length - 1].charAt(0).toUpperCase();
+      return `${firstChar}${lastChar}`;
+    }
+    if (parts.length === 1 && parts[0].length > 0) {
+      const single = parts[0].replace(/[^a-zA-Z0-9]/g, '') || parts[0];
+      return single.charAt(0).toUpperCase() || 'U';
+    }
+  }
+
+  return 'U';
+}
+
+/**
  * Generate 6-digit verification code
  */
 function generateOtp() {
@@ -216,6 +267,7 @@ export async function verifyEmail(req, res, next) {
         email: user.email,
         role: user.role,
         isVerified: true,
+        initials: getInitials(user.name, user.email),
       },
     });
   } catch (error) {
@@ -475,6 +527,7 @@ export async function getMe(req, res, next) {
         hostel: req.user.hostel,
         phone: req.user.phone,
         avatar: req.user.avatar,
+        initials: getInitials(req.user.name, req.user.email),
         stats: {
           activeListings: stats ? Number(stats.activeListings) : 0,
           soldListings: stats ? Number(stats.soldListings) : 0,
@@ -543,6 +596,7 @@ export async function updateProfile(req, res, next) {
         hostel: rows[0].hostel,
         phone: rows[0].phone,
         avatar: rows[0].avatar,
+        initials: getInitials(rows[0].name, rows[0].email),
       },
     });
   } catch (error) {
@@ -675,6 +729,7 @@ export async function googleAuth(req, res, next) {
         hostel: user.hostel,
         phone: user.phone,
         avatar: user.avatar,
+        initials: getInitials(user.name, user.email),
       },
     });
   } catch (error) {

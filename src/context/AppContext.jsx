@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { getRelevantFallbackImage } from '../utils/imageUtils';
 import { apiGetMe } from '../utils/api';
+import { getInitials } from '../utils/userUtils';
 
 const AppContext = createContext();
 
@@ -35,7 +36,12 @@ export function AppProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem('campusmart-user');
-      return saved ? JSON.parse(saved) : null;
+      if (!saved) return null;
+      const parsed = JSON.parse(saved);
+      if (parsed) {
+        parsed.initials = getInitials(parsed.name, parsed.email);
+      }
+      return parsed;
     } catch {
       return null;
     }
@@ -73,8 +79,12 @@ export function AppProvider({ children }) {
       apiGetMe()
         .then((res) => {
           if (res?.success && res?.user) {
-            setUser((prev) => ({ ...(prev || {}), ...res.user }));
-            localStorage.setItem('campusmart-user', JSON.stringify(res.user));
+            const formatted = {
+              ...res.user,
+              initials: getInitials(res.user.name, res.user.email),
+            };
+            setUser((prev) => ({ ...(prev || {}), ...formatted }));
+            localStorage.setItem('campusmart-user', JSON.stringify(formatted));
           }
         })
         .catch(() => {
@@ -169,8 +179,9 @@ export function AppProvider({ children }) {
   const login = useCallback((userData = {}) => {
     const email = userData.email || '';
     const name = userData.name || (email ? email.split('@')[0] : 'Student');
-    const initials = userData.initials || (name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || 'ST');
+    const initials = getInitials(name, email);
     const newUser = {
+      ...userData,
       id: userData.id,
       name,
       email,
@@ -178,10 +189,9 @@ export function AppProvider({ children }) {
       hostel: userData.hostel || '',
       phone: userData.phone || '',
       avatar: userData.avatar || null,
-      initials,
       role: userData.role || 'STUDENT',
       isVerified: Boolean(userData.isVerified),
-      ...userData,
+      initials,
     };
     setUser(newUser);
     localStorage.setItem('campusmart-user', JSON.stringify(newUser));
@@ -192,9 +202,7 @@ export function AppProvider({ children }) {
     setUser((prev) => {
       const base = prev || {};
       const next = { ...base, ...updates };
-      if (updates.name) {
-        next.initials = updates.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || base.initials;
-      }
+      next.initials = getInitials(next.name, next.email);
       try {
         localStorage.setItem('campusmart-user', JSON.stringify(next));
       } catch (err) {
@@ -207,7 +215,7 @@ export function AppProvider({ children }) {
 
   const startChat = useCallback(({ seller, sellerAvatar, sellerEmail, title }) => {
     const name = seller || 'Verified Student';
-    const initials = sellerAvatar || (name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || 'VS');
+    const initials = sellerAvatar || getInitials(name, sellerEmail);
     const chat = {
       id: 'seller-' + String(sellerEmail || name).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       name,

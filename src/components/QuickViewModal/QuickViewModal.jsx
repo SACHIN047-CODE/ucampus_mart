@@ -204,7 +204,7 @@ export default function QuickViewModal({ product, onClose }) {
             {/* Chat Simulator */}
             <div className="cm-qv-chat-simulator">
               <div className="chat-header">
-                <Avatar initials={product.sellerAvatar || 'CU'} size={32} online />
+                <Avatar initials={product.sellerAvatar} name={product.seller} size={32} online />
                 <div>
                   <strong>Chat with student: {product.seller}</strong>
                   <span>active on campus</span>

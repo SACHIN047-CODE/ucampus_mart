@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { categories } from '../../data/categories';
 import { useApp } from '../../context/AppContext';
 import { getRelevantFallbackImage } from '../../utils/imageUtils';
+import { getInitials } from '../../utils/userUtils';
 import Button from '../../components/Button/Button';
 import './SellItem.css';
 
@@ -81,7 +82,7 @@ export default function SellItem() {
       location: form.location.trim(),
       hostel: user?.hostel || form.location.trim(),
       seller: user?.name || 'Verified Student',
-      sellerAvatar: user?.initials || 'VS',
+      sellerAvatar: getInitials(user?.name, user?.email),
       sellerEmail: user?.email || '',
       postedAt: 'Just now',
       createdAt: Date.now(),

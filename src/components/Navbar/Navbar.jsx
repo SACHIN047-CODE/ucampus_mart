@@ -5,6 +5,7 @@ import { useApp } from '../../context/AppContext';
 import { categories } from '../../data/categories';
 import SearchBar from '../SearchBar/SearchBar';
 import Avatar from '../Avatar/Avatar';
+import { getInitials } from '../../utils/userUtils';
 import Button from '../Button/Button';
 import ChitkaraLogo from '../ChitkaraLogo/ChitkaraLogo';
 import './Navbar.css';
@@ -157,7 +158,7 @@ export default function Navbar() {
           {user ? (
             <div className="cm-nav__profile" ref={profileRef}>
               <button onClick={() => setProfileOpen((v) => !v)} aria-label="Profile menu" className="cm-nav__profile-btn">
-                <Avatar initials={user.initials || 'SS'} size={32} online />
+                <Avatar initials={getInitials(user?.name, user?.email)} size={32} online />
               </button>
               {profileOpen && (
                 <div className="cm-nav__profile-menu scale-in">

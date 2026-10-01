@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import ProductImage from '../../components/ProductImage/ProductImage';
 import Avatar from '../../components/Avatar/Avatar';
+import { getInitials } from '../../utils/userUtils';
 import Badge from '../../components/Badge/Badge';
 import Button from '../../components/Button/Button';
 import EmptyState from '../../components/EmptyState/EmptyState';
@@ -21,8 +22,8 @@ export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState(searchParams.get('tab') || 'dashboard');
   const [settings, setSettings] = useState({
-    name: user?.name || 'Sachin Sharma',
-    email: user?.email || 'sachin.sharma@chitkara.edu.in',
+    name: user?.name || '',
+    email: user?.email || '',
     hostel: user?.hostel || 'CS Dept Hostel',
     phone: user?.phone || '+91 98765 43210',
   });
@@ -63,8 +64,8 @@ export default function Profile() {
     <div className="cm-profile container">
       <aside className="cm-profile__sidebar">
         <div className="cm-profile__card">
-          <Avatar initials={user?.initials || 'SS'} size={64} online />
-          <h3>{user?.name || 'Sachin Sharma'}</h3>
+          <Avatar initials={getInitials(user?.name, user?.email)} size={64} online />
+          <h3>{user?.name || 'Student'}</h3>
           <p>{user?.department || 'B.Tech CSE, 2nd Year'}</p>
           <Badge variant="success">✓ Verified Student</Badge>
         </div>

@@ -1,3 +1,4 @@
+import { getInitials } from '../../utils/userUtils';
 import './Avatar.css';
 
 const GRADIENTS = [
@@ -14,19 +15,24 @@ function hashGradient(str = '') {
   return GRADIENTS[Math.abs(hash) % GRADIENTS.length];
 }
 
-export default function Avatar({ initials = 'SS', size = 40, online = false }) {
+export default function Avatar({ initials, name, user, email, size = 40, online = false }) {
+  const resolvedInitials = initials || getInitials(name || user?.name, email || user?.email);
+
   return (
     <span
       className="cm-avatar"
       style={{
         width: size,
         height: size,
-        background: hashGradient(initials),
-        fontSize: size * 0.38,
+        background: hashGradient(resolvedInitials),
+        fontSize: resolvedInitials.length > 2 ? size * 0.32 : size * 0.38,
       }}
     >
-      {initials}
+      {resolvedInitials}
       {online && <span className="cm-avatar__dot" />}
     </span>
   );
 }
+
+export { getInitials };
+
