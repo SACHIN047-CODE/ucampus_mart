@@ -1,7 +1,6 @@
 # 🎓 CampusMart
 
 [![Live Website](https://img.shields.io/badge/🚀_Live_Website-ucampus--mart.vercel.app-blue?style=for-the-badge&logo=vercel)](https://ucampus-mart.vercel.app/)
-[![API Backend](https://img.shields.io/badge/⚡_API_Server-Render_Live-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://campusmart-api-0nz9.onrender.com/)
 
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-5.4.21-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
