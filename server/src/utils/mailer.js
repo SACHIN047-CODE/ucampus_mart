@@ -115,6 +115,42 @@ export async function sendOtpEmail({ to, name = 'Student', code, purpose = 'veri
     </html>
   `;
 
+  // 1. Brevo HTTPS API (Sends to ANY email, no domain required)
+  const brevoKey = process.env.BREVO_API_KEY;
+  if (brevoKey) {
+    try {
+      const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.EMAIL_USER || 'krishnakirola2007@gmail.com';
+      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': brevoKey.trim(),
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          sender: {
+            name: 'CampusMart',
+            email: senderEmail.trim(),
+          },
+          to: [{ email: to, name: name || 'Student' }],
+          subject,
+          htmlContent: html,
+          textContent: `${headline}\n\nHello ${name},\n\nYour OTP code is: ${code}\n\nThis code will expire in 15 minutes.\n\nCampusMart Team`,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        console.log(`✅ [BREVO EMAIL SENT] Successfully sent ${purpose} OTP to ${to} (Message ID: ${data.messageId})`);
+        return true;
+      }
+      console.error(`❌ [BREVO API ERROR]:`, data);
+    } catch (err) {
+      console.error(`❌ [BREVO FETCH ERROR]:`, err.message);
+    }
+  }
+
+  // 2. Resend HTTPS API Fallback
   const resendKey = process.env.RESEND_API_KEY;
   if (resendKey) {
     try {
