@@ -19,7 +19,9 @@ function hashGradient(str = '') {
 export default function Avatar({ initials, name, user, email, size = 40, online = false, verified }) {
   const resolvedEmail = email || user?.email;
   const resolvedInitials = initials || getInitials(name || user?.name, resolvedEmail);
-  const showVerified = verified ?? isUserVerified(user || resolvedEmail);
+  // The email domain is authoritative; a stale `verified` flag must never
+  // give a non-Chitkara account the green tick.
+  const showVerified = isUserVerified(resolvedEmail) && verified !== false;
 
   return (
     <span
