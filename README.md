@@ -19,6 +19,7 @@
 * **🔐 Dual Authentication Flow**:
   * **Google OAuth 2.0**: Instant, secure sign-in with campus/personal Google accounts. Automatically validates existing accounts before login.
   * **Campus Email & Password + 2FA OTP**: Real-time 6-digit one-time password (OTP) verification powered by **Brevo HTTPS API** and Nodemailer.
+  * **Chitkara Verified Student Badge**: Register or log in with an email ending in `@chitkara.edu.in` to receive verified-student status and a green tick on your profile. Other email domains can use the platform normally, but do not receive the green tick.
 * **🛍️ Faceted Marketplace & Search**:
   * Instant search query filtering, category browsing, price range filters, item condition selectors, and sort orders.
   * Interactive product cards with dynamic badges (*Verified Student*, *Urgent*, *Featured*, *Negotiable*).
@@ -188,6 +189,11 @@ cd ucampus_mart
 All API routes are versioned under `/api/v1`:
 
 ### 🔐 Authentication (`/api/v1/auth`)
+
+#### Verified student status
+
+CampusMart grants the green verified-student tick only when the account email ends with the exact domain `@chitkara.edu.in` (case-insensitive). Users with other email domains can still create and use normal accounts, but their profiles will not display the green tick. Email OTP verification is still required when using the campus email/password flow.
+
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `POST` | `/auth/register` | Register new student account & trigger OTP |
