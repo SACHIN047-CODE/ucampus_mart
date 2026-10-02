@@ -135,29 +135,6 @@ export default function Login() {
           <h1>Welcome back</h1>
           <p>Log in with your Chitkara University ID or personal email.</p>
 
-          {/* Quick Test Login buttons */}
-          <div className="cm-auth__test-helper">
-            <span className="cm-auth__test-title">Quick demo login:</span>
-            <div className="cm-auth__test-buttons">
-              <button
-                type="button"
-                className={`cm-auth__test-btn is-chitkara ${isChitkara ? 'is-active' : ''}`}
-                onClick={() => setForm({ email: 'sachin.sharma@chitkara.edu.in', password: form.password || 'student123' })}
-                title="Log in with Chitkara email to receive Verified Status + Green Tick"
-              >
-                <span className="cm-auth__mini-tick">✓</span> @chitkara.edu.in (Verified)
-              </button>
-              <button
-                type="button"
-                className={`cm-auth__test-btn is-normal ${isGeneralEmail ? 'is-active' : ''}`}
-                onClick={() => setForm({ email: 'student.user@gmail.com', password: form.password || 'password123' })}
-                title="Log in with standard email (Normal Account, No Green Tick)"
-              >
-                Regular Email (No Tick)
-              </button>
-            </div>
-          </div>
-
           {errors.general && (
             <div className="cm-field-error" style={{ marginBottom: '1rem', padding: '0.6rem 0.8rem', background: '#fee2e2', borderRadius: '6px', color: '#dc2626' }}>
               {errors.general}
