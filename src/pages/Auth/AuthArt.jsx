@@ -13,7 +13,7 @@ export default function AuthArt() {
       </div>
       <div className="cm-auth__card-float">
         <strong>✅ Verified Student</strong>
-        <span>Sign up with your campus email for a trusted badge</span>
+        <span>Register with your <b>@chitkara.edu.in</b> ID to get verified and receive the green tick on your profile.</span>
       </div>
     </div>
   );

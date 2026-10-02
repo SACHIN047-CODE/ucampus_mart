@@ -102,23 +102,30 @@
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-sm);
-  padding: 14px 18px;
-  max-width: 240px;
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  width: min(310px, calc(100% - 72px));
+  max-width: 310px;
   z-index: 2;
 }
 
 .cm-auth__card-float strong {
   display: block;
-  font-size: 13px;
+  font-size: 16px;
   color: #fff;
-  margin-bottom: 2px;
+  margin-bottom: 8px;
 }
 
 .cm-auth__card-float span {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.65;
   color: rgba(255, 255, 255, 0.65);
+}
+
+.cm-auth__card-float b {
+  color: #86efac;
+  font-weight: 700;
 }
 
 .cm-auth__form-side {
