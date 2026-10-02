@@ -3,6 +3,7 @@ import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { getProductById } from '../../data/products';
 import { useApp } from '../../context/AppContext';
 import { resolveProductImages } from '../../utils/imageUtils';
+import { isChitkaraEmail } from '../../utils/userUtils';
 import ProductImage from '../../components/ProductImage/ProductImage';
 import Avatar from '../../components/Avatar/Avatar';
 import Badge from '../../components/Badge/Badge';
@@ -102,10 +103,18 @@ export default function ProductDetails() {
           </div>
 
           <div className="cm-pd__seller">
-            <Avatar initials={product.sellerAvatar} size={48} online />
+            <Avatar
+              initials={product.sellerAvatar}
+              email={product.sellerEmail}
+              size={48}
+              online
+              verified={isChitkaraEmail(product.sellerEmail)}
+            />
             <div>
               <div className="cm-pd__seller-name">{product.seller}</div>
-              <div className="cm-pd__seller-sub">Verified Student · Usually replies within an hour</div>
+              <div className="cm-pd__seller-sub">
+                {isChitkaraEmail(product.sellerEmail) ? 'Verified Chitkara student' : 'Campus seller'} · Usually replies within an hour
+              </div>
             </div>
             <button className="cm-pd__seller-btn" onClick={handleChatSeller}>Message</button>
           </div>

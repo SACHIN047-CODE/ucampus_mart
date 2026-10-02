@@ -28,3 +28,12 @@
   border: 2px solid var(--card);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
+
+.cm-avatar__verified {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  display: flex;
+  line-height: 0;
+  filter: drop-shadow(0 0 0 2px var(--card));
+}

@@ -50,3 +50,27 @@ export function getInitials(name, email = '') {
 
   return 'U';
 }
+
+/**
+ * Checks if an email address belongs to Chitkara University.
+ * Only emails ending with @chitkara.edu.in receive verified status and a green tick.
+ * @param {string} email
+ * @returns {boolean}
+ */
+export function isChitkaraEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  const clean = email.trim().toLowerCase();
+  return clean.endsWith('@chitkara.edu.in');
+}
+
+/**
+ * Checks if a user is verified with the green tick.
+ * Returns true if the user's email ends with @chitkara.edu.in.
+ * @param {object|string} user - User object or email string
+ * @returns {boolean}
+ */
+export function isUserVerified(user) {
+  if (!user) return false;
+  if (typeof user === 'string') return isChitkaraEmail(user);
+  return isChitkaraEmail(user.email);
+}

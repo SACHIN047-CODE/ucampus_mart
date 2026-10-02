@@ -1,4 +1,5 @@
-import { getInitials } from '../../utils/userUtils';
+import { getInitials, isUserVerified } from '../../utils/userUtils';
+import VerifiedTick from '../VerifiedTick/VerifiedTick';
 import './Avatar.css';
 
 const GRADIENTS = [
@@ -15,8 +16,10 @@ function hashGradient(str = '') {
   return GRADIENTS[Math.abs(hash) % GRADIENTS.length];
 }
 
-export default function Avatar({ initials, name, user, email, size = 40, online = false }) {
-  const resolvedInitials = initials || getInitials(name || user?.name, email || user?.email);
+export default function Avatar({ initials, name, user, email, size = 40, online = false, verified }) {
+  const resolvedEmail = email || user?.email;
+  const resolvedInitials = initials || getInitials(name || user?.name, resolvedEmail);
+  const showVerified = verified ?? isUserVerified(user || resolvedEmail);
 
   return (
     <span
@@ -30,6 +33,11 @@ export default function Avatar({ initials, name, user, email, size = 40, online 
     >
       {resolvedInitials}
       {online && <span className="cm-avatar__dot" />}
+      {showVerified && (
+        <span className="cm-avatar__verified">
+          <VerifiedTick size={Math.max(12, Math.round(size * 0.38))} />
+        </span>
+      )}
     </span>
   );
 }

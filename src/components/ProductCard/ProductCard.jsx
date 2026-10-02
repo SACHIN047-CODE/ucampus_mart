@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import { isChitkaraEmail } from '../../utils/userUtils';
 import ProductImage from '../ProductImage/ProductImage';
 import './ProductCard.css';
 
@@ -192,10 +193,12 @@ export default function ProductCard({ product, style, onQuickView }) {
             </span>
             <div className="cm-seller-details">
               <span className="cm-seller-name">@{product.seller ? product.seller.split(' ')[0].toLowerCase() : 'peer'}</span>
-              <span className="cm-verified-badge">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="#16a34a" stroke="none"><circle cx="12" cy="12" r="10" /><polygon points="9 12 11 14 15 10" fill="#fff" /></svg>
-                Verified
-              </span>
+              {isChitkaraEmail(product.sellerEmail) && (
+                <span className="cm-verified-badge">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#16a34a" stroke="none"><circle cx="12" cy="12" r="10" /><polygon points="9 12 11 14 15 10" fill="#fff" /></svg>
+                  Verified
+                </span>
+              )}
             </div>
           </div>
           <span className="cm-pcard__time">

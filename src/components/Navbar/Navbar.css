@@ -460,9 +460,16 @@
   font-weight: 600;
   font-size: 14px;
   color: #111111;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.cm-nav__verified-tick {
+  flex-shrink: 0;
 }
 
 [data-theme='dark'] .cm-nav__profile-name {

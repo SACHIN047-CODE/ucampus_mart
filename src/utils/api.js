@@ -42,6 +42,17 @@ export async function apiFetch(endpoint, options = {}) {
   }
 }
 
+export function isNetworkError(err) {
+  const message = err?.message || '';
+  return (
+    err?.name === 'TypeError' ||
+    message.includes('Unable to connect') ||
+    message.includes('Failed to fetch') ||
+    message.includes('NetworkError') ||
+    message.includes('fetch')
+  );
+}
+
 /**
  * Auth API methods
  */

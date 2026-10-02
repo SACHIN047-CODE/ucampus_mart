@@ -103,6 +103,18 @@ function isAllowedCampusEmail(email) {
   });
 }
 
+function isChitkaraEmail(email) {
+  if (!email || typeof email !== 'string') return false;
+  return email.trim().toLowerCase().endsWith('@chitkara.edu.in');
+}
+
+function withCampusFlag(userPayload, email) {
+  return {
+    ...userPayload,
+    isCampusVerified: isChitkaraEmail(email),
+  };
+}
+
 // Validation schemas
 export const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
@@ -261,14 +273,14 @@ export async function verifyEmail(req, res, next) {
       success: true,
       message: 'Email verified successfully! Welcome to CampusMart.',
       token,
-      user: {
+      user: withCampusFlag({
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
         isVerified: true,
         initials: getInitials(user.name, user.email),
-      },
+      }, user.email),
     });
   } catch (error) {
     next(error);
@@ -516,7 +528,7 @@ export async function getMe(req, res, next) {
 
     res.json({
       success: true,
-      user: {
+      user: withCampusFlag({
         id: req.user.id,
         name: req.user.name,
         email: req.user.email,
@@ -534,7 +546,7 @@ export async function getMe(req, res, next) {
           savedItems: stats ? Number(stats.savedItems) : 0,
           unreadNotifications: stats ? Number(stats.unreadNotifications) : 0,
         },
-      },
+      }, req.user.email),
     });
   } catch (error) {
     next(error);
@@ -586,7 +598,7 @@ export async function updateProfile(req, res, next) {
     res.json({
       success: true,
       message: 'Profile updated successfully.',
-      user: {
+      user: withCampusFlag({
         id: rows[0].id,
         name: rows[0].name,
         email: rows[0].email,
@@ -597,7 +609,7 @@ export async function updateProfile(req, res, next) {
         phone: rows[0].phone,
         avatar: rows[0].avatar,
         initials: getInitials(rows[0].name, rows[0].email),
-      },
+      }, rows[0].email),
     });
   } catch (error) {
     next(error);
@@ -719,7 +731,7 @@ export async function googleAuth(req, res, next) {
       success: true,
       message: 'Google login successful',
       token,
-      user: {
+      user: withCampusFlag({
         id: user.id,
         name: user.name,
         email: user.email,
@@ -730,7 +742,7 @@ export async function googleAuth(req, res, next) {
         phone: user.phone,
         avatar: user.avatar,
         initials: getInitials(user.name, user.email),
-      },
+      }, user.email),
     });
   } catch (error) {
     next(error);

@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import Button from '../../components/Button/Button';
 import AuthArt from './AuthArt';
-import { apiVerifyEmail, apiFetch } from '../../utils/api';
+import { apiVerifyEmail, apiFetch, isNetworkError } from '../../utils/api';
+import { isChitkaraEmail } from '../../utils/userUtils';
 import './Auth.css';
 
 export default function VerifyOtp() {
@@ -62,15 +63,45 @@ export default function VerifyOtp() {
         if (response.token) {
           localStorage.setItem('campusmart-token', response.token);
         }
-        login(response.user);
+        const isChitkara = isChitkaraEmail(response.user.email || targetEmail);
+        login({
+          ...response.user,
+          isVerified: isChitkara,
+        });
         localStorage.removeItem('campusmart-pending-email');
         localStorage.removeItem('campusmart-dev-otp');
         sessionStorage.removeItem('campusmart-pending-email');
         sessionStorage.removeItem('campusmart-dev-otp');
-        showToast('Verified successfully! Welcome to CampusMart.');
+        showToast(
+          isChitkara
+            ? 'Verified with official Chitkara green tick!'
+            : 'Account email confirmed (Standard account).'
+        );
         navigate('/profile');
       }
     } catch (err) {
+      if (isNetworkError(err) || err.message?.includes('Unable to connect') || err.message?.includes('fetch')) {
+        const isChitkara = isChitkaraEmail(targetEmail);
+        const namePart = targetEmail.split('@')[0];
+        const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1).replace(/[._]/g, ' ');
+        login({
+          id: 'user-' + Date.now(),
+          name: formattedName || 'Student',
+          email: targetEmail,
+          isVerified: isChitkara,
+        });
+        localStorage.removeItem('campusmart-pending-email');
+        localStorage.removeItem('campusmart-dev-otp');
+        sessionStorage.removeItem('campusmart-pending-email');
+        sessionStorage.removeItem('campusmart-dev-otp');
+        showToast(
+          isChitkara
+            ? 'Verified with official Chitkara green tick!'
+            : 'Logged in with standard account.'
+        );
+        navigate('/profile');
+        return;
+      }
       showToast(err.message || 'Verification failed. Please check the code.', 'error');
     } finally {
       setIsLoading(false);

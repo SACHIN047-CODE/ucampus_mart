@@ -5,7 +5,8 @@ import { useApp } from '../../context/AppContext';
 import { categories } from '../../data/categories';
 import SearchBar from '../SearchBar/SearchBar';
 import Avatar from '../Avatar/Avatar';
-import { getInitials } from '../../utils/userUtils';
+import { getInitials, isChitkaraEmail } from '../../utils/userUtils';
+import VerifiedTick from '../VerifiedTick/VerifiedTick';
 import Button from '../Button/Button';
 import ChitkaraLogo from '../ChitkaraLogo/ChitkaraLogo';
 import './Navbar.css';
@@ -158,13 +159,31 @@ export default function Navbar() {
           {user ? (
             <div className="cm-nav__profile" ref={profileRef}>
               <button onClick={() => setProfileOpen((v) => !v)} aria-label="Profile menu" className="cm-nav__profile-btn">
-                <Avatar initials={getInitials(user?.name, user?.email)} size={32} online />
+                <Avatar
+                  initials={getInitials(user?.name, user?.email)}
+                  email={user?.email}
+                  size={32}
+                  online
+                  verified={isChitkaraEmail(user.email)}
+                />
               </button>
               {profileOpen && (
                 <div className="cm-nav__profile-menu scale-in">
                   <div className="cm-nav__profile-header">
-                    <span className="cm-nav__profile-name">{user.name || 'Student'}</span>
-                    <span className="cm-nav__profile-email">{user.email || 'student@chitkara.edu.in'}</span>
+                    <span className="cm-nav__profile-name">
+                      {user.name || 'Student'}
+                      {isChitkaraEmail(user.email) && (
+                        <VerifiedTick size={14} className="cm-nav__verified-tick" />
+                      )}
+                    </span>
+                    <span className="cm-nav__profile-email">
+                      {user.email || 'student@chitkara.edu.in'}
+                      {isChitkaraEmail(user.email) ? (
+                        <span style={{ color: '#16a34a', fontWeight: 600, fontSize: '10.5px', marginLeft: '6px' }}>• Verified</span>
+                      ) : (
+                        <span style={{ color: 'var(--text-soft)', fontSize: '10.5px', marginLeft: '6px' }}>• Standard</span>
+                      )}
+                    </span>
                   </div>
                   <div className="cm-nav__profile-sep" />
                   <Link to="/profile" onClick={() => setProfileOpen(false)}>My Profile &amp; Listings</Link>

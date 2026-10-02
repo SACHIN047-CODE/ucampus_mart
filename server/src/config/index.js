@@ -34,10 +34,11 @@ export const config = {
 
   googleClientId: process.env.GOOGLE_CLIENT_ID || '407241904104-u4ckitgki81o6j9mep0r6g8ev1fi2mej.apps.googleusercontent.com',
 
-  allowedCampusDomains: (process.env.CAMPUS_EMAIL_DOMAINS || 'chitkara.edu.in,edu.in,ac.in,edu,gmail.com')
+  allowedCampusDomains: (process.env.CAMPUS_EMAIL_DOMAINS || 'chitkara.edu.in,edu.in,ac.in,edu,gmail.com,yahoo.com,outlook.com,hotmail.com,icloud.com')
     .split(',')
     .map(d => d.trim().toLowerCase())
     .filter(Boolean),
+  // Green tick / campus verified badge is granted only for @chitkara.edu.in
 
   admin: {
     email: process.env.ADMIN_EMAIL || 'admin@campusmart.edu',

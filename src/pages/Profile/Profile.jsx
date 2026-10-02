@@ -3,7 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import ProductImage from '../../components/ProductImage/ProductImage';
 import Avatar from '../../components/Avatar/Avatar';
-import { getInitials } from '../../utils/userUtils';
+import { getInitials, isChitkaraEmail } from '../../utils/userUtils';
+import VerifiedTick from '../../components/VerifiedTick/VerifiedTick';
 import Badge from '../../components/Badge/Badge';
 import Button from '../../components/Button/Button';
 import EmptyState from '../../components/EmptyState/EmptyState';
@@ -57,17 +58,58 @@ export default function Profile() {
       showToast('Campus Email cannot be empty', 'danger');
       return;
     }
-    updateUser(settings);
+    updateUser({
+      ...settings,
+      isVerified: isChitkaraEmail(settings.email),
+    });
+    if (isChitkaraEmail(settings.email)) {
+      showToast('Profile updated with Chitkara verified status.', 'success');
+    } else {
+      showToast('Profile updated. Standard account (no green tick).', 'default');
+    }
   };
+
+  const isVerified = isChitkaraEmail(user?.email);
 
   return (
     <div className="cm-profile container">
       <aside className="cm-profile__sidebar">
         <div className="cm-profile__card">
-          <Avatar initials={getInitials(user?.name, user?.email)} size={64} online />
-          <h3>{user?.name || 'Student'}</h3>
-          <p>{user?.department || 'B.Tech CSE, 2nd Year'}</p>
-          <Badge variant="success">✓ Verified Student</Badge>
+          <Avatar
+            initials={getInitials(user?.name, user?.email)}
+            email={user?.email}
+            size={64}
+            online
+            verified={isVerified}
+          />
+          <h3 className="cm-profile__name">
+            <span>{user?.name || 'Student'}</span>
+            {isVerified && <VerifiedTick className="cm-profile__green-tick" />}
+          </h3>
+          <p className="cm-profile__dept">{user?.department || (isVerified ? 'Chitkara University' : 'Student')}</p>
+          <p className="cm-profile__email">{user?.email || '—'}</p>
+
+          {isVerified ? (
+            <Badge variant="success" className="cm-profile__badge cm-profile__badge--verified">
+              <VerifiedTick size={12} />
+              Verified Student
+            </Badge>
+          ) : (
+            <Badge variant="default" className="cm-profile__badge cm-profile__badge--normal">
+              Normal Account
+            </Badge>
+          )}
+
+          {isVerified ? (
+            <div className="cm-profile__status-pill is-verified">
+              <span className="cm-profile__status-dot" />
+              Verified via @chitkara.edu.in
+            </div>
+          ) : (
+            <div className="cm-profile__status-pill is-normal">
+              <span>Standard Student (No Green Tick)</span>
+            </div>
+          )}
         </div>
         <nav className="cm-profile__nav">
           {TABS.map((t) => (
@@ -171,7 +213,15 @@ export default function Profile() {
             <h2>Profile Settings</h2>
             <div className="cm-profile__form">
               <div className="cm-sell__field"><label>Full Name</label><input type="text" value={settings.name} onChange={(e) => updateSetting('name', e.target.value)} /></div>
-              <div className="cm-sell__field"><label>Campus Email</label><input type="email" value={settings.email} onChange={(e) => updateSetting('email', e.target.value)} /></div>
+              <div className="cm-sell__field">
+                <label>Campus Email</label>
+                <input type="email" value={settings.email} onChange={(e) => updateSetting('email', e.target.value)} />
+                <small style={{ color: isChitkaraEmail(settings.email) ? '#16a34a' : 'var(--text-soft)', fontSize: '11.5px', marginTop: '4px', display: 'block' }}>
+                  {isChitkaraEmail(settings.email)
+                    ? '✓ Chitkara University email detected: Verified status and green tick will be active.'
+                    : 'ℹ️ Standard email domain: Normal account status (no green tick). Use an @chitkara.edu.in email for the green tick.'}
+                </small>
+              </div>
               <div className="cm-sell__field"><label>Hostel / Block</label><input type="text" value={settings.hostel} onChange={(e) => updateSetting('hostel', e.target.value)} /></div>
               <div className="cm-sell__field"><label>Phone Number</label><input type="tel" value={settings.phone} onChange={(e) => updateSetting('phone', e.target.value)} /></div>
               <Button onClick={handleSaveSettings}>Save Changes</Button>

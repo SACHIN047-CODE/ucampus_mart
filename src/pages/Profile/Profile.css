@@ -19,16 +19,92 @@
   gap: 6px;
   box-shadow: var(--shadow-sm);
 }
-.cm-profile__card h3 {
-  font-size: 16px;
-  margin-top: 6px;
+.cm-profile__name {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 17px;
+  font-weight: 700;
+  margin-top: 8px;
   letter-spacing: -0.02em;
 }
-.cm-profile__card p {
+
+.cm-profile__green-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  animation: scaleIn 0.25s ease-out;
+}
+
+.cm-profile__dept {
+  color: var(--text-muted) !important;
+  font-family: var(--font-display) !important;
+  font-size: 13px !important;
+  font-weight: 500;
+  margin: 0 !important;
+}
+
+.cm-profile__email {
+  color: var(--text-soft) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 11.5px !important;
+  margin: 0 0 6px !important;
+}
+
+.cm-profile__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cm-profile__badge--verified {
+  background: rgba(22, 163, 74, 0.12) !important;
+  color: #16a34a !important;
+  border-color: rgba(22, 163, 74, 0.3) !important;
+  font-weight: 700;
+}
+
+.cm-profile__badge--normal {
+  background: var(--bg-subtle) !important;
+  color: var(--text-muted) !important;
+  border-color: var(--border) !important;
+}
+
+.cm-profile__status-pill {
+  margin-top: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cm-profile__status-pill.is-verified {
+  background: rgba(22, 163, 74, 0.08);
+  color: #15803d;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+}
+[data-theme='dark'] .cm-profile__status-pill.is-verified {
+  background: rgba(22, 163, 74, 0.18);
+  color: #86efac;
+}
+
+.cm-profile__status-pill.is-normal {
+  background: var(--bg-subtle);
   color: var(--text-soft);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  margin: 0 0 4px;
+  border: 1px solid var(--border);
+}
+
+.cm-profile__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.25);
 }
 
 .cm-profile__nav {

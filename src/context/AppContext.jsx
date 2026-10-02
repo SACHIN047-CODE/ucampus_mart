@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { getRelevantFallbackImage } from '../utils/imageUtils';
 import { apiGetMe } from '../utils/api';
-import { getInitials } from '../utils/userUtils';
+import { getInitials, isChitkaraEmail } from '../utils/userUtils';
 
 const AppContext = createContext();
 
@@ -40,6 +40,8 @@ export function AppProvider({ children }) {
       const parsed = JSON.parse(saved);
       if (parsed) {
         parsed.initials = getInitials(parsed.name, parsed.email);
+        parsed.isVerified = isChitkaraEmail(parsed.email);
+        parsed.isCampusVerified = parsed.isVerified;
       }
       return parsed;
     } catch {
@@ -81,6 +83,8 @@ export function AppProvider({ children }) {
           if (res?.success && res?.user) {
             const formatted = {
               ...res.user,
+              isVerified: isChitkaraEmail(res.user.email),
+              isCampusVerified: isChitkaraEmail(res.user.email),
               initials: getInitials(res.user.name, res.user.email),
             };
             setUser((prev) => ({ ...(prev || {}), ...formatted }));
@@ -180,17 +184,19 @@ export function AppProvider({ children }) {
     const email = userData.email || '';
     const name = userData.name || (email ? email.split('@')[0] : 'Student');
     const initials = getInitials(name, email);
+    const isVerified = isChitkaraEmail(email);
     const newUser = {
       ...userData,
-      id: userData.id,
+      id: userData.id || 'user-' + Date.now(),
       name,
       email,
-      department: userData.department || '',
+      department: userData.department || (isVerified ? 'Chitkara University' : ''),
       hostel: userData.hostel || '',
       phone: userData.phone || '',
       avatar: userData.avatar || null,
       role: userData.role || 'STUDENT',
-      isVerified: Boolean(userData.isVerified),
+      isVerified,
+      isCampusVerified: isVerified,
       initials,
     };
     setUser(newUser);
@@ -202,6 +208,10 @@ export function AppProvider({ children }) {
     setUser((prev) => {
       const base = prev || {};
       const next = { ...base, ...updates };
+      if (next.email) {
+        next.isVerified = isChitkaraEmail(next.email);
+        next.isCampusVerified = next.isVerified;
+      }
       next.initials = getInitials(next.name, next.email);
       try {
         localStorage.setItem('campusmart-user', JSON.stringify(next));
@@ -210,8 +220,7 @@ export function AppProvider({ children }) {
       }
       return next;
     });
-    showToast('Profile updated successfully', 'success');
-  }, [showToast]);
+  }, []);
 
   const startChat = useCallback(({ seller, sellerAvatar, sellerEmail, title }) => {
     const name = seller || 'Verified Student';
