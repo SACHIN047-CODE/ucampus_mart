@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { products as seedProducts } from '../data/products';
 import { getRelevantFallbackImage } from '../utils/imageUtils';
 import { apiGetMe } from '../utils/api';
 import { getInitials, isChitkaraEmail } from '../utils/userUtils';
@@ -11,20 +12,36 @@ export function AppProvider({ children }) {
       const saved = localStorage.getItem('campusmart-products');
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Exclude mock seed products that had id p1..p20 or fake picsum images
-        const realOnly = parsed.filter((p) => {
-          if (!p.id) return false;
-          if (typeof p.id === 'string' && p.id.match(/^p([1-9]|1[0-9]|20)$/)) return false;
-          return true;
-        });
-        return realOnly.map((p) => ({
-          ...p,
-          images: Array.isArray(p.images) && p.images.length > 0 ? p.images : [getRelevantFallbackImage(p.title, p.category)],
-        }));
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const formatted = parsed.map((p) => ({
+            ...p,
+            images: Array.isArray(p.images) && p.images.length > 0 ? p.images : [getRelevantFallbackImage(p.title, p.category)],
+          }));
+
+          // Ensure pre-seeded product catalog is available alongside any user-posted items
+          const existingIds = new Set(formatted.map((p) => String(p.id)));
+          const missingSeeds = seedProducts.filter((sp) => !existingIds.has(String(sp.id)));
+          const allListings = [...formatted, ...missingSeeds];
+
+          if (missingSeeds.length > 0) {
+            try {
+              localStorage.setItem('campusmart-products', JSON.stringify(allListings));
+            } catch {
+              // ignore
+            }
+          }
+          return allListings;
+        }
       }
-      return [];
+      // If no listings in storage or storage was cleared, seed with full product catalog
+      try {
+        localStorage.setItem('campusmart-products', JSON.stringify(seedProducts));
+      } catch {
+        // ignore
+      }
+      return seedProducts;
     } catch {
-      return [];
+      return seedProducts;
     }
   });
 

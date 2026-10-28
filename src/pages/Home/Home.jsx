@@ -110,22 +110,24 @@ export default function Home() {
 
   // Helper: Filter listings by campus
   const getProductsForCampus = (items) => {
+    let list = items;
     if (activeCampus === 'Punjab Campus') {
       // Exclude a few southern/suburban elements to simulate local search
-      return items.filter(
+      list = items.filter(
         (p) => !['South Campus', 'PG Block 4', 'Sports Complex', 'Gate No. 2 Parking'].includes(p.location)
       );
     } else if (activeCampus === 'Himachal Campus') {
       // Simulating HP Baddi campus items
-      return items.filter(
+      list = items.filter(
         (p) => ['South Campus', 'PG Block 4', 'Sports Complex', 'Gate No. 2 Parking', 'West Campus'].includes(p.location)
       );
     } else {
       // Simulated online course list items
-      return items.filter(
+      list = items.filter(
         (p) => ['East Campus', 'Gate No. 1 Parking', 'Ganga Hostel', 'Meera Hostel', 'Tech Park'].includes(p.location)
       );
     }
+    return list.length > 0 ? list : items;
   };
 
   // Live filtered catalogs
